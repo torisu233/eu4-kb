@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EU4 知識庫問答</title>
+<style>
+  :root{ --bg:#f6f7f9; --card:#fff; --bd:#e3e6ea; --fg:#1f2430; --mut:#6b7280; --accent:#2563eb; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+       font-family:"Microsoft JhengHei","PingFang TC",-apple-system,Segoe UI,system-ui,sans-serif;line-height:1.65}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px}
+  h1{font-size:20px;margin:6px 0 14px} h1 .sub{font-size:13px;color:var(--mut);font-weight:normal;margin-left:6px}
+  .ask{display:flex;gap:8px;align-items:flex-end}
+  textarea{flex:1;min-height:52px;max-height:200px;padding:10px 12px;border:1px solid var(--bd);
+           border-radius:10px;font:inherit;resize:vertical;background:var(--card)}
+  button{padding:11px 18px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;
+         font-weight:600;cursor:pointer;white-space:nowrap}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .hint{color:var(--mut);font-size:12px;margin:6px 2px}
+  #status{margin:12px 2px 8px;color:var(--mut);font-size:13px;min-height:18px}
+  .cols{display:grid;grid-template-columns:380px 1fr;gap:16px;margin-top:6px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px}
+  .panel h3{margin:0 0 10px;font-size:13px;color:var(--mut);font-weight:600;letter-spacing:.3px}
+  /* 過程步驟 */
+  .step{border-left:3px solid var(--bd);padding:6px 0 6px 10px;margin:8px 0;font-size:13px}
+  .step .lbl{font-weight:600}
+  .step.think{border-color:#a78bfa;color:#6d28d9}
+  .step.text{border-color:#94a3b8;color:#334155}
+  .step.tool{border-color:#2563eb}
+  .step.res{border-color:#16a34a}
+  .step code{background:#f0f3f7;padding:1px 5px;border-radius:4px;font-size:.88em;word-break:break-all}
+  .step details{margin-top:4px} .step summary{cursor:pointer;color:var(--mut)}
+  .step pre{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--bd);border-radius:6px;
+            padding:8px;margin:6px 0 0;max-height:240px;overflow:auto;font-size:12px}
+  /* 答案 */
+  .answer h1,.answer h2,.answer h3{margin:1em 0 .5em;line-height:1.3}
+  .answer h2{font-size:18px;border-bottom:1px solid var(--bd);padding-bottom:4px} .answer h3{font-size:16px}
+  .answer table{border-collapse:collapse;margin:10px 0;width:100%;font-size:14px}
+  .answer th,.answer td{border:1px solid var(--bd);padding:6px 10px;text-align:left} .answer th{background:#f0f3f7}
+  .answer code{background:#f0f3f7;padding:1px 5px;border-radius:4px;font-size:.9em}
+  .answer pre{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;overflow:auto}
+  .answer pre code{background:none;color:inherit}
+  .answer blockquote{margin:.6em 0;padding:.2em 12px;border-left:3px solid var(--accent);background:#f8fafc}
+  .answer:empty::before{content:"答案會顯示在這裡…";color:var(--mut);font-size:13px}
+  #fb{display:none;margin-top:14px;padding-top:12px;border-top:1px solid var(--bd);align-items:center;gap:8px;flex-wrap:wrap}
+  #fb.show{display:flex}
+  #fb .fbq{font-size:13px;color:var(--mut)}
+  .fbbtn{padding:5px 12px;background:#fff;color:var(--fg);border:1px solid var(--bd);border-radius:8px;font-size:13px;font-weight:500}
+  .fbbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .fbbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  #fbc{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--bd);border-radius:8px;font:inherit;font-size:13px}
+  #fbmsg{font-size:13px;color:#16a34a}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid #cbd5e1;border-top-color:var(--accent);
+        border-radius:50%;animation:r .8s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EU4 知識庫問答 <span class="sub" id="kbname">本地 RAG · 即時過程</span></h1>
+  <div class="ask">
+    <textarea id="q" placeholder="輸入問題，例如：貴族理念組有什麼加成？（Ctrl/⌘+Enter 送出）"></textarea>
+    <button id="go">送出</button>
+  </div>
+  <div class="hint">左側即時顯示 AI 的思考與用了哪些工具拿到什麼；右側是最終答案（附《文件名》出處）。</div>
+  <div id="status"></div>
+  <div class="cols">
+    <div class="panel"><h3>🧭 過程（思考 / 工具 / 結果）</h3><div id="process"></div></div>
+    <div class="panel"><h3>📝 答案</h3><div id="answer" class="answer"></div>
+      <div id="fb">
+        <span class="fbq">這個回答有幫助嗎？</span>
+        <button class="fbbtn" data-r="up">👍 有用</button>
+        <button class="fbbtn" data-r="down">👎 沒用</button>
+        <input id="fbc" maxlength="500" placeholder="補充說明（可選）">
+        <span id="fbmsg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const $ = s => document.querySelector(s);
+  const el = (h)=>{ const d=document.createElement('div'); d.innerHTML=h; return d.firstElementChild; };
+  function render(md){
+    if (window.marked){ try{ return marked.parse(md); }catch(e){} }
+    return '<pre style="white-space:pre-wrap;background:none;color:inherit;padding:0">'+md.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre>';
+  }
+  function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function addStep(cls, html){ const p=$('#process'); p.appendChild(el('<div class="step '+cls+'">'+html+'</div>')); p.scrollTop=p.scrollHeight; }
+
+  let answerBuf=''; let turnId=null;
+  function handle(ev){
+    if(ev.type==='start'){ if(ev.turn_id) turnId=ev.turn_id; addStep('text','<span class="lbl">▶ 開始處理…</span>'); }
+    else if(ev.type==='thinking'){ if(ev.text&&ev.text.trim()) addStep('think','💭 <span class="lbl">思考</span><br>'+esc(ev.text)); }
+    else if(ev.type==='text'){ if(ev.text){ answerBuf+=ev.text; $('#answer').innerHTML=render(answerBuf);
+                                            addStep('text','🗣 <span class="lbl">敘述</span>：'+esc(ev.text.slice(0,80))+(ev.text.length>80?'…':'')); } }
+    else if(ev.type==='tool_use'){ const internal=(ev.name==='ToolSearch');
+        const inp=esc(JSON.stringify(ev.input));
+        addStep(internal?'text':'tool',
+          (internal?'⚙ <span class="lbl">內部·載入工具</span> ':'🔧 <span class="lbl">呼叫工具</span> ')+
+          '<code>'+esc(ev.name)+'</code>'+(internal?'':'<br>參數 <code>'+inp+'</code>')); }
+    else if(ev.type==='tool_result'){ const c=(ev.content||'').trim();
+        const internal=(ev.name==='ToolSearch');
+        const body = c ? '<details'+(internal?'':' open')+'><summary>展開內容'+(ev.truncated?'（已截斷）':'')+'</summary><pre>'+esc(ev.content)+'</pre></details>'
+                       : '<span style="color:var(--mut)">（此步無文字內容）</span>';
+        addStep(internal?'text':'res',
+          (internal?'⚙':'📄')+' <span class="lbl">'+esc(ev.name||'工具')+' 回傳</span> '+body); }
+    else if(ev.type==='final'){ if(ev.answer){ answerBuf=ev.answer; $('#answer').innerHTML=render(answerBuf); }
+        if(ev.turn_id) turnId=ev.turn_id;
+        const tu=(ev.tools_used||[]).map(t=>t.replace('mcp__eu4-kb__',''));
+        $('#status').textContent='✓ 完成（用了 '+tu.length+' 次工具：'+(tu.join('、')||'無')+'）';
+        if(ev.answer && turnId) $('#fb').classList.add('show'); }
+    else if(ev.type==='error'){ $('#status').textContent='⚠ 錯誤：'+ev.error; addStep('text','⚠ '+esc(ev.error)); }
+  }
+
+  async function ask(){
+    const q=$('#q').value.trim(); if(!q) return;
+    $('#go').disabled=true; $('#process').innerHTML=''; $('#answer').innerHTML=''; answerBuf=''; turnId=null; resetFeedback();
+    $('#status').innerHTML='<span class="spin"></span>查詢中…（首次或冷啟可能 30–60 秒）';
+    const t0=Date.now();
+    try{
+      const resp=await fetch('ask_stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+      if(!resp.ok||!resp.body){ throw new Error('HTTP '+resp.status); }
+      const reader=resp.body.getReader(); const dec=new TextDecoder(); let buf='';
+      while(true){
+        const {done,value}=await reader.read(); if(done) break;
+        buf+=dec.decode(value,{stream:true}); let i;
+        while((i=buf.indexOf('\n'))>=0){ const line=buf.slice(0,i).trim(); buf=buf.slice(i+1);
+          if(line){ try{ handle(JSON.parse(line)); }catch(e){} } }
+      }
+      if(!$('#status').textContent.startsWith('✓')&&!$('#status').textContent.startsWith('⚠'))
+        $('#status').textContent='✓ 完成（'+((Date.now()-t0)/1000).toFixed(0)+' 秒）';
+    }catch(e){ $('#status').textContent='⚠ 連線失敗：'+e+'（後端 8781 / KB 服務 8766 是否都在跑？）'; }
+    $('#go').disabled=false;
+  }
+  function resetFeedback(){ $('#fb').classList.remove('show'); $('#fbc').value=''; $('#fbc').disabled=false; $('#fbmsg').textContent='';
+    document.querySelectorAll('.fbbtn').forEach(b=>{ b.disabled=false; b.classList.remove('on'); }); }
+  async function sendFeedback(rating, btn){
+    if(!turnId) return;
+    document.querySelectorAll('.fbbtn').forEach(b=>b.disabled=true); btn.classList.add('on'); $('#fbc').disabled=true;
+    try{
+      const r=await fetch('feedback',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({turn_id:turnId, rating, comment:$('#fbc').value.trim()})});
+      $('#fbmsg').textContent = r.ok ? '✓ 已記錄，謝謝' : '⚠ 記錄失敗';
+    }catch(e){ $('#fbmsg').textContent='⚠ 記錄失敗：'+e;
+      document.querySelectorAll('.fbbtn').forEach(b=>b.disabled=false); $('#fbc').disabled=false; btn.classList.remove('on'); }
+  }
+  document.querySelectorAll('.fbbtn').forEach(b=> b.onclick=()=>sendFeedback(b.dataset.r, b));
+  $('#go').onclick=ask;
+  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) ask(); });
+</script>
+</body>
+</html>
