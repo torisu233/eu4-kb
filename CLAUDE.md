@@ -63,8 +63,14 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 參考常見的 GitHub Actions → Cloud Run 流程設計，但因為架構差異很大
 （見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。完整設計記錄在
 （本機計劃文件）（GCP CI/CD部署計劃段落）。**服務已實際部署
-並用真實問題驗證通過**（`gcloud run services describe eu4-kb --region asia-northeast1`查URL；服務
-預設私有，需帶`Authorization: Bearer $(gcloud auth print-identity-token)`才能訪問）。
+並用真實問題驗證通過**（`gcloud run services describe eu4-kb --region asia-northeast1`查URL）。
+
+**訪問控制**：2026-07按用戶要求從"預設私有(需Google IAM身份)"改成**完全公開**
+(`--allow-unauthenticated`，`ci.yml`已固化這個設定，之後每次自動部署都會保持公開)——原本要求
+每個訪客都要有Google帳號+`gcloud`才能用，對一般用戶不友善。**用量/成本控管目前完全沒做**
+(`--max-instances 1`只是限制"最多同時1個實例"這個保底，不是真正的用量限制)，登入機制/rate limit
+之類的控管留到之後另外做，目前是有意識地先接受"任何人都能直接用、可能消耗個人Claude訂閱額度"這個
+風險換取可用性。
 
 ### 部署過程踩的3個真實坑（都在CI/CD實測中發現，不是憑空預想的）
 
