@@ -1,9 +1,17 @@
 name: CI
 
 # 觸發：推送到任何分支、或開 Pull Request 時都跑——壞了馬上知道。
+# 純文檔改動(*.md)不觸發：實測發現只改CLAUDE.md這種commit也會觸發整套build+deploy，
+# 把好端端一個warm的Cloud Run實例重新冷啟動一次，沒有必要。
 on:
   push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
 jobs:
   test:
@@ -78,6 +86,10 @@ jobs:
       # --max-instances 1：這是個人訂閱token驅動的服務，公開後更需要這個保底來限制併發，
       #   避免同一個 Claude 訂閱 OAuth token 被多請求同時搶用(注意：這不是速率限制，只是
       #   限制"最多同時起1個實例"，仍需要後續加真正的用量控管)。
+      # --cpu 2：原本預設只有1 vCPU，經CI/CD debug過程中的實測日誌證實——單次模型推理
+      #   (embedding編碼/reranker重排序)在1 vCPU下要花25~30秒，長到讓MCP Client端等不及
+      #   逾時斷線(ClientDisconnect)，這是"MCP經常沒有服務/很慢"的確認根因，加到2 vCPU緩解。
+      # --min-instances 暫不設(先只解決CPU瓶頸這一項，觀察效果，冷啟動問題之後視情況再處理)。
       - name: 部署 Cloud Run（創建或更新）
         run: |
           gcloud run deploy eu4-kb \
@@ -88,6 +100,7 @@ jobs:
             --add-volume-mount volume=kbdata,mount-path=/mnt/kb-data \
             --set-secrets "CLAUDE_CODE_OAUTH_TOKEN=${{ vars.GCP_OAUTH_SECRET_NAME }}:latest" \
             --allow-unauthenticated \
+            --cpu 2 \
             --max-instances 1 \
             --timeout 600 \
             --memory 4Gi
