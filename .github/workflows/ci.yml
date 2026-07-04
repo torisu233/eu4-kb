@@ -72,9 +72,12 @@ jobs:
       # --add-volume/--add-volume-mount：把持久化的 GCS bucket(kb 資料)掛進容器，
       #   容器內 entrypoint.sh 讀 EU4_KBS_DIR 指向掛載路徑，資料更新不需要重新部署。
       # --set-secrets：CLAUDE_CODE_OAUTH_TOKEN 走 Secret Manager(非明文 --set-env-vars)。
-      # --max-instances 1：這是個人/小圈子訂閱token驅動的服務，不做成可橫向擴展的公開產品，
-      #   避免同一個 Claude 訂閱 OAuth token 被多實例並發消耗。
-      # 不加 --allow-unauthenticated：預設私有，個人存取用 `gcloud run services proxy`。
+      # --allow-unauthenticated：2026-07按用戶要求改為公開(不需要Google身份就能訪問)，
+      #   因為原本"要求Google IAM授權"對一般用戶不友善；真正的用量/成本控管以後另外做
+      #   (如登入機制/rate limit)，目前只靠 --max-instances 1 這個保底(見下)。
+      # --max-instances 1：這是個人訂閱token驅動的服務，公開後更需要這個保底來限制併發，
+      #   避免同一個 Claude 訂閱 OAuth token 被多請求同時搶用(注意：這不是速率限制，只是
+      #   限制"最多同時起1個實例"，仍需要後續加真正的用量控管)。
       - name: 部署 Cloud Run（創建或更新）
         run: |
           gcloud run deploy eu4-kb \
@@ -84,6 +87,7 @@ jobs:
             --add-volume name=kbdata,type=cloud-storage,bucket="${{ vars.GCP_KB_BUCKET }}" \
             --add-volume-mount volume=kbdata,mount-path=/mnt/kb-data \
             --set-secrets "CLAUDE_CODE_OAUTH_TOKEN=${{ vars.GCP_OAUTH_SECRET_NAME }}:latest" \
+            --allow-unauthenticated \
             --max-instances 1 \
             --timeout 600 \
             --memory 4Gi
