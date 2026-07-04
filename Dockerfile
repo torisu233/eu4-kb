@@ -13,10 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg ca-c
     && apt-get purge -y curl gnupg && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-# 先裝依賴(碼變依賴沒變時走快取層)。torch 走 CPU-only index，不放進 requirements.txt。
+# 先裝依賴(碼變依賴沒變時走快取層)。torch 必須**先**裝CPU-only wheel再裝requirements.txt——
+# sentence-transformers依賴torch(無版本限定)，順序反過來的話pip會先從預設PyPI源抓GPU版
+# torch(現在預設會帶一整套nvidia-cu*/cuda-toolkit依賴，好幾GB)，把runner磁碟塞爆
+# (實測CI上直接因為這個順序錯誤導致 OSError: No space left on device)。CPU版先裝好，
+# 之後requirements.txt解析torch依賴時視為已滿足，不會再去抓GPU版。
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+    && pip install --no-cache-dir -r requirements.txt
 
 # 源碼(不含 kbs/ 資料、.venv、fundamentals_src 以外的建置腳本不需要在 serving 鏡像裡，
 # 但 fundamentals_extract.py 依賴 kb/ 套件，一併拷入無妨，體積很小)
