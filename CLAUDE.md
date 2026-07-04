@@ -58,11 +58,34 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 .\.venv\Scripts\python.exe check_kb.py --kb eu4
 ```
 
-## 部署（GCP Cloud Run，2026-07新增）
+## 部署（GCP Cloud Run，2026-07，已上線驗證）
 
 參考常見的 GitHub Actions → Cloud Run 流程設計，但因為架構差異很大
 （見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。完整設計記錄在
-（本機計劃文件）（GCP CI/CD部署計劃段落）。
+（本機計劃文件）（GCP CI/CD部署計劃段落）。**服務已實際部署
+並用真實問題驗證通過**（`gcloud run services describe eu4-kb --region asia-northeast1`查URL；服務
+預設私有，需帶`Authorization: Bearer $(gcloud auth print-identity-token)`才能訪問）。
+
+### 部署過程踩的3個真實坑（都在CI/CD實測中發現，不是憑空預想的）
+
+1. **requirements.txt裡`sentence-transformers`拉torch的順序問題**：`pip install -r requirements.txt`
+   若先跑，pip解析`sentence-transformers`對torch的依賴時會去預設PyPI源抓**GPU版**torch(現在預設
+   附帶一整套`nvidia-cu*`/`cuda-toolkit`依賴，好幾GB)，把CI runner磁碟撐爆(`OSError: No space left
+   on device`)。**解法**：Dockerfile裡先單獨裝CPU-only wheel(`--index-url .../whl/cpu`)，
+   再裝`requirements.txt`，這樣pip解析時視torch已滿足，不會再抓GPU版。
+2. **模型預熱快取的使用者不匹配**：一開始在`useradd`/`USER app`**之前**(root身份)預熱下載
+   embedding/reranker模型，快取進了`/root/.cache`；但容器實際serving是`USER app`
+   (`/home/app/.cache`，全新空目錄)，導致**預熱完全沒用**，Cloud Run容器啟動時重新下載2.2GB的
+   reranker——而Cloud Run的可寫檔案系統是從記憶體配額扣的，下載失敗+直接OOM，`kb_mcp_server.py`
+   從未啟動成功，問答後端連不上MCP工具、只能用通用知識瞎答。
+3. **modifying 大檔案的chown觸發overlay檔案系統copy-up**：踩坑2的直覺修法是"下載完(root寫入)後
+   補一句`chown -R app`"，但overlay檔案系統對已存在於下層的大檔案做**任何**metadata變更(chown/chmod)
+   常會把整個檔案copy-up到新層，對2.27GB的reranker做chown等於憑空多佔一份幾GB空間，又把CI runner
+   磁碟撐爆。**正解**：`useradd`+對(還是空的)快取目錄`chown`要在下載模型**之前**做，然後
+   `USER app`切換後才下載——模型檔案從誕生那一刻就屬於`app`，永遠不需要之後再對大檔案動owner/權限。
+
+這三個坑的教訓：**任何"先用root做某件事、之後再chown給執行期用戶"的Dockerfile寫法都要小心**——
+要嘛在下載/生成大檔案前就切換好使用者，要嘛接受"這一層必然要對大檔案做metadata操作"進而預留足夠磁碟。
 
 **容器架構**：單一 Dockerfile，`kb_mcp_server.py` 當內部背景進程(只聽127.0.0.1，不對外)，
 `kb_answer_backend.py` 當主進程接管 Cloud Run 注入的 `$PORT`，`entrypoint.sh` 負責編排順序
