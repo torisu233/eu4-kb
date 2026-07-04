@@ -28,24 +28,25 @@ COPY kb/ ./kb/
 COPY clausewitz/ ./clausewitz/
 COPY renderers/ ./renderers/
 COPY wiki/ ./wiki/
-COPY kb_mcp_server.py kb_answer_backend.py kb_ui.html ./
+COPY kb_mcp_server.py kb_answer_backend.py kb_ui.html entrypoint.sh ./
+RUN chmod +x entrypoint.sh
 
-# 預熱下載 embedding + reranker 模型進鏡像層，避免 Cloud Run 冷啟動時現拉(reranker ~2.2GB，
-# 實測本機首次下載約需數分鐘，容器內現拉會拖慢/拖不穩每次冷啟動，且Cloud Run可寫檔案系統是從
-# 記憶體配額扣的，現拉大檔案很容易把記憶體撐爆)。
-# 關鍵：HF_HOME 固定成一個之後任何使用者都能讀到的路徑，且要在「切換到執行期用戶」之前就設好——
-# 之前踩過的坑：這段RUN在useradd/USER app之前跑(此時是root)，快取進了/root/.cache，
-# 但實際serving時是USER app(/home/app/.cache，全新空目錄)，導致預熱完全沒用、運行時重新下載
-# 觸發 Cloud Run 記憶體/磁碟耗盡。改成固定路徑+之後chown給app，兩邊用同一份快取。
+# 建執行期用戶，並「在下載大模型檔案之前」就讓它擁有 /app 和快取路徑——踩過兩次坑才定案:
+# ① 若在useradd/USER app之前(root身份)下載模型，快取進/root/.cache，實際serving時是
+#    USER app(/home/app/.cache全新空目錄)讀不到，導致Cloud Run運行時重新下載觸發OOM。
+# ② 若下載完模型(root寫入)後才補一句chown -R給app，overlay檔案系統對已存在的大檔案做
+#    metadata變更常會整份copy-up到新層，等於憑空多佔一份好幾GB的空間，CI runner磁碟被
+#    這個chown動作本身撐爆(觀察到的錯誤是"No space left on device"發生在chown那一步)。
+# 正解：先建用戶+空目錄的chown(此時目錄是空的，chown很便宜)，之後直接切換USER app再下載，
+# 模型檔案從誕生那一刻起就屬於app，不需要之後再對大檔案做任何owner/權限異動。
 ENV HF_HOME=/opt/hf-cache
-RUN mkdir -p "$HF_HOME" \
-    && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
-    && python -c "from sentence_transformers import CrossEncoder; CrossEncoder('BAAI/bge-reranker-v2-m3')"
-
-COPY entrypoint.sh ./
-RUN chmod +x entrypoint.sh \
-    && useradd -m app && chown -R app /app "$HF_HOME"
+RUN useradd -m app \
+    && mkdir -p "$HF_HOME" \
+    && chown -R app /app "$HF_HOME"
 USER app
+
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
+    && python -c "from sentence_transformers import CrossEncoder; CrossEncoder('BAAI/bge-reranker-v2-m3')"
 
 # Cloud Run 預設從 8080 注入 PORT；問答後端監聽 0.0.0.0 才能從容器外訪問(kb_answer_backend.py
 # 的 HOST 讀 KB_ANSWER_HOST，entrypoint.sh 會設成 0.0.0.0)。
