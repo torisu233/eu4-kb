@@ -127,7 +127,7 @@ gcloud secrets add-iam-policy-binding "$OAUTH_SECRET" \
 | `GCP_DEPLOY_SA` | `$DEPLOY_SA_EMAIL` |
 | `GCP_RUN_SA` | `$RUN_SA_EMAIL` |
 | `GCP_KB_BUCKET` | `$KB_BUCKET` |
-| `GCP_OAUTH_SECRET_NAME` | `projects/$PROJECT_ID/secrets/$OAUTH_SECRET`（Cloud Run `--set-secrets` 引用格式） |
+| `GCP_OAUTH_SECRET_NAME` | `$OAUTH_SECRET`(裸密鑰ID即可，如`claude-code-oauth-token`；**實測`--set-secrets`不接受`projects/<字串PROJECT_ID>/secrets/...`這種完整路徑**，報`is not a valid secret name`，同專案內直接用短名稱) |
 
 不需要在 GitHub 存 `CLAUDE_CODE_OAUTH_TOKEN` 本身——它已經進了 Secret Manager，Cloud Run 部署時
 直接用 `GCP_OAUTH_SECRET_NAME` 引用，不會出現在GitHub Actions的日誌或環境裡。
