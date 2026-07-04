@@ -1,0 +1,3 @@
+# CI/本機測試用；-r requirements.txt 帶入完整運行期依賴(torch 除外，見 Dockerfile 註解)
+-r requirements.txt
+pytest==8.3.4

@@ -1,0 +1,13 @@
+.git
+.venv
+kbs/
+cache/
+feedback/
+fundamentals_src/
+__pycache__/
+*.pyc
+.env
+_*.log
+_*.pid
+tests/
+docs/

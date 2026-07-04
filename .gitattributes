@@ -1,0 +1,3 @@
+# entrypoint.sh 會被拷進Linux容器裡直接執行，強制LF——CRLF會讓 /bin/sh 報 bad interpreter。
+*.sh text eol=lf
+Dockerfile text eol=lf

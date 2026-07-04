@@ -20,7 +20,9 @@ except Exception:
     pass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # ...\eu4-kb
-KBS_DIR = os.path.join(ROOT, "kbs")
+# 部署場景(Cloud Run)可能把 kbs/ 換成掛載的 GCS bucket 路徑(如 /mnt/kb-data)，
+# 用環境變數覆蓋、預設值不變，本機/現有流程無感。
+KBS_DIR = os.environ.get("EU4_KBS_DIR") or os.path.join(ROOT, "kbs")
 DEFAULT_EMBED_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
 
 def kb_path(name): return os.path.join(KBS_DIR, name)

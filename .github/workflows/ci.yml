@@ -1,0 +1,92 @@
+name: CI
+
+# 觸發：推送到任何分支、或開 Pull Request 時都跑——壞了馬上知道。
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: pytest（最小冒煙，無外部資料庫依賴）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      # 冒煙測試會實際下載一次 embedding 模型(sentence-transformers，非reranker，較小)驗證
+      # chunk/embed/lance 流水線真的能跑，故裝完整 requirements-dev.txt(含 requirements.txt)；
+      # 不需要 torch 的 CPU wheel(embed 模型走 sentence-transformers 預設後端已夠測試用)。
+      - name: 安裝依賴
+        run: pip install -r requirements-dev.txt
+
+      - name: 跑 pytest（冒煙測試：import + 合成假資料全流程 + kb_mcp_server 連通性）
+        run: pytest tests/ -v
+
+      # 只 build、不 push、不碰 GCP——驗證 Dockerfile 本身能不能成功構建(裝Node/npm裝claude-code
+      # CLI/預熱下載模型等一長串步驟)。本機無法裝Docker(BIOS未開硬體虛擬化)，故把這一步驗證
+      # 挪到CI的Linux runner上做，任何分支push都會跑，deploy job才需要master。
+      - name: 驗證 Dockerfile 能否構建(僅build，不push/不部署)
+        run: docker build -t eu4-kb-build-check:ci .
+
+  # 測試過了、且是 master 時：build 鏡像推 Artifact Registry → 部署 Cloud Run(push→自動上雲)。
+  # 注意：這裡只部署「代碼」——kbs/eu4/ 知識庫資料本身不在鏡像裡、也不在這個 pipeline 裡更新，
+  # 資料更新是本地跑完 kb.build_all 全量重建後手動 `gcloud storage rsync` 到 GCS bucket，
+  # 因為 CI 機器既沒有 Steam 遊戲檔案、也不該跑 40-50 分鐘的 embedding 重建。
+  deploy:
+    name: build & deploy 到 Cloud Run
+    needs: test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write     # 用 WIF 換 GCP 臨時憑證(無長期密鑰)
+      contents: read
+    env:
+      IMAGE: ${{ vars.GCP_IMAGE }}   # 形如 <region>-docker.pkg.dev/<project>/eu4-kb/eu4-kb
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        name: 經 Workload Identity Federation 取得 GCP 憑證
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+
+      - name: 安裝 gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Docker 認證 Artifact Registry
+        run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: build + push（tag：latest 與 git sha）
+        run: |
+          docker build -t "$IMAGE:latest" -t "$IMAGE:${{ github.sha }}" .
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:${{ github.sha }}"
+
+      # 部署剛 build 的那個 sha(精確部署本次產物，不靠 latest)。
+      # --add-volume/--add-volume-mount：把持久化的 GCS bucket(kb 資料)掛進容器，
+      #   容器內 entrypoint.sh 讀 EU4_KBS_DIR 指向掛載路徑，資料更新不需要重新部署。
+      # --set-secrets：CLAUDE_CODE_OAUTH_TOKEN 走 Secret Manager(非明文 --set-env-vars)。
+      # --max-instances 1：這是個人/小圈子訂閱token驅動的服務，不做成可橫向擴展的公開產品，
+      #   避免同一個 Claude 訂閱 OAuth token 被多實例並發消耗。
+      # 不加 --allow-unauthenticated：預設私有，個人存取用 `gcloud run services proxy`。
+      - name: 部署 Cloud Run（創建或更新）
+        run: |
+          gcloud run deploy eu4-kb \
+            --image "$IMAGE:${{ github.sha }}" \
+            --region "${{ vars.GCP_REGION }}" \
+            --service-account "${{ vars.GCP_RUN_SA }}" \
+            --add-volume name=kbdata,type=cloud-storage,bucket="${{ vars.GCP_KB_BUCKET }}" \
+            --add-volume-mount volume=kbdata,mount-path=/mnt/kb-data \
+            --set-secrets "CLAUDE_CODE_OAUTH_TOKEN=${{ vars.GCP_OAUTH_SECRET_NAME }}:latest" \
+            --max-instances 1 \
+            --timeout 600 \
+            --memory 2Gi
+
+      - name: 打印服務 URL
+        run: gcloud run services describe eu4-kb --region "${{ vars.GCP_REGION }}" --format='value(status.url)'

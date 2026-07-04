@@ -58,6 +58,36 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 .\.venv\Scripts\python.exe check_kb.py --kb eu4
 ```
 
+## 部署（GCP Cloud Run，2026-07新增）
+
+參考常見的 GitHub Actions → Cloud Run 流程設計，但因為架構差異很大
+（見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。完整設計記錄在
+（本機計劃文件）（GCP CI/CD部署計劃段落）。
+
+**容器架構**：單一 Dockerfile，`kb_mcp_server.py` 當內部背景進程(只聽127.0.0.1，不對外)，
+`kb_answer_backend.py` 當主進程接管 Cloud Run 注入的 `$PORT`，`entrypoint.sh` 負責編排順序
+(起MCP→輪詢等就緒→exec問答後端)。這兩個服務原本就用 `KB_MCP_URL`/`KB_ANSWER_PORT` 環境變數連接，
+部署不需要改這兩支程式的代碼。
+
+**知識庫數據持久化**：`kbs/eu4/`(210MB，含LanceDB)**不進Docker鏡像、不進git**——這份數據只能在
+本機花40-50分鐘+需要Steam遊戲安裝目錄才能重建，CI機器做不到也不該做。改用 **GCS bucket + Cloud Run
+原生Volume Mount**：本地重建完後 `gcloud storage rsync -r kbs/eu4 gs://<bucket>/eu4
+--exclude ".*emb/.*"` 同步上去即可，容器內 `EU4_KBS_DIR`(新增的環境變數，見`kb/common.py`)指向
+掛載路徑，**更新數據不需要重新部署代碼**。這樣資料在GCP Console的Cloud Storage瀏覽器裡可以直接
+查看(manifest.jsonl/INDEX.md/tree.json都是人類可讀文字)。
+
+**與典型單服務部署的關鍵差異**：① 典型單服務部署用Postgres(Cloud SQL)，eu4-kb用本地文件型LanceDB，數據"能不能在
+CI裡建"這件事完全不同；② 典型單服務部署單一FastAPI服務，eu4-kb是MCP server+問答後端兩個獨立HTTP服務，合併
+進一個容器解決；③ `CLAUDE_CODE_OAUTH_TOKEN`是個人訂閱token非按量計費API key，本服務定位為
+"個人/小圈子私有"(`--max-instances 1`、預設不開放匿名訪問)而非典型單服務部署那種可橫向擴展的公開產品；
+④ eu4-kb目前零自動化測試，新增了`tests/test_smoke.py`最小冒煙測試(import檢查+合成假數據跑一遍
+build_all全流程+kb_mcp_server連通性)作為部署前質量閘門，不追求覆蓋率。
+
+**一次性GCP手動設置**（建Artifact Registry/GCS bucket/Workload Identity Federation/Secret Manager/
+IAM角色）見 `docs/gcp_setup.md`，需要你自己的GCP帳號權限執行，我沒辦法代做。GitHub倉庫需要配置的
+Variables：`GCP_IMAGE`/`GCP_REGION`/`GCP_WIF_PROVIDER`/`GCP_DEPLOY_SA`/`GCP_RUN_SA`/`GCP_KB_BUCKET`/
+`GCP_OAUTH_SECRET_NAME`。
+
 ## 資料現狀（2026-07）
 
 2604篇文檔（1883 wiki + 714 game_file + 7 fundamentals）→ ~37300+個chunk。game_file 是 **PoC範圍**：僅
