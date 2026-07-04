@@ -16,8 +16,9 @@
   python -m kb.build_all --kb eu4 --stages organize,index,tree
 
 階段(--stages，逗號分隔；預設 all)：
-  wiki_extract  MediaWiki API 抓取全站頁面 → 清洗 → docs/*.md + manifest.jsonl(source=wiki)
-  game_extract  解析遊戲檔案(Clausewitz腳本) → 渲染 → docs/*.md + manifest.jsonl(source=game_file)
+  wiki_extract          MediaWiki API 抓取全站頁面 → 清洗 → docs/*.md + manifest.jsonl(source=wiki)
+  game_extract          解析遊戲檔案(Clausewitz腳本) → 渲染 → docs/*.md + manifest.jsonl(source=game_file)
+  fundamentals_extract  手寫「EU4基礎知識」源文件(fundamentals_src/*.md) → docs/*.md + manifest.jsonl(source=fundamentals)
   chunk         .md → chunks.jsonl（⚠ 會清空舊 emb/ 與 lancedb/ 待重建）
   embed         chunks → emb/seg_*.npy（可續跑；中斷重跑只補缺段）
   lance         emb → LanceDB 向量表
@@ -32,7 +33,7 @@ import argparse, sys, time
 from . import common
 from . import build as _build
 
-ALL_STAGES = ["wiki_extract", "game_extract", "chunk", "embed", "lance", "organize", "index", "tree"]
+ALL_STAGES = ["wiki_extract", "game_extract", "fundamentals_extract", "chunk", "embed", "lance", "organize", "index", "tree"]
 
 def main():
     ap = argparse.ArgumentParser(description="EU4 知識庫建置管線（一鍵串接）",
@@ -48,6 +49,8 @@ def main():
     ap.add_argument("--game-dir", default=None, help="EU4 遊戲安裝目錄（game_extract 階段必需）")
     ap.add_argument("--entity-types", default=None, help="限定處理的實體類別(逗號分隔，如 ideas,government_reforms,country_history)；不給則跑全部已實作類別")
     ap.add_argument("--country-filter", default=None, help="限定 country_history 等按國家切分的實體只處理指定國家tag(逗號分隔)")
+    # fundamentals_extract 專屬
+    ap.add_argument("--fundamentals-src-dir", default=None, help="fundamentals源md目錄(預設 fundamentals_src/)")
     a = ap.parse_args()
 
     name = a.kb.strip()
@@ -82,6 +85,10 @@ def main():
         common.save_config(name, {**cfg, "name": name, "system": name, "embed_model": embed_model,
                                   "game_dir": game_dir})
         cfg = common.load_config(name)
+    if "fundamentals_extract" in stages:
+        print("\n=== fundamentals_extract ===", flush=True)
+        from . import fundamentals_extract as _fundamentals_extract
+        _fundamentals_extract.run(name, src_dir=a.fundamentals_src_dir)
     if "chunk" in stages:
         print("\n=== chunk ===", flush=True); _build.run_chunk(name)
     if "embed" in stages:

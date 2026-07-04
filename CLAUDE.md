@@ -9,17 +9,18 @@
 ```
                                                           ┌─ Wiki (MediaWiki API, wikitext)
 kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 OAuth token 認證(非 API key)
-                   │  Claude Agent SDK，白名單 7 個 KB 工具   │
+                   │  Claude Agent SDK，白名單 7 個 KB 工具   │  SYSTEM提示詞含「EU4整體遊戲地圖」(Tier 0)+「內容分層判斷規則」濃縮版
                    ▼                                       │
               KB MCP server :8766 (kb_mcp_server.py)        │
                    │  混合檢索：向量(LanceDB) + 英文BM25(RRF融合，可選reranker) │
                    ▼                                       │
               kbs/eu4/  單一統一知識庫                        │
-                   每個 chunk: source=wiki|game_file          │
+                   每個 chunk: source=wiki|game_file|fundamentals │
                               entity_category/wiki_category   │
-                   ▲                                          │
-        wiki_extract.py              game_extract.py          │
-     (MediaWiki API 抓取+清洗)   (Clausewitz腳本解析+規則翻譯) ← 遊戲安裝目錄
+                   ▲                                          │            ┌ fundamentals_src/*.md
+        wiki_extract.py              game_extract.py          │            │ (手寫遊戲常識框架文檔)
+     (MediaWiki API 抓取+清洗)   (Clausewitz腳本解析+規則翻譯) ← 遊戲安裝目錄  │
+                                                            fundamentals_extract.py ┘
 ```
 
 ## 套件結構
@@ -29,6 +30,7 @@ kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 
 | `kb/common.py` | 環境穩定性修正、路徑/設定(複用自前身專案) |
 | `kb/wiki_extract.py` + `wiki/` | MediaWiki API列舉/抓取(`mw_client.py`)、模板剝離+表格轉換(`wikitext_clean.py`/`wikitable.py`) |
 | `kb/game_extract.py` + `clausewitz/` + `renderers/` | Clausewitz腳本解析(`tokenizer.py`/`parser.py`)、本地化(`localisation.py`)、宏展開(`macro_expand.py`)、trigger/effect規則翻譯(`translate_rules.py`)、實體渲染器 |
+| `kb/fundamentals_extract.py` + `fundamentals_src/` | 手寫「EU4遊戲常識框架」源md(簡單title/category frontmatter) → docs/*.md + manifest(`source=fundamentals`，`doc_id`前綴`f-`) |
 | `kb/build.py` | chunk(段落+標題感知切塊)/embed/lance/organize(分類統計+向量最近鄰)/index/tree |
 | `kb/searcher.py` | 混合檢索器：向量+英文BM25→RRF→可選reranker→去重 |
 | `kb_mcp_server.py` | 7個MCP工具 |
@@ -43,7 +45,8 @@ kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 
 # 分階段建庫(可組合，見 kb/build_all.py 開頭docstring)
 python -m kb.build_all --kb eu4 --stages wiki_extract                                    # 全站wiki(cache-based,快)
 python -m kb.build_all --kb eu4 --stages game_extract --entity-types ideas,government_reforms,country_history --country-filter MNG --game-dir "C:\Program Files (x86)\Steam\steamapps\common\Europa Universalis IV"
-python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree            # 下游全量重建(embed慢,~40-50分鐘/37000+chunk)
+python -m kb.build_all --kb eu4 --stages fundamentals_extract                             # 只重跑fundamentals_src/*.md(快，秒級)
+python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree            # 下游全量重建(embed慢,~40-50分鐘/37000+chunk；改一個字都要全量重跑，見下方已知坑)
 
 # 不經MCP/Claude直接測檢索
 .\.venv\Scripts\python.exe test_search.py
@@ -57,13 +60,46 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 
 ## 資料現狀（2026-07）
 
-2597篇文檔（1883 wiki + 714 game_file）→ ~37300個chunk。game_file 是 **PoC範圍**：僅
+2604篇文檔（1883 wiki + 714 game_file + 7 fundamentals）→ ~37300+個chunk。game_file 是 **PoC範圍**：僅
 ideas(25個理念組全量) + government_reforms(688個全量) + country_history(僅明朝Ming 1國)。
 missions/events/decisions/province_history **完全未抽取**，是最大的已知覆蓋缺口，按規劃等
 `feedback/turns.jsonl` 累積真實查詢日誌後再數據驅動決定優先級。
 
+`fundamentals`是2026-07新增的第三種`source`，內容是**手寫的遊戲常識框架文檔**(非wiki/game_file
+自動抽取)，解決"AI有碎片事實但缺整體判斷框架"問題，採用**兩層設計**：
+- **Tier 0**：寫死在`kb_answer_backend.py`的SYSTEM提示詞裡的「EU4整體遊戲地圖」段落，不依賴檢索，
+  約550字內講完6大板塊(國力引擎/經濟殖民/戰爭擴張戰略層/內政治理/對外關係/戰鬥戰術層，前5個對照
+  wiki自帶的`Mechanics`權威分類頁w-d4a20ddcf4劃分，第6個戰術層是後續補充)。
+- **Tier 1**：`fundamentals_src/`下7篇檢索文檔，每篇嚴格400-600字、邊緣情況一句話帶過、結尾指回
+  1-2個wiki doc_id：`01_growth_engine`(國力引擎，含Institutions)、`02_economy_and_colonization`
+  (經濟殖民)、`03_war_and_expansion`(戰爭擴張戰略層，含Aggressive Expansion→Coalition)、
+  `04_internal_governance`(內政治理，政體/等級/改革層級三軸精簡版)、`05_diplomacy_and_subjects`
+  (外交附庸，含HRE)、`06_content_layering_and_reachability`(AI判斷規則，見下方"已知坑")、
+  `07_combat_basics`(戰鬥戰術層：三日火力/衝擊循環、兵種配比、包圍、地形/渡河懲罰、士氣紀律——
+  和03的"要不要開戰"戰略層是不同層次)。
+
+這是v2版本，取代了2026-07初版(君主點數/國家等級/術語表3篇獨立文檔)——初版被發現「理解不到位、
+缺乏重點」(邊緣情況寫太多，Institutions/Coalition這類真正高頻機制反而漏掉)，診斷後改成對照wiki自帶
+`Mechanics`分類骨架 + 外部教程/玩家討論交叉驗證的兩層設計；`07_combat_basics`是v2上線後翻出本輪
+早前(對話壓縮前)已完成的兩個背景調研代理完整報告、逐條核對v2覆蓋度後補的第7篇。
+
 ## ⚠ 已知坑（踩過的，務必先看）
 
+- **AI把「國家專屬內容」誤答成「通用內容」**：真實bug，問"一個普通的遜尼派君主制國家該怎麼獲得全騎兵
+  部隊"時，agent連續24次工具調用仍給不出可信答案，把某特定小國的專屬任務獎勵當成通用答案呈現
+  (`feedback/turns.jsonl`有記錄)。根因：EU4內容是**通用默認→地區/宗教/文化/科技組共享池→國家專屬**
+  三層覆蓋結構(遊戲文件用`potential={tag=X}`/`generic=yes/no`精確編碼)，專屬內容還要再判斷"是否有
+  建國決議(Form Xxx Nation)可達、達成條件是否群體性可滿足"，但知識庫沒把這套邏輯提煉給AI。解法：
+  `doc_type=fundamentals`的`06_content_layering_and_reachability.md`(判斷步驟+識別信號表)
+  + `kb_answer_backend.py`的SYSTEM提示詞插入濃縮版判斷規則(不依賴檢索觸發，常駐生效)。
+  **教訓**：遇到"具體問法答錯"類bug，先判斷是缺一條事實還是缺一套判斷框架——同類誤判模式反覆出現時，
+  補框架性文檔/規則比逐case補資料划算。
+- **寫「基礎知識/常識」類內容要對照權威分類骨架，不能靠自己直覺挑重點**：fundamentals初版(君主點數/
+  國家等級/術語表)被發現「理解不到位、缺乏重點」——邊緣情況(HRE選帝侯等級上限等)寫了很多，但
+  Institutions(未接納制度科技成本暴漲)、Aggressive Expansion→Coalition(擴張失控被反制聯合國)這兩個
+  真正高頻高殺傷的機制完全沒寫。後來查到wiki自己有一篇`Mechanics`總覽頁(w-d4a20ddcf4)把全部機制分成
+  5大類，這種"社群自己沉澱的分類法"比自己憑感覺挑主題可靠得多。**教訓**：寫這類內容前先找該領域有沒有
+  現成的權威分類骨架，用它核對覆蓋面，篇幅分配以"真實高頻"為準，不是"我恰好查到了細節"。
 - **標題正則的貪婪`\s*`bug**：`convert_headings()`裡若用`\s*$`當邊界，`\s`會吃掉換行，在`re.M`下
   貪婪比對會把標題後面所有空行一併吃進match，替換後標題跟緊接內容黏成一段、切塊器抓不到這層
   heading_path。教訓：正則邊界符號只能用`[ \t]*`(水平空白)，不能用`\s*`。**且不能指望來源wikitext
@@ -78,6 +114,18 @@ missions/events/decisions/province_history **完全未抽取**，是最大的已
 - **chunk階段透傳所有manifest欄位**：`run_chunk()`把manifest記錄(除`abs_path`/`extract_status`/`chars`
   等內部欄位)原樣複製進chunk dict，LanceDB建表自動跟著欄位走。新增資料源/新增分類欄位**不需要改
   chunk/lance/search任何程式碼**，只要extractor在manifest裡塞新欄位即可。
+- **為什麼「只改幾篇fundamentals文檔」也要觸發全量~40分鐘重建**：`run_chunk()`(`kb/build.py:129`)
+  每次都把`chunks.jsonl`從整個`manifest.jsonl`重新生成一遍(非增量追加)，生成完unconditional執行
+  `shutil.rmtree(emb/); shutil.rmtree(lancedb/)`(`build.py:155-156`)——只要chunk被重新生成過，
+  一律清空下游，不做"這次到底哪些內容真的變了"的精細判斷。而`run_embed()`的向量快取是**按位置分段**
+  (`seg_00000.npy`=第0-255號chunk、`seg_00001.npy`=第256-511號…)、不是按內容雜湊定址，`emb/`一旦
+  被清空，所有段都變成待算，於是3萬7千+個chunk全部要重新跑一次embedding模型(這是真正的耗時來源，
+  純計算密集)。`organize`的向量最近鄰(`related_docs`用)本質上是全語料庫兩兩相似度矩陣，就算流水線設計
+  成增量，這一步理論上也繞不開全量重算。**結論**：SYSTEM提示詞(在`kb_answer_backend.py`裡，是獨立
+  Python字符串，改了只需重啟該進程，和knowledge base完全無關)本身從不需要重建；只有動了
+  `fundamentals_src/`等會改變manifest的內容才會連鎖觸發這整套全量重建。這是PoC階段"正確性優先、
+  工程量最小"換來的技術債，未來若要支援高頻增量更新知識庫，需要把embedding快取改成內容定址而非
+  位置定址，才能只算真正新增/變更的chunk。
 - **`organize`不用KMeans**：診斷過對這份已有清晰分類(entity_category/wiki_category)的資料，KMeans
   聚類等於花力氣重新(且更粗糙地)發現已知分類。改成確定性的 source×doc_type 分類統計，向量最近鄰
   (供`related_docs`)保留(這部分是獨立信號，仍有真實語義價值，如Ming的向量近鄰是Chinese Kingdom/
