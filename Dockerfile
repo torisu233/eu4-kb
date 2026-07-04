@@ -31,13 +31,20 @@ COPY wiki/ ./wiki/
 COPY kb_mcp_server.py kb_answer_backend.py kb_ui.html ./
 
 # 預熱下載 embedding + reranker 模型進鏡像層，避免 Cloud Run 冷啟動時現拉(reranker ~2.2GB，
-# 實測本機首次下載約需數分鐘，容器內現拉會拖慢/拖不穩每次冷啟動)。
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
+# 實測本機首次下載約需數分鐘，容器內現拉會拖慢/拖不穩每次冷啟動，且Cloud Run可寫檔案系統是從
+# 記憶體配額扣的，現拉大檔案很容易把記憶體撐爆)。
+# 關鍵：HF_HOME 固定成一個之後任何使用者都能讀到的路徑，且要在「切換到執行期用戶」之前就設好——
+# 之前踩過的坑：這段RUN在useradd/USER app之前跑(此時是root)，快取進了/root/.cache，
+# 但實際serving時是USER app(/home/app/.cache，全新空目錄)，導致預熱完全沒用、運行時重新下載
+# 觸發 Cloud Run 記憶體/磁碟耗盡。改成固定路徑+之後chown給app，兩邊用同一份快取。
+ENV HF_HOME=/opt/hf-cache
+RUN mkdir -p "$HF_HOME" \
+    && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
     && python -c "from sentence_transformers import CrossEncoder; CrossEncoder('BAAI/bge-reranker-v2-m3')"
 
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh \
-    && useradd -m app && chown -R app /app
+    && useradd -m app && chown -R app /app "$HF_HOME"
 USER app
 
 # Cloud Run 預設從 8080 注入 PORT；問答後端監聽 0.0.0.0 才能從容器外訪問(kb_answer_backend.py

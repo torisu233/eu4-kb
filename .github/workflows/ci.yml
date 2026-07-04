@@ -86,7 +86,7 @@ jobs:
             --set-secrets "CLAUDE_CODE_OAUTH_TOKEN=${{ vars.GCP_OAUTH_SECRET_NAME }}:latest" \
             --max-instances 1 \
             --timeout 600 \
-            --memory 2Gi
+            --memory 4Gi
 
       - name: 打印服務 URL
         run: gcloud run services describe eu4-kb --region "${{ vars.GCP_REGION }}" --format='value(status.url)'
