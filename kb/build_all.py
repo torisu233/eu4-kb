@@ -33,7 +33,7 @@ import argparse, sys, time
 from . import common
 from . import build as _build
 
-ALL_STAGES = ["wiki_extract", "game_extract", "fundamentals_extract", "chunk", "embed", "lance", "organize", "index", "tree"]
+ALL_STAGES = ["wiki_extract", "game_extract", "fundamentals_extract", "zh_glossary", "chunk", "embed", "lance", "organize", "index", "tree"]
 
 def main():
     ap = argparse.ArgumentParser(description="EU4 知識庫建置管線（一鍵串接）",
@@ -46,7 +46,8 @@ def main():
     ap.add_argument("--skip-wiki-cache", action="store_true", help="忽略 cache/wiki_raw 強制重新打API")
     ap.add_argument("--wiki-limit", type=int, default=None, help="限定只處理前 N 頁(驗證清洗規則用，不給則全站)")
     # game_extract 專屬
-    ap.add_argument("--game-dir", default=None, help="EU4 遊戲安裝目錄（game_extract 階段必需）")
+    ap.add_argument("--game-dir", default=None, help="EU4 遊戲安裝目錄（game_extract / zh_glossary 階段必需）")
+    ap.add_argument("--zh-loc-dir", default=None, help="paratranz 中文 loc 目錄(zh_glossary 用；預設 cache/paratranz_zh/localisation)")
     ap.add_argument("--entity-types", default=None, help="限定處理的實體類別(逗號分隔，如 ideas,government_reforms,country_history)；不給則跑全部已實作類別")
     ap.add_argument("--country-filter", default=None, help="限定 country_history 等按國家切分的實體只處理指定國家tag(逗號分隔)")
     # fundamentals_extract 專屬
@@ -89,6 +90,10 @@ def main():
         print("\n=== fundamentals_extract ===", flush=True)
         from . import fundamentals_extract as _fundamentals_extract
         _fundamentals_extract.run(name, src_dir=a.fundamentals_src_dir)
+    if "zh_glossary" in stages:
+        print("\n=== zh_glossary ===", flush=True)
+        from . import build_glossary as _build_glossary
+        _build_glossary.run(name, game_dir=(a.game_dir or cfg.get("game_dir")), zh_loc_dir=a.zh_loc_dir)
     if "chunk" in stages:
         print("\n=== chunk ===", flush=True); _build.run_chunk(name)
     if "embed" in stages:

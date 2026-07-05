@@ -39,6 +39,7 @@ def kb_paths(name):
         "tree": os.path.join(base, "tree.json"),
         "index_md": os.path.join(base, "INDEX.md"),
         "config": os.path.join(base, "config.json"),
+        "zh_glossary": os.path.join(base, "zh_glossary.json"),  # 英文名/key → 官方中文(paratranz)，供中文模式術語注解
     }
 
 def strip_frontmatter(text):

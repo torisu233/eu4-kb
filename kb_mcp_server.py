@@ -51,14 +51,49 @@ def build_server(names, label):
     multi = len(names) > 1
     KBS_HINT = ("This knowledge base covers multiple systems/topics: " + ", ".join(names) + ".") if multi else ("Knowledge base: " + names[0] + ".")
 
+    # 中文術語詞典(build 時由 paratranz 生成的 zh_glossary.json)：中文模式下給檢索結果標題加官方中文注解。
+    def _load_gloss(n):
+        p = common.kb_paths(n)["zh_glossary"]
+        if os.path.exists(p):
+            try:
+                with open(p, encoding="utf-8") as f: return json.load(f)
+            except Exception as e:
+                sys.stderr.write(f"[gloss] load 失敗 {n}: {e!r}\n")
+        return {"name2zh": {}, "key2zh": {}}
+    GLOSS = {n: _load_gloss(n) for n in names}
+
+    def _zh_gloss(kb, title, source_path, source):
+        """回傳 title 的官方中文名(查無回 None)。game_file 用 entity_id(source_path 末段)查 key2zh，
+        其餘(wiki)用英文名查 name2zh。"""
+        g = GLOSS.get(kb or names[0]) or {}
+        src = (source or "")
+        if not src and source_path:
+            src = source_path.split("/", 1)[0]        # "game_file/idea_group/x" -> "game_file"
+        zh = None
+        if src == "game_file" and source_path:
+            eid = source_path.rstrip("/").split("/")[-1].strip().lower()
+            zh = (g.get("key2zh") or {}).get(eid)
+        if not zh and title:
+            zh = (g.get("name2zh") or {}).get(title.strip().lower())
+        return zh if (zh and zh != (title or "").strip()) else None
+
+    def _title_zh(lang, kb, title, source_path, source):
+        """中文模式下把 title 渲染成 'Title（中文）'，否則原樣。"""
+        if (lang or "").strip().lower() == "zh":
+            zh = _zh_gloss(kb, title, source_path, source)
+            if zh: return f"{title}（{zh}）"
+        return title
+
     @mcp.tool()
     def search_kb(query: str, kb: str = "", doc_id: str = "", path_prefix: str = "",
-                  source: str = "", entity_category: str = "", top_k: int = 8) -> str:
+                  source: str = "", entity_category: str = "", top_k: int = 8, lang: str = "") -> str:
         """Hybrid semantic + keyword search; returns the most relevant snippets with sources (cosine relevance attached). Content is English.
         doc_id (optional): search within a single document only (use this to find relevant sections of a large doc); form "kb:doc_id".
         path_prefix (optional): search only within a folder subtree (e.g. "game_file/idea_group"); use list_tree first to see which folders exist.
         source (optional): restrict to "wiki" or "game_file"; unfiltered by default (most questions need wiki strategy + game_file exact values fused,
         filter only when you explicitly want one side). entity_category (optional): restrict game_file entity type (e.g. idea_group/mission/decision).
+        lang (optional): pass "zh" when the user asked in Chinese — each result title then gets its official Chinese name appended as «Title（中文）»
+        (from the game's Chinese localisation), so you can cite authoritative Chinese terms instead of inventing translations.
         Each hit carries a relevance score (0~1, cosine); if the best relevance is too low it will clearly say "not found / low confidence"."""
         f = {}
         if doc_id:                                   # 限定單一文件：拆出庫名縮範圍，用 doc_id 過濾 chunk
@@ -83,7 +118,8 @@ def build_server(names, label):
             dups = h.get("dup_paths") or []
             dupnote = f"\n(same content also stored in {len(dups)} other place(s), e.g. {dups[0]})" if dups else ""
             src = h.get("source") or ""
-            out.append(f"[{i}] «{h['title']}» (kb:{h.get('kb','')} · {h['doc_type']} · source={src}) relevance={rel}\n"
+            title_disp = _title_zh(lang, h.get('kb',''), h['title'], h.get('source_path'), src)
+            out.append(f"[{i}] «{title_disp}» (kb:{h.get('kb','')} · {h['doc_type']} · source={src}) relevance={rel}\n"
                        f"Section: {h['heading_path']}\nSource: {h['source_path']} (doc_id={ref}{more}){dupnote}\nContent: {h['text'][:600]}")
         body = "\n\n---\n\n".join(out)
         warn = (f"⚠ Best relevance is low ({best:.2f}); the KB may lack this topic or the question is out of scope — judge carefully and say so if not found.\n\n"
@@ -93,11 +129,12 @@ def build_server(names, label):
         "snippets with relevance <0.5 are weak; use get_doc for fuller content; doc_id has the form kb:doc_id)"
 
     @mcp.tool()
-    def grep_kb(pattern: str, kb: str = "", path_prefix: str = "", limit: int = 30) -> str:
-        """Exact literal/regex search (game-internal keys, exact terms, trigger/modifier names). path_prefix optional, restricts to a folder subtree."""
+    def grep_kb(pattern: str, kb: str = "", path_prefix: str = "", limit: int = 30, lang: str = "") -> str:
+        """Exact literal/regex search (game-internal keys, exact terms, trigger/modifier names). path_prefix optional, restricts to a folder subtree.
+        lang (optional): pass "zh" when the user asked in Chinese to append official Chinese names to result titles («Title（中文）»)."""
         hits = S().grep(pattern, kb=(kb or None), limit=limit, path_prefix=(path_prefix.strip() or None))
         if not hits: return "(no matching literal content)"
-        return "\n\n".join(f"«{h['title']}» (kb:{h.get('kb','')}) | {h['heading_path']}\nSource:{h['source_path']}\n…{h['snippet']}…" for h in hits)
+        return "\n\n".join(f"«{_title_zh(lang, h.get('kb',''), h['title'], h.get('source_path'), '')}» (kb:{h.get('kb','')}) | {h['heading_path']}\nSource:{h['source_path']}\n…{h['snippet']}…" for h in hits)
 
     @mcp.tool()
     def get_doc(doc_id: str, section: int = -1, sections: str = "", offset: int = 0, max_chars: int = 12000) -> str:

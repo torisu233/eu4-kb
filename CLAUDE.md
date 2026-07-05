@@ -26,14 +26,28 @@ kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 
 ## 語言：英文為來源真相 + 可切換語言層（2026-07 重構）
 
 **核心原則**：語料統一為英文（wiki 本來就是英文；game_file 的 trigger/effect 也改成英文渲染），英文是
-可對照遊戲核實的「來源真相」。**回答語言由 prompt 控制，不在資料層**——英文 prompt 出英文答案、中文
-prompt 讀同一份英文語料出中文答案（中文是 LLM 現場意譯，**非官方 paratranz 術語**，那是預留的下一步）。
+可對照遊戲核實的「來源真相」。**回答語言由 prompt 控制，不在資料層**——同一份英文語料，英文答案/中文
+答案都讀它；**權威中文術語由資料層(paratranz 詞典)在檢索結果裡注入，不靠 prompt 也不靠 LLM 瞎編**。
 
 **語言切換鉤子（都不寫死）**：單一 `lang` 參數，預設 `en`（env `KB_LANG` / `/ask` 請求 body）：
 - 前端 `kb_ui.html`：`I18N={en,zh}` 字典 + 可見語言下拉，切換即時換 UI chrome 並把 `lang` 放進請求 body。
-  英文為預設；中文條目是**簡體**（2026-07 從繁體改簡）。
-- 後端 `kb_answer_backend.py`：`PROMPTS={en,zh}`，`_pick_prompt(lang)` 選 system prompt；`answer(question, lang)`。
-- 資料層：`LocalisationIndex.load_dir(lang=...)` 是換語言源的現成鉤子（本輪只跑 en，中文資料層留待 paratranz）。
+  英文為預設；中文條目是**簡體**。
+- 後端 `kb_answer_backend.py`：**單一英文 base prompt** `SYSTEM_BASE` + `build_system(lang)` 末尾追加
+  `[OUTPUT LANGUAGE]` 區塊(en=Answer in English；zh=用簡體中文+指示 agent 給檢索工具傳 `lang="zh"` 拿官方中文名)。
+  **不再維護兩份平行 prompt**(會 drift)——Claude 讀英文 prompt 照樣輸出簡體中文。
+- 資料層：`LocalisationIndex.load_dir(lang=...)` 換語言源；**中文術語詞典已實作**(見下「中文術語注解」)。
+
+**中文術語注解（2026-07，用 paratranz 官方中文）**：中文模式下 MCP 檢索結果標題自動帶官方中文名
+`«Mughals（莫卧儿）»`，讓 agent 引用權威術語而非自己意譯。做法：
+- **來源**：`paratranz/EU4-Chinese-Localisation`(GitHub，每6h自動同步；**key 結構與遊戲英文 loc 完全一致**；
+  CC BY-NC-SA 4.0 **非商用+署名**)。shallow-clone 到 `cache/paratranz_zh/`(gitignored)。
+- **build**：`zh_glossary` 階段(`kb/build_glossary.py`)把 游戲英文loc(key→英文) 與 paratranz(key→中文) 按共享 key
+  join → `kbs/eu4/zh_glossary.json`(`name2zh` 英文名→中文 + `key2zh` key→中文，過濾成短術語名，~4.5MB)。
+  **為什麼 build 時做**：雲端容器沒有遊戲檔案，英文 loc 只在 build 時有；serve 時只讀 kbs 數據(隨 GCS 同步上雲)。
+- **serve**：`kb_mcp_server.py` 啟動載入 glossary；`search_kb`/`grep_kb` 加可選 `lang` 參數，`lang="zh"` 時
+  標題渲染 `«Title（中文）»`(game_file 用 entity_id=source_path末段查 key2zh，wiki 用 title 查 name2zh)。
+  agent 是否傳 `lang="zh"` 由 zh 的 `[OUTPUT LANGUAGE]` 區塊指示。
+- **未做**：整篇文檔的中文化(現在只注解標題/術語名，正文仍英文，靠 LLM 現場翻譯)。
 
 **trigger/effect 英文渲染**（`translate_rules.py`，2026-07 從中文改英文，三級取英文）：
 1. **遊戲自帶 loc 模板優先**（`_GAME_LOC_CMDS` 白名單，如 `HAS_REFORM`→"Has enacted Government Reform X"）：
@@ -65,7 +79,8 @@ prompt 讀同一份英文語料出中文答案（中文是 LLM 現場意譯，**
 python -m kb.build_all --kb eu4 --stages wiki_extract                                    # 全站wiki(cache-based,快)
 python -m kb.build_all --kb eu4 --stages game_extract --entity-types ideas,government_reforms,country_history --country-filter MNG --game-dir "C:\Program Files (x86)\Steam\steamapps\common\Europa Universalis IV"
 python -m kb.build_all --kb eu4 --stages fundamentals_extract                             # 只重跑fundamentals_src/*.md(快，秒級)
-python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree            # 下游全量重建(embed慢,~40-50分鐘/37000+chunk；改一個字都要全量重跑，見下方已知坑)
+python -m kb.build_all --kb eu4 --stages zh_glossary --game-dir "...EU4"                   # 生成中文術語詞典zh_glossary.json(快，需游戏loc+cache/paratranz_zh)
+python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree            # 下游全量重建(embed慢,~40-50分鐘/48000+chunk；改一個字都要全量重跑，見下方已知坑)
 
 # 不經MCP/Claude直接測檢索
 .\.venv\Scripts\python.exe test_search.py
