@@ -4,7 +4,10 @@
 set -e
 
 export EU4_KBS_DIR="${EU4_KBS_DIR:-/mnt/kb-data}"
-export KB_USE_RERANK="${KB_USE_RERANK:-1}"
+# 2026-07：預設關閉 reranker——實測(本機)開啟時單次search_kb要7~9秒(雲端2vCPU下14~18秒)，
+# 關閉後降到0.1~0.2秒(向量+BM25本身很快)，一題常需7~13次工具調用，這個差距在雲端會被放大
+# 成主要延遲來源。之後若找到更輕量的reranker方案再重新評估開啟。
+export KB_USE_RERANK="${KB_USE_RERANK:-0}"
 export KB_MCP_URL="${KB_MCP_URL:-http://127.0.0.1:8766/mcp}"
 export KB_ANSWER_HOST="0.0.0.0"
 export KB_ANSWER_PORT="${PORT:-8781}"
