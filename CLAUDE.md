@@ -117,6 +117,38 @@ IAM角色）見 `docs/gcp_setup.md`，需要你自己的GCP帳號權限執行，
 Variables：`GCP_IMAGE`/`GCP_REGION`/`GCP_WIF_PROVIDER`/`GCP_DEPLOY_SA`/`GCP_RUN_SA`/`GCP_KB_BUCKET`/
 `GCP_OAUTH_SECRET_NAME`。
 
+**推送權限**：GitHub push走的是`torisu233`這個帳號(對`torisuorg/eu4-kb`有admin權限)，本機`gh`/`git`
+的credential helper已切過去(`gh auth setup-git`)；同機另有另一個帳號登入過但沒有這個repo權限，
+如果之後推送被拒絕，先查`gh auth status`確認active account是不是`torisu233`。
+
+### 上線後的性能調優(2026-07，也是實測踩坑+修復，非事先設計)
+
+上線後用戶反饋"網頁打開緩慢、MCP經常沒有服務、MCP工具執行速度很慢"，查生產日誌(`gcloud logging read`)
+定位到兩個獨立的真實問題(不是同一個bug)：
+
+1. **CPU瓶頸導致MCP client端逾時斷線**：日誌裡直接看到 `Batches: 100%|...| 1/1 [00:25<00:00,
+   25.90s/it]` 後緊跟着 `ERROR Error handling POST request` + `ClientDisconnect`——單次模型推理
+   (embedding編碼/reranker重排序)在預設1 vCPU下要25~30秒，長到讓Claude Agent SDK的MCP HTTP client
+   等不及先斷線，這次工具調用直接判定失敗。這就是"MCP經常沒有服務"的真正原因(不是服務掛了，是單次
+   推理慢到觸發client逾時)。**修法**：`gcloud run deploy`加`--cpu 2`，修復後同一批推理降到
+   14~18秒，日誌裡`ClientDisconnect`消失。
+2. **`--max-instances 1`卻沒設`--min-instances`，實例會被提前回收**：觀察到一個實例才活了~90秒
+   就因為`Starting new instance. Reason: AUTOSCALING`被換掉，下一個請求撞上要重新完整走一遍
+   `entrypoint.sh`冷啟動(起kb_mcp_server→輪詢就緒→載入兩個模型進記憶體，耗時~100秒)。Cloud Run
+   沒有"閒置多久才縮容"這種可調參數，只能用`--min-instances 1`保底常駐解決，代價是持續計費、不再有
+   "沒人用就不花錢"的優勢。**這兩處修復都已經應用**(先用`gcloud run services update`直接改現有
+   revision驗證效果，再把改動寫進`ci.yml`讓之後的自動部署保持一致)。
+
+3. **CI/CD本身也加了修正**：`ci.yml`原本`on: push:`沒有路徑過濾，連只改`CLAUDE.md`這種純文檔commit
+   都會觸發整套build+deploy，把好端端一個熱實例重新冷啟動——加了`paths-ignore: ['**.md', 'docs/**']`
+   避免這種不必要的churn。
+
+**修完之後的殘留現實**：即便CPU/冷啟動都修好了，同一問題本地測跑得比雲端快3~4倍(本地單次推理批處理
+4~8秒，雲端同一批次14~18秒)——**Cloud Run的vCPU是共享/受限資源，天生弱於本機開發機的實際算力**，
+這是雲部署要接受的成本現實，不是還有沒抓到的bug；再加上這套agentic多輪檢索架構本身單題常需要
+7~13次工具調用(本地測試從一開始就是這樣，見上方"內容分層"bug的診斷記錄)，是"雲端算力較弱"+
+"多輪推理本身有開銷"兩件事疊加，不是單一原因造成的"慢"。
+
 ## 資料現狀（2026-07）
 
 2604篇文檔（1883 wiki + 714 game_file + 7 fundamentals）→ ~37300+個chunk。game_file 是 **PoC範圍**：僅
