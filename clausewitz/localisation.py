@@ -28,6 +28,36 @@ def clean_text(text):
     """本地化文本清洗的標準組合：去顏色碼 + 佔位符轉花括號。"""
     return normalize_placeholders(strip_color_codes(text))
 
+# 作用域佔位符 -> 通用英文（靜態抽取時沒有具體國家，只能給通用說法）。
+_SCOPE_WORDS = {
+    "country": "our country", "this": "this scope", "from": "the other country",
+    "root": "our country", "who": "the country", "actor": "the acting country",
+    "recipient": "the target country", "prev": "the previous scope",
+    "controller": "the controller", "owner": "the owner", "target": "the target",
+}
+_PLACEHOLDER_RE = re.compile(r'\$([A-Za-z0-9_]+)(?:\|[^$]*)?\$')  # $CULTURE|Y$ / $COUNTRY$ 等
+
+def render_game_trigger(text, value_display):
+    """把遊戲自帶的 trigger/effect loc 模板(如 "Has enacted Government Reform $REFORM|Y$")
+    渲染成可讀英文：去 §色碼、單一「內容佔位符」用 value_display 填入、作用域佔位符($COUNTRY$等)
+    填通用英文。若模板不含恰好一個內容佔位符(0 個 = 純名詞標籤如 "Government"；>1 = 語意不明)則
+    回 None，讓上層改用手寫英文兜底——這是刻意的保守策略，避免把假朋友 loc 或多變數模板誤填出錯句。
+    """
+    if not text:
+        return None
+    t = strip_color_codes(text).replace("\\n", " ").replace("\n", " ").strip()
+    names = [m.group(1) for m in _PLACEHOLDER_RE.finditer(t)]
+    content = [n for n in names if n.lower() not in _SCOPE_WORDS]
+    if len(content) != 1:
+        return None
+    def _repl(m):
+        low = m.group(1).lower()
+        if low in _SCOPE_WORDS:
+            return _SCOPE_WORDS[low]
+        return value_display if value_display is not None else m.group(1)
+    out = _PLACEHOLDER_RE.sub(_repl, t)
+    return re.sub(r'\s+', ' ', out).strip()
+
 def _title_case_fallback(key):
     """查無本地化時的兜底顯示名：snake_case -> Title Case。"""
     words = re.split(r'[_\-]+', key.strip())
@@ -73,6 +103,15 @@ class LocalisationIndex:
             return clean_text(raw)
         self.miss_counter[key] = self.miss_counter.get(key, 0) + 1
         return _title_case_fallback(key) if fallback_title_case else None
+
+    def game_trigger(self, cmd, value_display):
+        """用遊戲自帶的 trigger/effect loc 模板(大寫命令名當 key，如 HAS_REFORM)渲染成英文。
+        查無模板或模板不適合單值填充時回 None(見 render_game_trigger 的保守策略)。
+        value_display 應是「已本地化的值顯示名」(如 reform key -> "Mughal Diwan")。"""
+        raw = self.raw(cmd)   # _map 已小寫化，HAS_REFORM 與 has_reform 同槽
+        if raw is None:
+            return None
+        return render_game_trigger(raw, value_display)
 
     def __len__(self):
         return len(self._map)

@@ -1,28 +1,44 @@
 # -*- coding: utf-8 -*-
-"""trigger/effect 邏輯塊 -> 人類可讀中文文字的規則模板翻譯器。
+"""trigger/effect 邏輯塊 -> 人類可讀「英文」文字的規則模板翻譯器。
 
-設計：規則表 List[(matcher, formatter)]，按登記順序(即特異性由高到低)嘗試比對，第一個命中的生效。
-兜底規則(_fallback)必定命中，保證每個 key/value 都有輸出，絕不靜默丟棄——翻不了的原樣顯示
-`key = value`並標註「未能自動翻譯」，引導使用者/agent 去查原始腳本附錄核實，避免產生幻覺性數值。
+英文是這個知識庫的來源真相(game_file 本體就是英文；名稱一律取遊戲自帶英文 localisation)。
+每個命令取英文的三級策略：
+  1) 遊戲自帶 loc 模板優先：白名單 _GAME_LOC_CMDS 裡的命令，用 loc.game_trigger() 取遊戲原句
+     (如 HAS_REFORM -> "Has enacted Government Reform Mughal Diwan")——最權威，尽量用游戏原串。
+  2) 手寫英文兜底：遊戲沒有乾淨 loc 模板的命令(邏輯運算子、has_dlc、旗標、修正增刪等)用簡潔英文，
+     名稱仍來自遊戲英文 loc。這是對腳本邏輯的英文直白描述。
+  3) 最終兜底(_fmt_fallback)必定命中：翻不了的原樣顯示 `key = value` 並標註「(unmapped — see raw
+     script appendix)」，絕不靜默丟棄，引導去讀文末原始腳本附錄核實。
 
-輸入應為已用 macro_expand.expand_block() 展開過巨集的 Block（否則巨集呼叫節點會落到兜底規則，
-只顯示巨集名，翻不出實際條件）。
+輸入應為已用 macro_expand.expand_block() 展開過巨集的 Block。
+
+語言切換鉤子：這裡固定輸出英文(來源語言)。之後若要中文，做法是換 loc 資料源(paratranz 中文 loc)+
+另寫一份中文結構詞表，不改這裡的規則骨架。
 """
 import re
 from .parser import Block
-from .localisation import clean_text
 
 _PCT_SUFFIXES = ("_modifier", "_power", "_cost", "_chance", "_speed", "_efficiency")
+# 資源點數 effect -> 英文資源名(用於 "Gains N <resource>" / "Loses N <resource>")
 _ADD_POWER_MAP = {
-    "add_adm_power": "行政国力", "add_dip_power": "外交国力", "add_mil_power": "军事国力",
-    "add_prestige": "威望", "add_legitimacy": "统治正统性", "add_stability": "稳定度",
-    "add_manpower": "人力", "add_treasury": "国库金钱", "add_army_tradition": "陆军传统",
-    "add_navy_tradition": "海军传统", "add_devotion": "虔诚度", "add_horde_unity": "部落凝聚力",
-    "add_meritocracy": "唯才是举度", "add_absolutism": "专制主义", "add_karma": "业力",
-    "add_republican_tradition": "共和传统", "add_papal_influence": "教廷影响力",
-    "add_yearly_manpower": "年人力", "add_country_modifier": "国家修正",
+    "add_adm_power": "administrative power", "add_dip_power": "diplomatic power",
+    "add_mil_power": "military power", "add_prestige": "prestige",
+    "add_legitimacy": "legitimacy", "add_stability": "stability",
+    "add_manpower": "manpower", "add_treasury": "ducats",
+    "add_army_tradition": "army tradition", "add_navy_tradition": "navy tradition",
+    "add_devotion": "devotion", "add_horde_unity": "horde unity",
+    "add_meritocracy": "meritocracy", "add_absolutism": "absolutism",
+    "add_karma": "karma", "add_republican_tradition": "republican tradition",
+    "add_papal_influence": "papal influence", "add_yearly_manpower": "yearly manpower",
 }
-_SCOPE_LABELS = {"root": "我方", "from": "触发国", "prev": "前一层作用域", "this": "本作用域"}
+_SCOPE_LABELS = {"root": "our country", "from": "the other country",
+                 "prev": "the previous scope", "this": "this scope"}
+# 用遊戲自帶英文 loc 模板渲染的命令白名單(人工核對過：模板是乾淨的單值 trigger 句、非假朋友)。
+_GAME_LOC_CMDS = {
+    "has_reform", "have_had_reform", "primary_culture", "was_tag",
+    "mission_completed", "has_terrain", "has_estate_privilege",
+    "government_abilities", "has_government_mechanic",
+}
 
 
 def _is_pct_key(key):
@@ -55,96 +71,154 @@ def _loc_or_titlecase(key, loc):
         return loc.get(key)
     return re.sub(r'[_\-]+', ' ', key).strip().title()
 
+def _looks_numeric(v):
+    try:
+        float(v)
+        return True
+    except (TypeError, ValueError):
+        return False
 
-# ---------------- 個別 formatter ----------------
+
+# ---------------- 個別 formatter（一律輸出英文） ----------------
+
+def _fmt_via_game_loc(key, value, loc, tr):
+    """白名單命令：用遊戲自帶英文 loc 模板渲染。模板不適用(回 None)時往下一條規則(手寫英文兜底)。"""
+    if loc is None or isinstance(value, Block) or _looks_numeric(value):
+        return None
+    disp = loc.get(value)                 # 值的本地化英文顯示名(如 reform key -> "Mughal Diwan")
+    out = loc.game_trigger(key, disp)
+    return [out] if out else None
 
 def _fmt_logic(key, value, loc, tr):
     kl = key.lower()
     if not isinstance(value, Block):
-        return [f"`{key} = {value}`（邏輯運算子缺少子條件，見附錄）"]
+        return [f"`{key} = {value}` (logic operator without sub-conditions, see appendix)"]
     sub = tr(value, loc)
     if not sub:
-        sub = ["（無子條件）"]
-    if kl == "and":
-        head = "全部满足："
-    elif kl == "or":
-        head = "满足以下任一："
-    else:  # not
-        head = "不满足："
+        sub = ["(no sub-conditions)"]
+    head = {"and": "All of:", "or": "Any of:"}.get(kl, "None of:")   # not -> None of:
     return [head] + ["  " + s for s in sub]
 
 def _fmt_has_dlc(key, value, loc, tr):
-    return [f"需要 DLC「{value}」"]
+    return [f"Requires DLC: {value}"]
 
 def _fmt_is_core(key, value, loc, tr):
-    return [f"是{_scope_label(value)}的核心省份"]
+    return [f"Is a core province of {_scope_label(value)}"]
 
 def _fmt_is_claim(key, value, loc, tr):
-    return [f"是{_scope_label(value)}的宣称地"]
+    return [f"Is claimed by {_scope_label(value)}"]
 
 def _fmt_tag(key, value, loc, tr):
-    return [f"国家为 {value}"]
+    return [f"Country is {value}"]
 
 def _fmt_add_power(key, value, loc, tr):
-    kl = key.lower()
-    label = _ADD_POWER_MAP.get(kl)
-    _, num_s = _fmt_number(value)
+    label = _ADD_POWER_MAP.get(key.lower())
+    v, num_s = _fmt_number(value)
     if label:
-        return [f"获得 {num_s} 点{label}" if not str(value).startswith("-") else f"损失 {num_s.lstrip('-')} 点{label}"]
-    return [f"{_loc_or_titlecase(key, loc)}：{num_s}"]
-
-def _fmt_pct_modifier(key, value, loc, tr):
-    pct = _fmt_pct(value)
-    label = _loc_or_titlecase(key, loc)
-    if pct is None:
-        return [f"{label}：{value}"]
-    return [f"{label} {pct}"]
+        if str(value).strip().startswith("-"):
+            return [f"Loses {num_s.lstrip('-')} {label}"]
+        return [f"Gains {num_s} {label}"]
+    return [f"{_loc_or_titlecase(key, loc)}: {num_s}"]
 
 def _fmt_gov_attribute(key, value, loc, tr):
-    return [f"政体具有「{_loc_or_titlecase(value, loc)}」属性"]
+    return [f"Government has attribute: {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_flag(key, value, loc, tr):
-    return [f"已触发内部标记「{value}」（游戏内部状态，非直接可见数值，见附录原始脚本）"]
+    return [f"Has internal flag '{value}' (game-internal state, see raw script appendix)"]
+
+def _fmt_set_clr_flag(key, value, loc, tr):
+    kl = key.lower()
+    verb = "Clears" if kl.startswith("clr_") else "Sets"
+    scope = ("province" if "province" in kl else "ruler" if "ruler" in kl
+             else "global" if "global" in kl else "country")
+    return [f"{verb} {scope} flag '{value}' (game-internal state, see raw script appendix)"]
 
 def _fmt_is_year(key, value, loc, tr):
-    return [f"当前游戏年份为 {value} 年"]
+    return [f"Game year is {value} or later"]
 
 def _fmt_has_reform(key, value, loc, tr):
-    return [f"已进行「{_loc_or_titlecase(value, loc)}」政府改革"]
+    return [f"Has enacted government reform: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_have_had_reform(key, value, loc, tr):
+    return [f"Has ever enacted government reform: {_loc_or_titlecase(value, loc)} (not required to still have it)"]
+
+def _fmt_add_government_reform(key, value, loc, tr):
+    return [f"Gains government reform: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_change_government(key, value, loc, tr):
+    return [f"Government type changes to {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_country_modifier(key, value, loc, tr):
+    kl = key.lower()
+    verb = "Removes" if kl.startswith("remove_") else ("Gains" if kl.startswith("add_") else "Has")
+    if isinstance(value, Block):
+        name = value.get("name") or ""
+        return [f"{verb} country modifier: {_loc_or_titlecase(name, loc) if name else '(see appendix)'}"]
+    return [f"{verb} country modifier: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_province_modifier(key, value, loc, tr):
+    kl = key.lower()
+    verb = "Removes" if kl.startswith("remove_") else ("Gains" if kl.startswith("add_") else "Has")
+    if isinstance(value, Block):
+        name = value.get("name") or ""
+        return [f"{verb} province modifier: {_loc_or_titlecase(name, loc) if name else '(see appendix)'}"]
+    return [f"{verb} province modifier: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_has_building(key, value, loc, tr):
+    return [f"Has building: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_has_estate(key, value, loc, tr):
+    return [f"Estate is present: {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_is_subject_of_type(key, value, loc, tr):
+    return [f"Subject type is {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_change_unit_type(key, value, loc, tr):
+    return [f"Unit type changes to {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_secondary_religion(key, value, loc, tr):
+    return [f"Secondary religion is {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_same_continent(key, value, loc, tr):
+    return [f"Is on the same continent as {_scope_label(value)}"]
+
+def _fmt_trade_goods(key, value, loc, tr):
+    return [f"Trade good is {_loc_or_titlecase(value, loc)}"]
+
+def _fmt_current_age(key, value, loc, tr):
+    return [f"Current age is {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_religion(key, value, loc, tr):
-    return [f"信仰为「{_loc_or_titlecase(value, loc)}」"]
+    return [f"Religion is {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_government(key, value, loc, tr):
-    return [f"政体类型为「{_loc_or_titlecase(value, loc)}」"]
+    return [f"Government type is {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_primary_culture(key, value, loc, tr):
-    return [f"主要文化为「{_loc_or_titlecase(value, loc)}」"]
+    return [f"Primary culture is {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_advisor(key, value, loc, tr):
-    return [f"拥有顾问「{_loc_or_titlecase(value, loc)}」"]
+    return [f"Has advisor: {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_estate_scope(key, value, loc, tr):
-    return [f"针对阶层「{_loc_or_titlecase(value, loc)}」"]
+    return [f"For estate: {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_share_num(key, value, loc, tr):
     _, num_s = _fmt_number(value)
-    return [f"份额变化：{num_s}"]
+    return [f"Share change: {num_s}"]
 
 def _fmt_icon(key, value, loc, tr):
-    return []  # 純裝飾性圖示檔名，對閱讀理解無資訊量，直接略過(空列表=匹配成功但不輸出，不落到兜底規則)
+    return []  # 純裝飾性圖示檔名，無資訊量，略過(空列表=匹配成功但不輸出)
 
 def _fmt_group_scope(key, value, loc, tr):
-    label = _loc_or_titlecase(key, loc)
-    return [f"{label}为「{_loc_or_titlecase(value, loc)}」"]
+    return [f"{_loc_or_titlecase(key, loc)} is {_loc_or_titlecase(value, loc)}"]
 
 def _fmt_bool_flag(key, value, loc, tr):
-    label = _loc_or_titlecase(key, loc)
-    yn = "是" if str(value).strip().lower() == "yes" else "否"
-    return [f"{label}：{yn}"]
+    yn = "Yes" if str(value).strip().lower() == "yes" else "No"
+    return [f"{_loc_or_titlecase(key, loc)}: {yn}"]
 
 def _fmt_custom_tooltip(key, value, loc, tr):
-    # custom_trigger_tooltip 包一層 tooltip(說明文字)+實際條件；把實際條件攤平即可，tooltip 本身略過
+    # custom_trigger_tooltip 包一層 tooltip(說明文字)+實際條件；把實際條件攤平，tooltip 本身略過
     if not isinstance(value, Block):
         return []
     inner_lines = []
@@ -152,11 +226,11 @@ def _fmt_custom_tooltip(key, value, loc, tr):
         if k is not None and k.lower() == "tooltip":
             continue
         inner_lines.extend(tr(Block([(k, v)]), loc))
-    return inner_lines or ["（宏展开条件，详见附录）"]
+    return inner_lines or ["(scripted condition, see raw script appendix)"]
 
 def _fmt_limit(key, value, loc, tr):
     sub = tr(value, loc) if isinstance(value, Block) else []
-    return ["前提条件："] + ["  " + s for s in sub] if sub else ["前提条件：（无）"]
+    return ["Limited to:"] + ["  " + s for s in sub] if sub else ["Limited to: (none)"]
 
 def _fmt_number_generic(key, value, loc, tr):
     label = _loc_or_titlecase(key, loc)
@@ -166,7 +240,7 @@ def _fmt_number_generic(key, value, loc, tr):
             return [f"{label} {pct}"]
     _, num_s = _fmt_number(value)
     if num_s is not None:
-        return [f"{label}：{num_s}"]
+        return [f"{label}: {num_s}"]
     return None  # 非數值，交給下個規則
 
 def _fmt_fallback(key, value, loc, tr):
@@ -174,9 +248,9 @@ def _fmt_fallback(key, value, loc, tr):
         sub = tr(value, loc)
         label = _loc_or_titlecase(key, loc) if loc is not None else key
         if sub:
-            return [f"「{label}」（原始 key: {key}）："] + ["  " + s for s in sub]
-        return [f"`{key} = {{}}`（空区块，未能自动翻译，见附录）"]
-    return [f"`{key} = {value}`（未能自动翻译，见附录核实）"]
+            return [f"{label} (key: {key}):"] + ["  " + s for s in sub]
+        return [f"`{key} = {{}}` (empty block, unmapped — see raw script appendix)"]
+    return [f"`{key} = {value}` (unmapped — see raw script appendix)"]
 
 
 # ---------------- 規則表(matcher, formatter)：按特異性由高到低 ----------------
@@ -185,6 +259,7 @@ def _mk(keys):
     return lambda k, v: k.lower() in keys
 
 RULES = [
+    (_mk(_GAME_LOC_CMDS), _fmt_via_game_loc),   # 遊戲自帶英文 loc 模板優先(回 None 則落到下面手寫英文)
     (_mk(["and", "or", "not"]), _fmt_logic),
     (_mk(["has_dlc"]), _fmt_has_dlc),
     (_mk(["is_core"]), _fmt_is_core),
@@ -192,16 +267,32 @@ RULES = [
     (_mk(["tag", "original_tag", "overlord", "owner", "controller"]), _fmt_tag),
     (lambda k, v: k.lower() in _ADD_POWER_MAP, _fmt_add_power),
     (_mk(["has_government_attribute"]), _fmt_gov_attribute),
-    (lambda k, v: k.lower().startswith("has_country_flag") or k.lower().startswith("has_ruler_flag")
-                  or k.lower().startswith("has_global_flag"), _fmt_flag),
+    (lambda k, v: k.lower().startswith(("has_country_flag", "has_ruler_flag", "has_global_flag",
+                                         "has_province_flag")), _fmt_flag),
+    (lambda k, v: k.lower().startswith(("set_country_flag", "clr_country_flag", "set_province_flag",
+                                         "clr_province_flag", "set_ruler_flag", "clr_ruler_flag",
+                                         "set_global_flag", "clr_global_flag")), _fmt_set_clr_flag),
     (_mk(["is_year"]), _fmt_is_year),
     (_mk(["has_reform"]), _fmt_has_reform),
+    (_mk(["have_had_reform"]), _fmt_have_had_reform),
+    (_mk(["add_government_reform"]), _fmt_add_government_reform),
+    (_mk(["change_government"]), _fmt_change_government),
     (_mk(["religion", "add_harmonized_religion", "has_reform_religion"]), _fmt_religion),
+    (_mk(["secondary_religion"]), _fmt_secondary_religion),
     (_mk(["government"]), _fmt_government),
     (_mk(["primary_culture", "add_accepted_culture", "culture"]), _fmt_primary_culture),
     (_mk(["advisor"]), _fmt_advisor),
     (_mk(["estate"]), _fmt_estate_scope),
+    (_mk(["has_estate"]), _fmt_has_estate),
     (_mk(["share"]), _fmt_share_num),
+    (_mk(["has_country_modifier", "remove_country_modifier", "add_country_modifier"]), _fmt_country_modifier),
+    (_mk(["has_province_modifier", "remove_province_modifier", "add_province_modifier"]), _fmt_province_modifier),
+    (_mk(["has_building"]), _fmt_has_building),
+    (_mk(["is_subject_of_type"]), _fmt_is_subject_of_type),
+    (_mk(["change_unit_type"]), _fmt_change_unit_type),
+    (_mk(["same_continent"]), _fmt_same_continent),
+    (_mk(["trade_goods"]), _fmt_trade_goods),
+    (_mk(["current_age"]), _fmt_current_age),
     (_mk(["custom_trigger_tooltip", "custom_tooltip"]), _fmt_custom_tooltip),
     (_mk(["limit"]), _fmt_limit),
     (_mk(["icon"]), _fmt_icon),
@@ -212,17 +303,10 @@ RULES = [
     (lambda k, v: True, _fmt_fallback),   # 兜底，必定命中
 ]
 
-def _looks_numeric(v):
-    try:
-        float(v)
-        return True
-    except (TypeError, ValueError):
-        return False
-
 
 def translate_block(block, loc=None):
-    """把已展開巨集的 trigger/effect Block 翻譯成人類可讀的中文條列文字(List[str])。
-    loc: LocalisationIndex 實例(可選)，用於把 modifier key 轉成友善名稱；不給則用 snake_case->Title Case。"""
+    """把已展開巨集的 trigger/effect Block 翻譯成人類可讀的「英文」條列文字(List[str])。
+    loc: LocalisationIndex 實例(可選)，用於把命令/值轉成遊戲英文顯示名；不給則用 snake_case->Title Case。"""
     if not isinstance(block, Block):
         return []
     lines = []
@@ -235,7 +319,7 @@ def translate_block(block, loc=None):
                 try:
                     out = formatter(k, v, loc, translate_block)
                 except Exception as e:
-                    out = [f"`{k} = {v}`（翻译规则执行异常: {e!r}，见附录核实）"]
+                    out = [f"`{k} = {v}` (translation rule error: {e!r}, see raw script appendix)"]
                 if out is None:
                     continue
                 lines.extend(out)
@@ -247,5 +331,5 @@ def translate_block_md(block, loc=None):
     """回傳 Markdown bullet list 字串(供渲染器直接嵌入文件)。"""
     lines = translate_block(block, loc)
     if not lines:
-        return "（无可翻译条件）"
+        return "(no translatable conditions)"
     return "\n".join(f"- {l}" if not l.startswith("  ") else l for l in lines)

@@ -8,7 +8,7 @@ from .base import make_doc_id, source_hash, assemble_doc
 
 _SKIP_KEYS = {"category", "bonus", "trigger", "ai_will_do", "important"}
 # ai_will_do 不是雜訊——保留在獨立分區(見下方渲染邏輯)，只是不跟一般理念清單混在一起
-_CATEGORY_LABEL = {"mil": "军事(MIL)", "adm": "行政(ADM)", "dip": "外交(DIP)"}
+_CATEGORY_LABEL = {"mil": "Military (MIL)", "adm": "Administrative (ADM)", "dip": "Diplomatic (DIP)"}
 
 def render(entity_id, block, loc, macro_table, source_file, game_version=""):
     """entity_id: 理念組 key(如 aristocracy_ideas)；block: 該理念組的原始(未展開) Block。
@@ -47,7 +47,7 @@ def render(entity_id, block, loc, macro_table, source_file, game_version=""):
             cond_lines.append(translate_block_md(expand_block(body, macro_table), loc))
             if itrig:
                 cond_lines.append("")
-                cond_lines.append("条件：")
+                cond_lines.append("Conditions:")
                 cond_lines.append("")
                 cond_lines.append(translate_block_md(expand_block(itrig, macro_table), loc))
             cond_lines.append("")

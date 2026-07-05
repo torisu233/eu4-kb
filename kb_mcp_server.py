@@ -49,17 +49,17 @@ def build_server(names, label):
                 if _s["v"] is None: _s["v"] = MultiKBSearcher(names)
         return _s["v"]
     multi = len(names) > 1
-    KBS_HINT = ("本知識庫涵蓋多個系統/主題：" + "、".join(names) + "。") if multi else ("知識庫：" + names[0] + "。")
+    KBS_HINT = ("This knowledge base covers multiple systems/topics: " + ", ".join(names) + ".") if multi else ("Knowledge base: " + names[0] + ".")
 
     @mcp.tool()
     def search_kb(query: str, kb: str = "", doc_id: str = "", path_prefix: str = "",
                   source: str = "", entity_category: str = "", top_k: int = 8) -> str:
-        """做語意+關鍵字混合檢索，回傳最相關片段與出處(附 cosine 相關度)。內容為英文原文，請用中文綜合作答。
-        doc_id 可選：只在「該單一文件」內檢索(大型文件找相關段用這個)；形如 庫名:doc_id。
-        path_prefix 可選：只在「某資料夾子樹」內檢索(如 "game_file/idea_group")，先用 list_tree 看有哪些資料夾。
-        source 可選：限定來源 "wiki" 或 "game_file"；預設不過濾(多數問題需要 wiki 策略說明 + 遊戲檔案精確數值融合檢索，
-        只有明確只想看某一側時才過濾)。entity_category 可選：限定遊戲檔案的實體類別(如 idea_group/mission/decision)。
-        每筆附「相關度」(0~1，cosine)；最佳相關度過低會明確提示「查無/可信度低」。"""
+        """Hybrid semantic + keyword search; returns the most relevant snippets with sources (cosine relevance attached). Content is English.
+        doc_id (optional): search within a single document only (use this to find relevant sections of a large doc); form "kb:doc_id".
+        path_prefix (optional): search only within a folder subtree (e.g. "game_file/idea_group"); use list_tree first to see which folders exist.
+        source (optional): restrict to "wiki" or "game_file"; unfiltered by default (most questions need wiki strategy + game_file exact values fused,
+        filter only when you explicitly want one side). entity_category (optional): restrict game_file entity type (e.g. idea_group/mission/decision).
+        Each hit carries a relevance score (0~1, cosine); if the best relevance is too low it will clearly say "not found / low confidence"."""
         f = {}
         if doc_id:                                   # 限定單一文件：拆出庫名縮範圍，用 doc_id 過濾 chunk
             if ":" in doc_id: kb, did = doc_id.split(":", 1); did = did.strip()
@@ -69,56 +69,56 @@ def build_server(names, label):
         if source: f["source"] = source.strip()
         if entity_category: f["entity_category"] = entity_category.strip()
         hits = S().search(query, kb=(kb or None), filters=(f or None), top_k=top_k)
-        if not hits: return "（知識庫查無相關內容）"
+        if not hits: return "(no relevant content in the knowledge base)"
         sims = [h["sim"] for h in hits if h.get("sim") is not None]
         best = max(sims) if sims else 0.0
         if best < SIM_FLOOR:                         # 相關性門檻：最佳 cosine 太低 → 知識庫多半沒有此主題
-            return f"（知識庫查無相關內容；最佳相關度僅 {best:.2f}，可能沒有此主題，請勿據此臆測作答）"
+            return f"(no relevant content; best relevance only {best:.2f}, the topic is likely absent — do not speculate from this)"
         out = []
         for i, h in enumerate(hits, 1):
             ref = f"{h.get('kb','')}:{h['doc_id']}" if h.get("kb") else h["doc_id"]
-            rel = f"{h['sim']:.2f}" if h.get("sim") is not None else "關鍵字命中"
+            rel = f"{h['sim']:.2f}" if h.get("sim") is not None else "keyword match"
             cs = h.get("char_start") or 0
-            more = f"｜讀完整上下文: get_doc(\"{ref}\", offset={cs})" if cs else ""
+            more = f" | read full context: get_doc(\"{ref}\", offset={cs})" if cs else ""
             dups = h.get("dup_paths") or []
-            dupnote = f"\n（相同內容另存於 {len(dups)} 處，如 {dups[0]}）" if dups else ""
+            dupnote = f"\n(same content also stored in {len(dups)} other place(s), e.g. {dups[0]})" if dups else ""
             src = h.get("source") or ""
-            out.append(f"[{i}] 《{h['title']}》（庫:{h.get('kb','')} · {h['doc_type']} · source={src}）相關度={rel}\n"
-                       f"章節: {h['heading_path']}\n來源: {h['source_path']} (doc_id={ref}{more}){dupnote}\n內容: {h['text'][:600]}")
+            out.append(f"[{i}] «{h['title']}» (kb:{h.get('kb','')} · {h['doc_type']} · source={src}) relevance={rel}\n"
+                       f"Section: {h['heading_path']}\nSource: {h['source_path']} (doc_id={ref}{more}){dupnote}\nContent: {h['text'][:600]}")
         body = "\n\n---\n\n".join(out)
-        warn = (f"⚠ 最佳相關度偏低({best:.2f})，知識庫可能無此主題或本題超出範圍，請審慎判斷、必要時明說查無。\n\n"
+        warn = (f"⚠ Best relevance is low ({best:.2f}); the KB may lack this topic or the question is out of scope — judge carefully and say so if not found.\n\n"
                 if best < SIM_WARN else "")
-        return warn + body + "\n\n(內容為英文原文，請用中文綜合作答並標註《文件名》為出處；wiki 來源給策略/概念框架，"
-        "game_file 來源給遊戲當前版本精確數值/觸發條件，兩者有出入時以 game_file 數值為準；"
-        "相關度<0.5 的片段參考性低；不足時用 get_doc 看更完整內容；doc_id 形如 庫名:doc_id)"
+        return warn + body + "\n\n(Content is English; synthesize your answer and cite «Document Name» as the source; wiki gives strategy/conceptual framework, "
+        "game_file gives the current version's exact values/trigger conditions, game_file wins on conflicts; "
+        "snippets with relevance <0.5 are weak; use get_doc for fuller content; doc_id has the form kb:doc_id)"
 
     @mcp.tool()
     def grep_kb(pattern: str, kb: str = "", path_prefix: str = "", limit: int = 30) -> str:
-        """精確字面/正則搜尋（遊戲內部 key、精確術語、trigger/modifier 名稱）。path_prefix 可選，限定資料夾子樹。"""
+        """Exact literal/regex search (game-internal keys, exact terms, trigger/modifier names). path_prefix optional, restricts to a folder subtree."""
         hits = S().grep(pattern, kb=(kb or None), limit=limit, path_prefix=(path_prefix.strip() or None))
-        if not hits: return "（查無符合的字面內容）"
-        return "\n\n".join(f"《{h['title']}》(庫:{h.get('kb','')}) | {h['heading_path']}\n來源:{h['source_path']}\n…{h['snippet']}…" for h in hits)
+        if not hits: return "(no matching literal content)"
+        return "\n\n".join(f"«{h['title']}» (kb:{h.get('kb','')}) | {h['heading_path']}\nSource:{h['source_path']}\n…{h['snippet']}…" for h in hits)
 
     @mcp.tool()
     def get_doc(doc_id: str, section: int = -1, sections: str = "", offset: int = 0, max_chars: int = 12000) -> str:
-        """取回結構化文件內容（大型文件用「大綱→章節」導覽，避免超過工具結果上限）。
-        doc_id 形如 "庫名:doc_id"，也接受相對路徑(source_path)。
-        用法：
-        - 小文件：直接回整份。
-        - 大文件且未指定 section/sections：回「文件大綱」(各章節編號與標題)。看過大綱後：
-          · 只要 1 個章節 → section=K。
-          · 從標題判斷有多個章節都可能相關 → **一次用 sections="2,6,17" 全部取回，不要分成好幾次呼叫**
-            (每次呼叫都有成本，能一次拿到就不要分批)。
-          · 找不準是哪幾節、或懷疑答案分散在多處 → 改用 search_kb(query, doc_id="庫名:doc_id") 直接語意搜本文件，
-            往往比自己猜章節快，但注意它是相關度排序、標題語意不夠貼近查詢的章節可能排不進來，
-            此時仍要搭配看大綱確認有沒有漏掉。
-        - section=K：取第 K 章節內容(章節仍過長時，依結尾提示用 offset 續取)。
-        - sections="K1,K2,...":一次取多個章節(各章節依總預算平均分配上限，內容較多時用 section=K 單獨續取)。
-        - offset=N(不給 section)：從本文第 N 字元起讀(search_kb 結果會附此 offset，可直接跳到相關段的完整上下文)。
-        - 遊戲檔案類文件末段通常有「原始腳本(附錄)」，需要核對精確數值/未翻譯的trigger時可讀該段。"""
+        """Retrieve structured document content (large docs use an "outline → section" navigation to avoid exceeding tool-result limits).
+        doc_id has the form "kb:doc_id"; a relative path (source_path) is also accepted.
+        Usage:
+        - Small doc: returns the whole thing.
+        - Large doc with no section/sections given: returns the "document outline" (section numbers and titles). After reading the outline:
+          · Only one section → section=K.
+          · Several sections look relevant from the titles → **fetch them all at once with sections="2,6,17", don't make several calls**
+            (each call has a cost; grab them in one go).
+          · Unsure which sections, or the answer seems scattered → use search_kb(query, doc_id="kb:doc_id") to semantically search this doc directly,
+            often faster than guessing sections, but note it is relevance-ranked so sections whose titles don't match the query semantically may not surface —
+            still cross-check the outline for anything missed.
+        - section=K: fetch section K (if still too long, use offset per the end-of-output hint to continue).
+        - sections="K1,K2,...": fetch multiple sections at once (each capped by an evenly-split budget; use section=K to continue a large one).
+        - offset=N (no section): read from character N of the body (search_kb results carry this offset, so you can jump straight to the relevant section's full context).
+        - game_file docs usually end with a "Raw Script (appendix)"; read it when you need exact values / unmapped triggers."""
         md = S().get_doc(doc_id)
         if not md:
-            return f"（找不到 doc_id={doc_id}）"
+            return f"(doc_id={doc_id} not found)"
         total = len(md)
         cap = min(max(1000, max_chars), DOC_SECTION_CAP)
 
@@ -134,34 +134,34 @@ def build_server(names, label):
             try:
                 idxs = [int(x.strip()) for x in sections.split(",") if x.strip() != ""]
             except ValueError:
-                return f"（sections 參數格式錯誤，應為逗號分隔的章節編號，如 \"2,6,17\"）"
+                return f"(bad 'sections' format; use comma-separated section numbers, e.g. \"2,6,17\")"
             per_cap = max(1500, cap // max(1, len(idxs)))
             parts = []
             for idx in idxs:
                 if idx < 0 or idx >= len(secs):
-                    parts.append(f"（章節[{idx}] 不存在，本文件只有 0–{len(secs)-1}）")
+                    parts.append(f"(section [{idx}] does not exist; this doc only has 0–{len(secs)-1})")
                     continue
                 lvl, head, body = secs[idx]
                 seg = body[:per_cap]
-                more = (f"\n（本章節尚有後續，單獨續取：get_doc(\"{doc_id}\", section={idx}, offset={len(seg)})）"
+                more = (f"\n(section has more; continue separately: get_doc(\"{doc_id}\", section={idx}, offset={len(seg)}))"
                         if len(seg) < len(body) else "")
-                parts.append(f"### 章節[{idx}] {head}\n{seg}{more}")
-            return f"（doc_id={doc_id} 多章節合併回傳，共 {len(idxs)} 節）\n\n" + "\n\n---\n\n".join(parts)
+                parts.append(f"### Section [{idx}] {head}\n{seg}{more}")
+            return f"(doc_id={doc_id} multiple sections combined, {len(idxs)} in total)\n\n" + "\n\n---\n\n".join(parts)
 
         # 指定單一章節
         if section >= 0:
             secs = _split_sections(md)
             if not secs: return md[:cap]
             if section >= len(secs):
-                return f"（doc_id={doc_id} 只有 {len(secs)} 個章節，編號 0–{len(secs)-1}；請先不帶 section 取大綱）"
+                return f"(doc_id={doc_id} has only {len(secs)} sections, numbered 0–{len(secs)-1}; fetch the outline first without a section)"
             lvl, head, body = secs[section]
             off = min(max(0, offset), len(body)); seg = body[off:off+cap]; end = off+len(seg)
-            info = f"（doc_id={doc_id} · 章節[{section}] {head} · 共 {len(body)} 字元，本段 {off}–{end}）\n\n"
+            info = f"(doc_id={doc_id} · section [{section}] {head} · {len(body)} chars total, this slice {off}–{end})\n\n"
             if end < len(body):
-                tail = f"\n\n（本章節尚有後續，續取：get_doc(\"{doc_id}\", section={section}, offset={end})）"
+                tail = f"\n\n(section has more; continue: get_doc(\"{doc_id}\", section={section}, offset={end}))"
             else:
-                nxt = f"；下一章節 get_doc(\"{doc_id}\", section={section+1})" if section+1 < len(secs) else ""
-                tail = f"\n\n（本章節結束{nxt}）"
+                nxt = f"; next section get_doc(\"{doc_id}\", section={section+1})" if section+1 < len(secs) else ""
+                tail = f"\n\n(end of section{nxt})"
             return info + seg + tail
 
         # offset 模式：對「去 frontmatter 的本文」切片，與 chunk 的 char_start 同基準對齊
@@ -171,52 +171,52 @@ def build_server(names, label):
             # 本文若 ≤ 整份門檻(本可整份回) → 從 offset 一次給到文末，不分頁；大文件才套單段上限
             ocap = (tb - off) if tb <= DOC_WHOLE_RETURN else cap
             seg = body[off:off+ocap]; end = off+len(seg)
-            tail = (f"\n\n（尚有後續：get_doc(\"{doc_id}\", offset={end})）" if end < tb else "\n\n（已到文件結尾）")
-            return f"（doc_id={doc_id} 本文共 {tb} 字元，本段 {off}–{end}）\n\n" + seg + tail
+            tail = (f"\n\n(more follows: get_doc(\"{doc_id}\", offset={end}))" if end < tb else "\n\n(end of document)")
+            return f"(doc_id={doc_id} body is {tb} chars total, this slice {off}–{end})\n\n" + seg + tail
 
         # 大文件、未指定 section → 回大綱
         secs = _split_sections(md)
-        lines = [f"# 文件大綱  doc_id={doc_id}（共 {total} 字元、{len(secs)} 章節，內容過長未直接回傳）", ""]
+        lines = [f"# Document outline  doc_id={doc_id} ({total} chars, {len(secs)} sections; too long to return directly)", ""]
         for k, (lvl, head, body) in enumerate(secs):
             indent = "  " * max(0, lvl-1)
-            lines.append(f"[{k}] {indent}{head}  （{len(body)} 字元）")
+            lines.append(f"[{k}] {indent}{head}  ({len(body)} chars)")
             if sum(len(x)+1 for x in lines) > DOC_SECTION_CAP - 400:
-                lines.append(f"… 章節過多，僅列前 {k+1} 個"); break
-        lines += ["", "取用方式（擇一）：",
-                  f"· 找特定資訊（推薦）：search_kb(\"你的問題\", doc_id=\"{doc_id}\") — 只在本文件內檢索相關段落",
-                  f"· 讀單一章節：get_doc(\"{doc_id}\", section=K)",
-                  f"· 看過上面章節標題後覺得有好幾節都可能相關 → 一次讀多節：get_doc(\"{doc_id}\", sections=\"2,6,17\")，"
-                  "不要為每節分別呼叫"]
+                lines.append(f"… too many sections, showing only the first {k+1}"); break
+        lines += ["", "How to fetch (pick one):",
+                  f"· Find specific info (recommended): search_kb(\"your question\", doc_id=\"{doc_id}\") — search only within this doc",
+                  f"· Read one section: get_doc(\"{doc_id}\", section=K)",
+                  f"· If several section titles above look relevant → read them at once: get_doc(\"{doc_id}\", sections=\"2,6,17\"), "
+                  "don't call once per section"]
         return "\n".join(lines)
 
     @mcp.tool()
     def list_tree(path_prefix: str = "", depth: int = 1, kb: str = "") -> str:
-        """瀏覽虛擬資料夾樹：頂層分 wiki/ 與 game_file/ 兩大子樹，列出某層的子資料夾(含子樹文件數)與檔案。
-        path_prefix 空=從頂層開始(看到 wiki/ game_file/ 兩個分支)；depth 控制展開層數。
-        想在某分類內找內容時，先用這個看路徑，再 search_kb(query, path_prefix="該路徑")。"""
+        """Browse the virtual folder tree: the top level splits into wiki/ and game_file/ subtrees; lists a level's subfolders (with subtree doc counts) and files.
+        path_prefix empty = start from the top (you'll see the wiki/ and game_file/ branches); depth controls how many levels to expand.
+        To find content within a category, use this to see the path first, then search_kb(query, path_prefix="that path")."""
         t = S().list_tree(path_prefix=path_prefix.strip(), depth=depth, kb=(kb or None))
         if not t["folders"] and not t["files"]:
-            return f"（路徑「{t['prefix'] or '(頂層)'}」下無內容；可能 path_prefix 拼錯，先用 list_tree() 看頂層）"
-        lines = [f"# 資料夾樹：{t['prefix'] or '(頂層)'}"]
+            return f"(nothing under path \"{t['prefix'] or '(top)'}\"; path_prefix may be misspelled — use list_tree() to see the top level)"
+        lines = [f"# Folder tree: {t['prefix'] or '(top)'}"]
         if t["folders"]:
-            lines.append("\n## 子資料夾（含子樹文件數）")
+            lines.append("\n## Subfolders (with subtree doc count)")
             for name, cnt in t["folders"]:
-                lines.append(f"- 📁 {name}/  （{cnt} 份）")
+                lines.append(f"- 📁 {name}/  ({cnt} docs)")
                 if sum(len(x)+1 for x in lines) > DOC_SECTION_CAP - 400:
-                    lines.append("… 資料夾過多，已截斷；用更深的 path_prefix 縮範圍"); break
+                    lines.append("… too many folders, truncated; narrow with a deeper path_prefix"); break
         if t["files"]:
-            lines.append("\n## 本層檔案")
+            lines.append("\n## Files at this level")
             for f in t["files"]:
                 ref = f"{f['kb']}:{f['doc_id']}"
                 lines.append(f"- 📄 {f['name']}  (doc_id={ref})")
                 if sum(len(x)+1 for x in lines) > DOC_SECTION_CAP - 200:
-                    lines.append("… 檔案過多，已截斷"); break
-        lines.append("\n用法：下鑽 list_tree(path_prefix=\"上面某資料夾\")；或 search_kb(query, path_prefix=\"…\") 在子樹內檢索")
+                    lines.append("… too many files, truncated"); break
+        lines.append("\nUsage: drill down with list_tree(path_prefix=\"a folder above\"); or search_kb(query, path_prefix=\"…\") to search within the subtree")
         return "\n".join(lines)
 
     @mcp.tool()
     def list_index(kb: str = "", path_prefix: str = "", doc_type: str = "") -> str:
-        """列出文件清單。建議用 path_prefix 限定某資料夾子樹(可靠)；doc_type 為粗分類(如 country/mechanic/idea_group)，僅供粗略參考。"""
+        """List documents. Prefer path_prefix to restrict to a folder subtree (reliable); doc_type is a coarse category (e.g. country/mechanic/idea_group), rough reference only."""
         s = S(); targets = s._targets(kb or None); rows = []
         dt = doc_type.strip().lower(); pf = path_prefix.strip()
         for n in targets:
@@ -224,42 +224,42 @@ def build_server(names, label):
                 if dt and str(m.get("doc_type", "")).strip().lower() != dt: continue
                 if pf and not KBSearcher._under_prefix(m.get("source_path"), pf): continue
                 rows.append((n, m))
-        if not rows: return "（無符合文件；path_prefix 可能拼錯，先用 list_tree 看路徑）"
-        lines = [f"- {n}:{m['doc_id']} 《{m['title']}》 ‹{m.get('source_path','')}›" for n, m in rows[:400]]
-        head = f"共 {len(rows)} 份（庫: {', '.join(targets)}{('；路徑='+pf) if pf else ''}）{'，僅列前 400' if len(rows)>400 else ''}：\n"
+        if not rows: return "(no matching documents; path_prefix may be misspelled — use list_tree to see the paths)"
+        lines = [f"- {n}:{m['doc_id']} «{m['title']}» ‹{m.get('source_path','')}›" for n, m in rows[:400]]
+        head = f"{len(rows)} docs (kb: {', '.join(targets)}{('; path='+pf) if pf else ''}){', showing first 400' if len(rows)>400 else ''}:\n"
         return head + "\n".join(lines)
 
     @mcp.tool()
     def knowledge_map(kb: str = "") -> str:
-        """分類地圖：知識庫各分類(來源×類型，如 wiki/country、game_file/idea_group)的文件量與代表文件。
-        想看『資料夾結構』逐層瀏覽請改用 list_tree。"""
-        s = S(); targets = s._targets(kb or None); out = ["# 知識庫分類地圖"]
+        """Category map: for each KB category (source × type, e.g. wiki/country, game_file/idea_group), the doc count and representative docs.
+        To browse the 'folder structure' level by level, use list_tree instead."""
+        s = S(); targets = s._targets(kb or None); out = ["# Knowledge base category map"]
         for n in targets:
             dm = s.s(n).doc_map; cats = dm.get("categories", []); titles = dm.get("titles", {}); nd = len(titles)
-            out.append(f"\n## 庫「{n}」（{nd} 份文件）")
+            out.append(f"\n## KB \"{n}\" ({nd} docs)")
             if cats:
                 for c in cats[:20]:
                     ex = [titles.get(d, "") for d in c["docs"][:3]]; ex = [e for e in ex if e]
-                    extxt = ("　例：" + "、".join(f"《{e}》" for e in ex)) if ex else ""
-                    out.append(f"- {c['key']}（{len(c['docs'])} 份){extxt}")
+                    extxt = ("  e.g. " + ", ".join(f"«{e}»" for e in ex)) if ex else ""
+                    out.append(f"- {c['key']} ({len(c['docs'])} docs){extxt}")
             else:
-                out.append("（無分類資料）")
+                out.append("(no category data)")
         return "\n".join(out)
 
     @mcp.tool()
     def related_docs(doc_id: str) -> str:
-        """給 doc_id("庫名:doc_id")，回傳所屬分類、向量最相關文件。"""
+        """Given a doc_id ("kb:doc_id"), returns its category and the most vector-similar documents."""
         s = S(); n, did, dm = s.related(doc_id)
-        if not dm: return f"（找不到 {doc_id} 的關聯）"
+        if not dm: return f"(no relations found for {doc_id})"
         titles = dm.get("titles", {})
-        lines = [f"# {n}:{did} 《{titles.get(did, did)}》的關聯（庫:{n}）"]
+        lines = [f"# Relations of {n}:{did} «{titles.get(did, did)}» (kb:{n})"]
         cat = next((c for c in dm.get("categories", []) if did in c["docs"]), None)
         if cat:
-            lines.append(f"\n## 所屬分類「{cat['key']}」（共 {len(cat['docs'])} 份）")
+            lines.append(f"\n## Category \"{cat['key']}\" ({len(cat['docs'])} docs)")
             lines += [f"- {n}:{d} {titles.get(d, d)}" for d in cat["docs"] if d != did][:8]
         rel = dm.get("related", {}).get(did, [])
-        lines.append("\n## 向量最相關")
-        lines += ([f"- {n}:{d} {titles.get(d, d)}" for d in rel] or ["（無）"])
+        lines.append("\n## Most vector-similar")
+        lines += ([f"- {n}:{d} {titles.get(d, d)}" for d in rel] or ["(none)"])
         return "\n".join(lines)
 
     return mcp, S

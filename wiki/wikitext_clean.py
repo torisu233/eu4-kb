@@ -20,6 +20,19 @@ _LAST_PARAM_NAMES = {"green", "red", "yellow", "dlc-only", "dlc", "tooltip", "ic
 _DROP_ENTIRELY_NAMES = {"icon", "icon24", "iconify"}
 # (e) 保留全部參數並用空白接合(版面包裝模板，內容才是重點)
 _JOIN_PARAMS_NAMES = {"plainlist", "multicolumn", "box wrapper", "columns"}
+# (f) 多具名字段模板：模板名(小寫) -> [(欄位名小寫, 顯示標籤), ...]，只列有敘述性內容的欄位
+# (跳過 version/id/collapse/mtth/map 等純技術/排版欄位)。2026-07 審計發現：這類模板(Decision/
+# Event/Option/Country)原本走下面的兜底規則，會被誤判成「大多數欄位是自由文本」而只留1個欄位、
+# 或「全部是key=value」而整個丟棄——不管哪種都會把 potential/allow/trigger 這類真正回答「怎麼做/
+# 何時觸發」的核心內容悄悄丟掉(見 memory: eu4-kb-project-status「怎麼成立莫臥兒」bug 的診斷記錄)。
+_KEEP_FIELDS_NAMES = {
+    "decision": [("decision_name", "Decision"), ("potential", "Potential"), ("allow", "Allow"), ("effect", "Effect")],
+    "country":  [("government", "Government"), ("culture", "Culture"), ("religion", "Religion"),
+                 ("capital", "Capital"), ("tech", "Tech"), ("rank", "Rank")],
+    "event":    [("event_name", "Event"), ("event_text", "Description"), ("trigger", "Trigger"),
+                 ("effect", "Effect"), ("options", "Options")],
+    "option":   [("option_text", "Option"), ("effect", "Effect")],
+}
 
 _TEMPLATE_INNER_RE = re.compile(r'\{\{([^{}]*)\}\}')
 # 注意：邊界只能用 [ \t]*(水平空白)，不能用 \s*——\s 會吃掉換行，貪婪比對在 re.M 下會把標題後面
@@ -27,12 +40,34 @@ _TEMPLATE_INNER_RE = re.compile(r'\{\{([^{}]*)\}\}')
 # 這個 bug 曾經讓幾乎全部 1883 篇 wiki 文件的標題都失效，教訓：正則邊界符號要謹慎選字元類。
 _HEADING_RE = re.compile(r'^(={2,6})[ \t]*(.*?)[ \t]*\1[ \t]*$', re.M)
 _LINK_RE = re.compile(r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]')
-_KV_ARG_RE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_ \-]*\s*=\s*.*$')   # 形如 "government=Free City"、"link=on" 的具名參數(非顯示文字)
+# 注意：一定要有 re.S(DOTALL)——Decision/Event 這類模板的 potential=/allow=/trigger= 欄位值本身是
+# 多行清單，沒有 re.S 時 "." 不跨行，導致這些多行欄位被誤判成「不是 key=value」而走進兜底的錯誤分支
+# (2026-07 審計發現的真實bug，見上面 _KEEP_FIELDS_NAMES 的說明)。
+_KV_ARG_RE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_ \-]*\s*=\s*.*$', re.S)   # 形如 "government=Free City"、"link=on" 的具名參數(非顯示文字)
+_KV_SPLIT_RE = re.compile(r'^([a-zA-Z_][a-zA-Z0-9_ \-]*?)\s*=\s*(.*)$', re.S)
 _HTML_WRAP_RE = re.compile(r'</?(?:div|span)\b[^>]*>', re.I)       # 排版用 HTML 包裝標籤(保留內容、丟標籤)
 
 
+def _parse_kv(a):
+    """把 "Government=Indian Sultanate" 解析成 ("government", "Indian Sultanate")；非 kv 形式回傳 None。"""
+    m = _KV_SPLIT_RE.match(a)
+    return (m.group(1).strip().lower(), m.group(2)) if m else None
+
 def _split_template(inner):
-    parts = inner.split("|")
+    """按頂層 | 切參數——注意 [[連結|顯示文字]] 內部的 | 不算分隔符，否則 potential=/allow= 這類
+    欄位值裡只要出現一個 wiki 連結(如 [[end-game_tag|end-game nation]])就會被錯誤地切成兩段參數，
+    field 內容和邊界全部亂掉(2026-07 審計發現的真實bug)。"""
+    parts = []; buf = []; depth = 0; i = 0; n = len(inner)
+    while i < n:
+        two = inner[i:i+2]
+        if two == '[[':
+            depth += 1; buf.append(two); i += 2; continue
+        if two == ']]' and depth > 0:
+            depth -= 1; buf.append(two); i += 2; continue
+        if inner[i] == '|' and depth == 0:
+            parts.append(''.join(buf)); buf = []; i += 1; continue
+        buf.append(inner[i]); i += 1
+    parts.append(''.join(buf))
     return parts[0].strip(), [p.strip() for p in parts[1:]]
 
 def _process_template(name, args):
@@ -50,6 +85,14 @@ def _process_template(name, args):
         return args[-1] if args else ""
     if nl in _JOIN_PARAMS_NAMES:
         return " ".join(a for a in args if a)
+    if nl in _KEEP_FIELDS_NAMES:
+        found = {}
+        for a in args:
+            kv = _parse_kv(a)
+            if kv and kv[1].strip():
+                found[kv[0]] = kv[1].strip()
+        parts = [f"{label}: {found[key]}" for key, label in _KEEP_FIELDS_NAMES[nl] if key in found]
+        return "\n".join(parts)
     # 兜底：未知模板 -> 由後往前找第一個「非 key=value 形式」的參數當顯示文字(多數展示型模板的慣例是
     # 最後一個位置參數才是要顯示的文字，key=value 形式的通常是版面/連結控制參數，如 link=on、size=24px)；
     # 全部參數都是 key=value(如 infobox 類模板)或完全無參數 -> 整個丟棄，不留生硬的 "key=value" 殘渣。

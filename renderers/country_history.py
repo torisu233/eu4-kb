@@ -6,14 +6,14 @@ from clausewitz.translate_rules import translate_block, translate_block_md
 from clausewitz.serialize import serialize
 from .base import make_doc_id, source_hash, assemble_doc
 
-_ROLE_LABEL = {"monarch": "即位为君主", "heir": "王储诞生", "queen": "王后/配偶"}
+_ROLE_LABEL = {"monarch": "accedes as ruler", "heir": "heir born", "queen": "consort"}
 
 def _fmt_ruler(blk, role):
     name = blk.get("name", "?")
     dynasty = blk.get("dynasty")
     adm, dip, mil = blk.get("adm"), blk.get("dip"), blk.get("mil")
-    dynasty_s = f"（{dynasty}王朝）" if dynasty else ""
-    stats = f"（行政{adm}/外交{dip}/军事{mil}）" if any([adm, dip, mil]) else ""
+    dynasty_s = f" (House of {dynasty})" if dynasty else ""
+    stats = f" (ADM {adm}/DIP {dip}/MIL {mil})" if any([adm, dip, mil]) else ""
     label = _ROLE_LABEL.get(role, role)
     return f"{name}{dynasty_s} {label}{stats}"
 
@@ -27,7 +27,7 @@ def _fmt_date_line(date_str, blk, loc):
             parts.append(_fmt_ruler(sub, role))
     leftover = Block([(k, v) for k, v in blk.items if k is not None and k.lower() not in ("monarch", "heir", "queen")])
     extra = translate_block(leftover, loc) if leftover.items else []
-    head = f"- **{date_disp}**" + ("：" + "；".join(parts) if parts else "")
+    head = f"- **{date_disp}**" + (": " + "; ".join(parts) if parts else "")
     lines = [head]
     lines += ["  " + e for e in extra]
     return lines

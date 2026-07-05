@@ -23,13 +23,32 @@ kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 
                                                             fundamentals_extract.py ┘
 ```
 
+## 語言：英文為來源真相 + 可切換語言層（2026-07 重構）
+
+**核心原則**：語料統一為英文（wiki 本來就是英文；game_file 的 trigger/effect 也改成英文渲染），英文是
+可對照遊戲核實的「來源真相」。**回答語言由 prompt 控制，不在資料層**——英文 prompt 出英文答案、中文
+prompt 讀同一份英文語料出中文答案（中文是 LLM 現場意譯，**非官方 paratranz 術語**，那是預留的下一步）。
+
+**語言切換鉤子（都不寫死）**：單一 `lang` 參數，預設 `en`（env `KB_LANG` / `/ask` 請求 body）：
+- 前端 `kb_ui.html`：`I18N={en,zh}` 字典 + 可見語言下拉，切換即時換 UI chrome 並把 `lang` 放進請求 body。
+  英文為預設；中文條目是**簡體**（2026-07 從繁體改簡）。
+- 後端 `kb_answer_backend.py`：`PROMPTS={en,zh}`，`_pick_prompt(lang)` 選 system prompt；`answer(question, lang)`。
+- 資料層：`LocalisationIndex.load_dir(lang=...)` 是換語言源的現成鉤子（本輪只跑 en，中文資料層留待 paratranz）。
+
+**trigger/effect 英文渲染**（`translate_rules.py`，2026-07 從中文改英文，三級取英文）：
+1. **遊戲自帶 loc 模板優先**（`_GAME_LOC_CMDS` 白名單，如 `HAS_REFORM`→"Has enacted Government Reform X"）：
+   `localisation.render_game_trigger()` 填佔位符($REFORM/$CULTURE…用值的英文名、$COUNTRY 等作用域填通用詞)+去§色碼。**尽量用游戏英文原串。**
+2. **手寫英文兜底**：遊戲無乾淨 loc key 的命令（and/or/not→All/Any/None of:、has_dlc、flag、modifier 增刪等）。
+3. **最終兜底必定命中**：翻不了原樣顯示 `` `key = value` `` + "(unmapped — see raw script appendix)"。
+   白名單**必須人工核對**——遊戲 loc 有假朋友(`TAG:0 "English"`、`GOVERNMENT:0 "Government"`、`tolerance_own` 值是數字)，盲查會出錯。
+
 ## 套件結構
 
 | 模組 | 職責 |
 |------|------|
 | `kb/common.py` | 環境穩定性修正、路徑/設定(複用自前身專案) |
 | `kb/wiki_extract.py` + `wiki/` | MediaWiki API列舉/抓取(`mw_client.py`)、模板剝離+表格轉換(`wikitext_clean.py`/`wikitable.py`) |
-| `kb/game_extract.py` + `clausewitz/` + `renderers/` | Clausewitz腳本解析(`tokenizer.py`/`parser.py`)、本地化(`localisation.py`)、宏展開(`macro_expand.py`)、trigger/effect規則翻譯(`translate_rules.py`)、實體渲染器 |
+| `kb/game_extract.py` + `clausewitz/` + `renderers/` | Clausewitz腳本解析(`tokenizer.py`/`parser.py`)、本地化(`localisation.py`)、宏展開(`macro_expand.py`)、trigger/effect**英文渲染**(`translate_rules.py`，游戏loc白名单優先+手写英文兜底，見上方語言章節)、實體渲染器 |
 | `kb/fundamentals_extract.py` + `fundamentals_src/` | 手寫「EU4遊戲常識框架」源md(簡單title/category frontmatter) → docs/*.md + manifest(`source=fundamentals`，`doc_id`前綴`f-`) |
 | `kb/build.py` | chunk(段落+標題感知切塊)/embed/lance/organize(分類統計+向量最近鄰)/index/tree |
 | `kb/searcher.py` | 混合檢索器：向量+英文BM25→RRF→可選reranker→去重 |
@@ -151,7 +170,8 @@ Variables：`GCP_IMAGE`/`GCP_REGION`/`GCP_WIF_PROVIDER`/`GCP_DEPLOY_SA`/`GCP_RUN
 
 ## 資料現狀（2026-07）
 
-2604篇文檔（1883 wiki + 714 game_file + 7 fundamentals）→ ~37300+個chunk。game_file 是 **PoC範圍**：僅
+2604篇文檔（1883 wiki + 714 game_file + 7 fundamentals）→ ~48700個chunk（2026-07 從 ~37300 漲上來，是
+wiki清洗修復`{{Decision}}`/`{{Event}}`/`{{Country}}`模板丟字段的bug後恢復的真實內容，見下方已知坑）。game_file 是 **PoC範圍**：僅
 ideas(25個理念組全量) + government_reforms(688個全量) + country_history(僅明朝Ming 1國)。
 missions/events/decisions/province_history **完全未抽取**，是最大的已知覆蓋缺口，按規劃等
 `feedback/turns.jsonl` 累積真實查詢日誌後再數據驅動決定優先級。
@@ -196,6 +216,14 @@ missions/events/decisions/province_history **完全未抽取**，是最大的已
   heading_path。教訓：正則邊界符號只能用`[ \t]*`(水平空白)，不能用`\s*`。**且不能指望來源wikitext
   本身有空行**——真實wikitext很常見「標題後緊接內容不留空行」(尤其標題後直接接清單)，`convert_headings()`
   現在會強制在標題轉換後補一個換行，不依賴來源格式。
+- **多具名字段模板(`{{Decision}}`/`{{Event}}`/`{{Country}}`)靜默丟字段**（2026-07 由「怎麼成立莫臥兒」
+  這個真實問題暴露）：`wikitext_clean._process_template()` 的兜底規則對不認識的多字段模板，會誤把
+  變身決議的 `potential=`/`allow=`、事件的 `trigger=`、國家信息框的 `government=/culture=/religion=` 等
+  **整段悄悄丟掉**，只留一個字段或全丟。兩個根因：① `_KV_ARG_RE` 沒加 `re.S`，多行字段值被誤判成
+  「非 key=value」；② `_split_template` 用 `str.split("|")`，把 `[[a|b]]` 內鏈的 `|` 也當分隔符。
+  全庫影響 60(Decision)+388(Event)+514(Country) 篇。**解法**：`_KEEP_FIELDS_NAMES` 白名單顯式保留這四類
+  模板的敘述性字段；`_split_template` 改成 wikilink-aware(忽略 `[[]]` 內的 `|`)；`_KV_ARG_RE` 加 `re.S`。
+  **教訓**：兜底規則「靜默丟棄」比「顯式標註未知」危險得多——build成功不代表內容沒丟，要拿真實問題端到端驗證。
 - **嵌套MediaWiki表格**：cell內容裡又是一個完整`{|...|}`(常見於"modifier明細"這種collapsible子表格)，
   `wiki/wikitable.py` 用遞迴解析(深度上限`_MAX_DEPTH=4`)，子表格轉換後併入外層cell文字，保留行的
   主體上下文(如"這是哪個叛軍類型的修正")。超過遞迴深度才真的降級為純文字。

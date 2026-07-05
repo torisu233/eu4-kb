@@ -19,8 +19,8 @@ def build_frontmatter(fields):
 def assemble_doc(frontmatter_fields, title, overview_md, conditions_md, raw_script):
     fm = build_frontmatter(frontmatter_fields)
     parts = [fm, "", f"# {title}", "",
-             "## Overview", "", (overview_md or "").strip() or "（无）", "",
-             "## Conditions and Effects (translated)", "", (conditions_md or "").strip() or "（无附加条件/效果）", "",
+             "## Overview", "", (overview_md or "").strip() or "(none)", "",
+             "## Conditions and Effects", "", (conditions_md or "").strip() or "(no additional conditions/effects)", "",
              "## Raw Script (appendix)", "", "```", (raw_script or "").strip(), "```", ""]
     return "\n".join(parts)
 

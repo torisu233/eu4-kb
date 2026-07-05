@@ -42,7 +42,7 @@ class KBSearcher:
             self._rr_tried=True
             try:
                 from sentence_transformers import CrossEncoder
-                self._rr=CrossEncoder(self.rerank_model)
+                self._rr=CrossEncoder(self.rerank_model, trust_remote_code=True)  # jina-reranker-v2需要自訂建模代碼
             except Exception as e:
                 sys.stderr.write(f"[reranker off] {repr(e)[:120]}\n"); self._rr=None
         return self._rr
