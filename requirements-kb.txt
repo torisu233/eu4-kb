@@ -1,4 +1,4 @@
-# KB 檢索/建置層依賴（衍生自 前身專案，拿掉中文特有的 jieba/opencc，加 requests 供 wiki extractor 用）
+# KB 檢索/建置層依賴（衍生自作者先前的中文知識庫專案，拿掉中文特有的 jieba/opencc，加 requests 供 wiki extractor 用）
 # torch 另從 CPU index 安裝：pip install torch --index-url https://download.pytorch.org/whl/cpu
 annotated-types==0.7.0
 anyio==4.14.0

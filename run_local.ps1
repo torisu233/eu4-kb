@@ -7,7 +7,6 @@
 #        ./run_local.ps1
 #
 # 本腳本會：確保 node/claude 在 PATH → 啟動 KB MCP server(8766) → 啟動問答後端(8781)
-# 注意：連接埠與 前身專案(8765/8780) 錯開，可與其同時運行。
 
 $ErrorActionPreference = "Stop"
 $SRC     = $PSScriptRoot

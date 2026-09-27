@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """建置：chunk -> embed(可續跑) -> LanceDB -> (可選)organize -> INDEX.md。
-與 前身專案 的差異：內容語言為英文（wiki + 遊戲檔案抽取皆為英文原文），
+與作者先前的中文知識庫專案相比：內容語言為英文（wiki + 遊戲檔案抽取皆為英文原文），
 故拿掉簡繁轉換(OpenCC)，organize 的關鍵詞抽取改用 TF-IDF(sklearn) 取代 jieba。"""
 import os, sys, json, re, time, shutil
 from . import common
@@ -203,7 +203,7 @@ def build_lance(name):
 
 # ---------------- organize (可選) ----------------
 # 設計說明：EU4 資料本身已有乾淨的現成分類(source x doc_type/entity_category/wiki_category)，
-# 不像 雜亂的通用文件堆(doc_type 只是從檔名猜的、真的沒有可靠分類)需要無監督聚類去發現結構。
+# 不像雜亂的通用文件堆(doc_type 只是從檔名猜的、真的沒有可靠分類)需要無監督聚類去發現結構。
 # 實測 KMeans+TF-IDF 對本專案資料的結果：16 群裡 12 群對某個既有 doc_type 純度 >65%(4 群 >90%)，
 # 且把同一個 doc_type(如 714 篇 government_reform)武斷切成 3~4 坨、關鍵詞多是模板樣板詞，
 # 等於花力氣重新(且較粗糙地)算出我們已經知道的答案。故 organize 改為：分類統計(確定性、免ML) +

@@ -3,7 +3,7 @@
 
 用法:
   python kb_mcp_server.py --kb eu4              # 單庫
-  加 --http 以 HTTP 常駐(127.0.0.1:8766/mcp，避免與 前身專案 的 8765 衝突)
+  加 --http 以 HTTP 常駐(127.0.0.1:8766/mcp)
 
 工具: search_kb / grep_kb / get_doc / list_tree / list_index / knowledge_map / related_docs
 路徑結構化：search_kb/grep_kb 可帶 path_prefix 限定資料夾子樹；list_tree 瀏覽資料夾樹

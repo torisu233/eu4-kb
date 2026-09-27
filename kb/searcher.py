@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """混合檢索器：向量(LanceDB) + 英文 BM25 → RRF 融合。可選 reranker。
-模型惰性載入（首次呼叫才載入）。與 前身專案 的差異：內容為英文，故 norm() 只做小寫化(不做簡繁轉換)，
+模型惰性載入（首次呼叫才載入）。與中文版前身的差異：內容為英文，故 norm() 只做小寫化(不做簡繁轉換)，
 BM25 tokenizer 改用正則英文分詞(取代 jieba)。"""
 import os, sys, json, re
 from . import common

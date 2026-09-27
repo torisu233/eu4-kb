@@ -1,8 +1,8 @@
 # CLAUDE.md — EU4 知識庫（eu4-kb）
 
 基於 **RAG + MCP + Claude Agent SDK** 的 Europa Universalis IV 遊戲知識庫問答系統。兩個資料源
-（官方 wiki + 遊戲安裝檔案）進同一個統一知識庫，混合檢索融合排序。架構大量複用姊妹專案
-（作者先前的知識庫專案）的下游流水線，抽取層（wiki抓取 + 遊戲腳本解析）全新實作。
+（官方 wiki + 遊戲安裝檔案）進同一個統一知識庫，混合檢索融合排序。下游流水線(切塊/嵌入/檢索/MCP/問答後端)
+複用作者先前一個知識庫專案，抽取層（wiki抓取 + 遊戲腳本解析）全新實作。私人本機備註見 `CLAUDE.local.md`(不進 repo)。
 
 ## 架構與連接埠
 
@@ -60,7 +60,7 @@ kb_ui.html ─→ 問答後端 :8781 (kb_answer_backend.py)         │  訂閱 
 
 | 模組 | 職責 |
 |------|------|
-| `kb/common.py` | 環境穩定性修正、路徑/設定(複用自前身專案) |
+| `kb/common.py` | 環境穩定性修正、路徑/設定(複用自先前的知識庫專案) |
 | `kb/wiki_extract.py` + `wiki/` | MediaWiki API列舉/抓取(`mw_client.py`)、模板剝離+表格轉換(`wikitext_clean.py`/`wikitable.py`) |
 | `kb/game_extract.py` + `clausewitz/` + `renderers/` | Clausewitz腳本解析(`tokenizer.py`/`parser.py`)、本地化(`localisation.py`)、宏展開(`macro_expand.py`)、trigger/effect**英文渲染**(`translate_rules.py`，游戏loc白名单優先+手写英文兜底，見上方語言章節)、實體渲染器 |
 | `kb/fundamentals_extract.py` + `fundamentals_src/` | 手寫「EU4遊戲常識框架」源md(簡單title/category frontmatter) → docs/*.md + manifest(`source=fundamentals`，`doc_id`前綴`f-`) |
@@ -95,8 +95,7 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 ## 部署（GCP Cloud Run，2026-07，已上線驗證）
 
 參考常見的 GitHub Actions → Cloud Run 流程設計，但因為架構差異很大
-（見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。完整設計記錄在
-（本機計劃文件）（GCP CI/CD部署計劃段落）。**服務已實際部署
+（見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。**服務已實際部署
 並用真實問題驗證通過**（`gcloud run services describe eu4-kb --region asia-northeast1`查URL）。
 
 **訪問控制**：2026-07按用戶要求從"預設私有(需Google IAM身份)"改成**完全公開**
@@ -139,10 +138,10 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 掛載路徑，**更新數據不需要重新部署代碼**。這樣資料在GCP Console的Cloud Storage瀏覽器裡可以直接
 查看(manifest.jsonl/INDEX.md/tree.json都是人類可讀文字)。
 
-**與典型單服務部署的關鍵差異**：① 典型單服務部署用Postgres(Cloud SQL)，eu4-kb用本地文件型LanceDB，數據"能不能在
-CI裡建"這件事完全不同；② 典型單服務部署單一FastAPI服務，eu4-kb是MCP server+問答後端兩個獨立HTTP服務，合併
+**與典型單服務部署的關鍵差異**：① 典型做法用Postgres(Cloud SQL)，eu4-kb用本地文件型LanceDB，數據"能不能在
+CI裡建"這件事完全不同；② 典型是單一FastAPI服務，eu4-kb是MCP server+問答後端兩個獨立HTTP服務，合併
 進一個容器解決；③ `CLAUDE_CODE_OAUTH_TOKEN`是個人訂閱token非按量計費API key，本服務定位為
-"個人/小圈子私有"(`--max-instances 1`、預設不開放匿名訪問)而非典型單服務部署那種可橫向擴展的公開產品；
+"個人/小圈子私有"(`--max-instances 1`、預設不開放匿名訪問)而非可橫向擴展的公開產品；
 ④ eu4-kb目前零自動化測試，新增了`tests/test_smoke.py`最小冒煙測試(import檢查+合成假數據跑一遍
 build_all全流程+kb_mcp_server連通性)作為部署前質量閘門，不追求覆蓋率。
 
@@ -151,9 +150,7 @@ IAM角色）見 `docs/gcp_setup.md`，需要你自己的GCP帳號權限執行，
 Variables：`GCP_IMAGE`/`GCP_REGION`/`GCP_WIF_PROVIDER`/`GCP_DEPLOY_SA`/`GCP_RUN_SA`/`GCP_KB_BUCKET`/
 `GCP_OAUTH_SECRET_NAME`。
 
-**推送權限**：GitHub push走的是`torisu233`這個帳號(對`torisuorg/eu4-kb`有admin權限)，本機`gh`/`git`
-的credential helper已切過去(`gh auth setup-git`)；同機另有另一個帳號登入過但沒有這個repo權限，
-如果之後推送被拒絕，先查`gh auth status`確認active account是不是`torisu233`。
+**推送權限**：推送被拒絕時先查`gh auth status`確認 active account 對本 repo 有寫入權限(細節見`CLAUDE.local.md`)。
 
 ### 上線後的性能調優(2026-07，也是實測踩坑+修復，非事先設計)
 
