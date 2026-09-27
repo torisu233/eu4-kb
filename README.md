@@ -5,7 +5,7 @@
 
 <!-- DEMO_GIF -->
 
-**[Architecture](#architecture)** · **[Governance](#governance-and-blast-radius)** · **[Production notes](#production-notes)** · **[Data & licensing](#data-sources-and-licensing)**
+**[▶ Replay demo](https://torisuorg.github.io/eu4-kb/)** · **[Architecture](#architecture)** · **[Governance](#governance-and-blast-radius)** · **[Production notes](#production-notes)** · **[Data & licensing](#data-sources-and-licensing)**
 
 A question-answering agent over two very different sources that describe the same domain: a
 MediaWiki site and a game engine's declarative script files.
@@ -113,6 +113,7 @@ The seven tools are `search_kb` (hybrid search), `grep_kb` (exact text), `get_do
 | `kb_answer_backend.py` | Answer backend: Claude Agent SDK, streaming step events, feedback endpoint |
 | `kb_ui.html` | Single-page UI with the live step panel and a language switch |
 | `fundamentals_src/` | Hand-written domain framing documents |
+| `demo/`, `record_demo.py` | Recorded runs for the replay demo, and the script that records them |
 | `tests/` | Smoke test (see [Testing](#testing)) |
 
 ### How the rule translator reads game logic
@@ -159,6 +160,31 @@ to do.
 - **CI has no long-lived cloud credentials.** GitHub Actions authenticates to GCP through
   Workload Identity Federation and assumes a deploy service account. A separate service account
   with narrower permissions runs the container.
+
+### The demo is deliberately tiered
+
+A public, unauthenticated LLM endpoint is an open wallet: anyone who finds the URL can spend
+the owner's model quota. On top of that, a container that has to load embedding models makes
+the first visitor wait up to two minutes for a cold start. So the demo is split into three
+tiers:
+
+| Tier | What it is | Cost / risk |
+|---|---|---|
+| **[Replay](https://torisuorg.github.io/eu4-kb/)** (default) | Real runs recorded with every step (reasoning, tool calls, raw tool results, final answer) and replayed in the real UI. `record_demo.py` records them; the page switches to replay mode when no backend is behind it | Static hosting on GitHub Pages. No model calls |
+| **Live** (on request) | The deployed service | Access and spend are bounded |
+| **Local** | Run it yourself (see below) | Yours, not mine |
+
+Replay is the default because it shows everything a live run shows, since the agent's tool use
+is the interesting part, while loading instantly and costing nothing. The recorded questions
+cover each capability:
+
+- a question that needs both sources together;
+- one that checks the two sources against each other value by value;
+- trigger conditions that only the script parser can answer;
+- strategy questions that rely on the fundamentals layer;
+- the Chinese answer mode;
+- one question the knowledge base cannot answer, to show that the agent says so instead of
+  making something up.
 
 ---
 
@@ -243,9 +269,9 @@ Federation, Secret Manager) are described in [`docs/gcp_setup.md`](docs/gcp_setu
 
 ## Data sources and licensing
 
-This repository contains **code only**. No game assets and no wiki content are distributed
-here. The build pipeline reads them from your own machine and from the public API at build
-time, and the generated corpus and index are git-ignored.
+This repository contains **code**, plus the recorded demo runs in `demo/`. The game files, the
+wiki and the built corpus and index are not distributed: the build pipeline reads them from your
+own machine and from the public API at build time, and its output is git-ignored.
 
 - **Game files:** proprietary to Paradox Interactive. Read from *your own* installation and
   not redistributed.
@@ -257,6 +283,11 @@ time, and the generated corpus and index are git-ignored.
 - **Chinese glossary:** built from
   [paratranz/EU4-Chinese-Localisation](https://github.com/paratranz/EU4-Chinese-Localisation),
   **CC BY-NC-SA 4.0** (non-commercial). Cloned at build time and not redistributed.
+- **`demo/traces/`:** recorded runs. Each run includes truncated tool results, which quote
+  short passages of the sources above: wiki excerpts under CC BY-SA 3.0 (from
+  <https://eu4.paradoxwikis.com>), a few game values and names, and, in the Chinese run,
+  glossary terms under CC BY-NC-SA 4.0. The traces are included only to demonstrate the
+  system, and each quoted passage keeps the licence of its source.
 - **Code and `fundamentals_src/`:** written by me, [MIT](LICENSE).
 
 *Europa Universalis IV* is a trademark of Paradox Interactive. This project is not affiliated

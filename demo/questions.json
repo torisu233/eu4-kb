@@ -1,0 +1,62 @@
+[
+ {
+  "id": "aristocratic-ideas",
+  "lang": "en",
+  "question": "What does the Aristocratic idea group give, and what kind of nation should take it?",
+  "shows": "Both sources together: exact bonuses from the parsed game files, strategy from the wiki"
+ },
+ {
+  "id": "celestial-empire-reform",
+  "lang": "en",
+  "question": "What are the requirements for the Celestial Empire government reform, and what does it do?",
+  "shows": "Clausewitz parsing: trigger conditions rendered from the game's own script"
+ },
+ {
+  "id": "ming-1444",
+  "lang": "en",
+  "question": "Who rules Ming at the 1444 start, and what government does it start with?",
+  "shows": "Country history parsed from the game files"
+ },
+ {
+  "id": "form-mughals",
+  "lang": "en",
+  "question": "How do I form the Mughals?",
+  "shows": "A formable-nation decision recovered from wiki templates"
+ },
+ {
+  "id": "form-mughals-zh",
+  "lang": "zh",
+  "question": "怎么成立莫卧儿？",
+  "shows": "Chinese answer mode: official Chinese game terms injected by the retrieval layer"
+ },
+ {
+  "id": "tech-cost",
+  "lang": "en",
+  "question": "Why is my technology so expensive? I'm playing a nation in India.",
+  "shows": "The hand-written fundamentals layer: a diagnosis, not a lookup"
+ },
+ {
+  "id": "sunni-cavalry",
+  "lang": "en",
+  "question": "How can an ordinary Sunni monarchy build an army that is mostly cavalry?",
+  "shows": "The content-layering rule: generic vs. shared vs. country-exclusive content"
+ },
+ {
+  "id": "win-battles",
+  "lang": "en",
+  "question": "How do I win battles against a bigger army early in the game?",
+  "shows": "Combat framing from fundamentals, backed by wiki mechanics"
+ },
+ {
+  "id": "wiki-vs-files",
+  "lang": "en",
+  "question": "Do the wiki and the game files agree on what the Innovative idea group gives? Point out any differences.",
+  "shows": "Cross-checking the two sources value by value; the game files are the authority"
+ },
+ {
+  "id": "not-in-kb",
+  "lang": "en",
+  "question": "What are the national ideas of the Kingdom of Atlantis?",
+  "shows": "Not inventing: it searches, finds nothing, and says so"
+ }
+]

@@ -1,0 +1,166 @@
+{
+ "id": "celestial-empire-reform",
+ "lang": "en",
+ "question": "What are the requirements for the Celestial Empire government reform, and what does it do?",
+ "shows": "Clausewitz parsing: trigger conditions rendered from the game's own script",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 52403,
+ "tool_calls": 5,
+ "events": [
+  {
+   "type": "start",
+   "t": 941
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about the Celestial Empire government reform in EU4. Let me search the knowledge base for this information.",
+   "t": 4810
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "select:search_kb,grep_kb"
+   },
+   "t": 5057
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "No matching deferred tools found",
+   "truncated": false,
+   "t": 5068
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search knowledge base"
+   },
+   "t": 7168
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 7176
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have the tools available. Let me search for the Celestial Empire government reform.",
+   "t": 8845
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Celestial Empire government reform requirements effects",
+    "entity_category": "government_reform"
+   },
+   "t": 9360
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "Celestial Empire"
+   },
+   "t": 9586
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Celestial Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.85\\nSection: Celestial Empire > Overview\\nSource: game_file/government_reform/celestial_empire (doc_id=eu4:g-488dcae54a | read full context: get_doc(\\\"eu4:g-488dcae54a\\\", offset=33))\\nContent: Government reform key: `celestial_empire`.\\n\\n---\\n\\n[2] «Celestial Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.84\\nSection: Celestial Empire > Overview\\nSource: game_file/government_reform/celestial_empire_legacy (doc_id=eu4:g-613e218eb1 | read full context: get_doc(\\\"eu4:g-613e218eb1\\\", offset=33))\\nContent: Government reform key: `celestial_empire_legacy`.\\n\\n---\\n\\n[3] «Grand Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.70\\nSection: Grand Empire > Overview\\nSource: game_file/government_reform/lithuanian_grand_empire (doc_id=eu4:g-00450f60c4 | read full context: get_doc(\\\"eu4:g-00450f60c4\\\", offset=29))\\nContent: Government reform key: `lithuanian_grand_empire`.\\n\\n---\\n\\n[4] «Solomonic Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.65\\nSection: Solomonic Empire > Overview\\nSource: game_file/government_reform/solomonic_empire_legacy (doc_id=eu4:g-cc8e5bb2cd | read full context: get_doc(\\\"eu4:g-cc8e5bb2cd\\\", offset=33))\\nContent: Government reform key: `solomonic_empire_legacy`.\\n\\n---\\n\\n[5] «Solomonic Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.64\\nSection: Solomonic Empire > Overview\\nSource: game_f",
+   "truncated": true,
+   "t": 9789
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"«Absolutism» (kb:eu4) | Absolutism > Yearly absolutism > From Great Projects\\nSource:wiki/mechanic/Absolutism\\n…lev \\n* The Forbidden City (Beijing (1816), requires the Celestial Empire government reform): +0.25; +0.5.\\n* The Grand Palace of Bangkok (Bangkok (4831)): +0.25; +0.5; +1.\\n* Winter Palace (Neva), requi…\\n\\n«Absolutism» (kb:eu4) | Absolutism > Changing maximum absolutism > Absolutism modifiers\\nSource:wiki/mechanic/Absolutism\\n…* −10 to +10 scaling linearly with Legitimacy. Note that with Mandate of Heaven the Celestial Empire does not use Legitimacy and cannot get modifiers from it.\\n* −20 during the Court And Country disast…\\n\\n«Ante Bellum/Ages» (kb:eu4) | Ante Bellum/Ages > Age of Reformation > Objectives\\nSource:wiki/misc/Ante Bellum/Ages\\n…moh\\n| | Objective | Description |\\n| --- | --- | --- |\\n| | Join the Reformation | As a Christian nation, embrace Protestantism, Reformed, Anglican, Hussite, or Gaelic as your state religion. |\\n| | Prot…\\n\\n«Ante Bellum/Ages» (kb:eu4) | Ante Bellum/Ages > Age of Revolutions > Abilities\\nSource:wiki/misc/Ante Bellum/Ages\\n…| | British Fleet | +1 Max Admiral Fire (available only to Britannia) |\\n| | Korean Warships | +15% Heavy ships combat ability (available only to Joseon, Goryeo, Goguryeo, and Korea) |\\n| | Hanseatic Ne…\\n\\n«Aristocratic Coup» (kb:eu4) | Aristocratic Coup > Start\\nSource:wiki/disaster/Aristocratic Coup\\n…If the progress reaches 100%, the disaster will start with the following event:\\nEvent: Th",
+   "truncated": true,
+   "t": 9868
+  },
+  {
+   "type": "thinking",
+   "text": "I found two docs: `eu4:g-488dcae54a` (the main Celestial Empire reform) and `eu4:g-613e218eb1` (the legacy version). Let me get the full details of both.",
+   "t": 12584
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:g-488dcae54a"
+   },
+   "t": 12949
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-488dcae54a\\\"\\ntitle: \\\"Celestial Empire\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"government_reform\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"3f44ed57d135\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-488dcae54a.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"government_reform\\\"\\nentity_id: \\\"celestial_empire\\\"\\nsource_file: \\\"common/government_reforms/01_government_reforms_monarchies.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Celestial Empire\\n\\n## Overview\\n\\nGovernment reform key: `celestial_empire`.\\n\\n## Conditions and Effects\\n\\n### Modifiers\\n\\n- Prestige: 0.5\\n- [Country.GetClergyName] Influence -10%\\n- [Country.GetNobilityName] Influence -10%\\n- [Country.GetBurghersName] Influence -10%\\n- Governing Capacity: 500\\n\\n### Custom Attributes\\n\\n- Locked Government Type: Yes\\n- Has Unify China Cb: Yes\\n\\n### AI Weighting (how the game AI evaluates picking this reform)\\n\\n- Factor: 1000\\n\\n### Other\\n\\n- Allow Normal Conversion: No\\n- Potential (key: potential):\\n  If (key: if):\\n    Limited to:\\n      Requires DLC: Mandate of Heaven\\n    Is Emperor Of China: Yes\\n  Else (key: else):\\n    Any of:\\n      Has enacted Government Reform Celestial Empire\\n      All of:\\n        Culture Group is Chinese\\n        Num Of Cities: 50\\n  None of:\\n    Has internal flag 'empire_of_china_dismantled' (game-internal state, see raw script appendix)\\n- `legacy_equivalent = celestial_empire_legacy` (unmapped — see raw script appendix)\\n- Maintain Dynast",
+   "truncated": true,
+   "t": 13014
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:g-613e218eb1"
+   },
+   "t": 13207
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-613e218eb1\\\"\\ntitle: \\\"Celestial Empire\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"government_reform\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"682c29a4970a\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-613e218eb1.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"government_reform\\\"\\nentity_id: \\\"celestial_empire_legacy\\\"\\nsource_file: \\\"common/government_reforms/00_government_reforms.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Celestial Empire\\n\\n## Overview\\n\\nGovernment reform key: `celestial_empire_legacy`.\\n\\n## Conditions and Effects\\n\\n### Modifiers\\n\\n- Prestige: 0.5\\n- Embracement Cost +10%\\n- Governing Capacity: 250\\n\\n### AI Weighting (how the game AI evaluates picking this reform)\\n\\n- Factor: 5\\n\\n### Other\\n\\n- Allow Normal Conversion: No\\n- Legacy Government: Yes\\n- Monarchy: Yes\\n- Maintain Dynasty: Yes\\n- Allow Force Tributary: No\\n- Valid For New Country: No\\n- Valid For Nation Designer: No\\n- Allow Convert: No\\n- Start Territory To Estates: 0.9\\n- Nation Designer Trigger (key: nation_designer_trigger):\\n  Culture Group is Chinese\\n  Technology Group is Chinese\\n  `capital_scope = Block(1 items)` (translation rule error: AttributeError(\\\"'Block' object has no attribute 'lower'\\\"), see raw script appendix)\\n- Enables factions:  (key: factions):\\n  - temples\\n  - enuchs\\n  - bureaucrats\\n- Fixed Rank: 3\\n- Conditional (key: conditional):\\n  Allow (key: allow):\\n    Requires DLC: Mandate of Heaven\\n  Has Meritocracy: Yes\\n  `fa",
+   "truncated": true,
+   "t": 13269
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have a good picture of the Celestial Empire reform. Let me also search for more context about the Emperor of China mechanic to better explain the requirements.",
+   "t": 16113
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Emperor of China Mandate of Heaven Celestial Empire government factions meritocracy"
+   },
+   "t": 16508
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Ming» (kb:eu4 · country · source=wiki) relevance=0.80\\nSection: Ming > Emperor of China\\nSource: wiki/country/Ming (doc_id=eu4:w-8013c8efde | read full context: get_doc(\\\"eu4:w-8013c8efde\\\", offset=4506))\\nContent: The Ming start out ruling China as the Emperor of China. This includes features such as the Mandate of Heaven or the Celestial Empire, as well as Celestial Reforms and Meritocracy. There are also corresponding Emperor of China missions. However, if the Ming are attacked and defeated by another country that claims the Mandate, then they lose the Celestial Empire and receive the \\\"Mandate of Heaven lost\\\" for 20 years, which also prevents them from trying to reclaim the Mandate.\\n## Missions\\n\\n---\\n\\n[2] «Ming» (kb:eu4 · country · source=wiki) relevance=0.77\\nSection: Ming > Celestial Empire\\nSource: wiki/country/Ming (doc_id=eu4:w-8013c8efde | read full context: get_doc(\\\"eu4:w-8013c8efde\\\", offset=3399))\\nContent: Ming has a unique monarchy form with fixed empire rank and fixed dynasty called the Celestial Empire, reflecting the Chinese belief that a well-governed empire was evidence of divine sanction and blessing, whereas a poorly governed or tyrannical one was evidence that the Emperor could be deposed. \\nWith Mandate of Heaven, the Celestial Empire represents Ming being the Emperor of China in 1444, a fact that alters gameplay far beyond what is described here, and it may lose or regain this government form like other eligible nations.\\n\\n---\\n",
+   "truncated": true,
+   "t": 16955
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have all the information I need to give a thorough answer. Let me also check what happens after losing the Celestial Empire (the `empire_of_china_dismantled` flag) from the wiki on Emperor of China.\n\nActually I have enough info. Let me synthesize this into a clear answer.\n\nKey points:\n1. **Requirements** (potential condition in the game file):\n   - **With Mandate of Heaven DLC**: You must be the **Emperor of China** (`is_emperor_of_china = yes`)\n   - **Without Mandate of Heaven DLC**: You must either already have the reform OR be in the **Chinese culture group** (`east_asian`) with at least **50 cities**\n   - In both cases, the global flag marking that the empire has been dismantled must not be active\n\nFor effects, this reform grants monthly prestige, reduces influence across all three estates, boosts governing capacity substantially, locks the government type in place, grants a special casus belli to unify China, blocks the ability to force tributaries, and unlocks factions tied to temples.\n\nWith the Mandate of Heaven DLC, it also enables Eunuchs and Bureaucrats factions, fixes the government at rank 3, assigns 90% of territory to estates, and swaps in the Meritocracy mechanic while clearing the standard faction list — and Tier 1 gets permanently locked once chosen, blocking normal conversion away from it. There's also an older legacy version predating the DLC that instead offers prestige alongside increased embracement cost and a smaller governing capacity boost.\n\nThe full version outright requires holding the Emperor of China title from MoH, granting far more governing capacity and cutting influence across all three estates, whereas the legacy variant is a weaker fallback that can't even be picked in the nation designer. I'm also puzzling over the `allow_force_tributary = no` flag, since it seems to conflict with what I'd expect from China's historical tribute system, so I want to cross-check that against the wiki's description of the \"Too powerful\" trade company penalty.\n\n",
+   "t": 36494
+  },
+  {
+   "type": "text",
+   "text": "Here's a full breakdown of the **Celestial Empire** government reform, sourced from «Celestial Empire» (game_file, v1.37.3) and «Emperor of China» / «Ming» (wiki).\n\n---\n\n## Requirements (Who Can Take It)\n\nThe reform is gated by a **potential condition** that varies by DLC:\n\n| Condition | Requirement |\n|---|---|\n| **With Mandate of Heaven DLC** | You must currently be the **Emperor of China** (i.e., hold the Mandate of Heaven) |\n| **Without Mandate of Heaven DLC** | You must either already have the reform, *or* be of the **East Asian culture group** with at least **50 cities** |\n| **Universal blocker** | The global flag `empire_of_china_dismantled` must NOT be active (if the EoC title has been permanently abolished in the world, this reform becomes unavailable to everyone) |\n\nAdditionally, for the **Nation Designer**, you need:\n- **Chinese culture group** (`east_asian`) + **Chinese tech group**\n- Capital located in the **North China**, **Xinan**, or **South China** region (costs +1000% in the designer)\n\n---\n\n## What It Does\n\n### Modifiers\n- **+0.5** Monthly Prestige\n- **+500** Governing Capacity (a very large bonus — the legacy no-DLC version only gives +250)\n- **−10%** Clergy Influence\n- **−10%** Nobility Influence\n- **−10%** Burghers Influence\n\n### Special Rules & Mechanics\n- 🔒 **Locked government type** — cannot be converted away through normal means (`allow_normal_conversion = no`)\n- 🔒 **Tier 1 is locked** once selected (`lock_level_when_selected = yes`) — you cannot swap it out\n- 👑 **Fixed rank 3 (Empire)** — your government rank is permanently locked at Empire tier\n- ⚔️ **Unify China CB** — grants a permanent Casus Belli to unify the Chinese states\n- 🚫 **Cannot force tributaries** via the standard mechanic (China's tribute system uses the Mandate of Heaven mechanics instead)\n- 🏛️ **Enables three court factions**: **Temples**, **Eunuchs**, and **Bureaucrats**\n- 📦 **90% of territory** is assigned to estates at start (`start_territory_to_estates = 0.9`)\n- ✅ **With Mandate of Heaven DLC**: also activates the **Meritocracy** mechanic (the faction system is replaced by Meritocracy)\n\n### Notable Restrictions\n- **Autonomy floor of 50%** in owned provinces — you cannot reduce autonomy below 50% (noted in «Art of War» wiki)\n- The **Cossacks estate** is unavailable to nations with this reform\n\n---\n\n## Legacy Version (`celestial_empire_legacy`)\n\nThere is also a pre-DLC **legacy** version of the reform (for saves from before Mandate of Heaven was introduced). It gives:\n- +0.5 Prestige, +250 Governing Capacity (half of the full version)\n- +10% Institution Embracement Cost (a drawback the full version doesn't have)\n- Same three factions; same fixed empire rank\n- Cannot be selected in the nation designer or by new countries\n\n---\n\n## Summary\n\nThe Celestial Empire is effectively **Ming's exclusive government form**, tied to holding the **Emperor of China** title (with MoH DLC). Its headline strength is the massive **+500 Governing Capacity** and **estate influence reductions**, which help manage China's enormous territorial size — but the **locked tier and locked government type** mean you have very little flexibility in how you govern. Losing the Mandate of Heaven means losing this reform entirely.",
+   "t": 52092
+  },
+  {
+   "type": "final",
+   "answer": "Here's a full breakdown of the **Celestial Empire** government reform, sourced from «Celestial Empire» (game_file, v1.37.3) and «Emperor of China» / «Ming» (wiki).\n\n---\n\n## Requirements (Who Can Take It)\n\nThe reform is gated by a **potential condition** that varies by DLC:\n\n| Condition | Requirement |\n|---|---|\n| **With Mandate of Heaven DLC** | You must currently be the **Emperor of China** (i.e., hold the Mandate of Heaven) |\n| **Without Mandate of Heaven DLC** | You must either already have the reform, *or* be of the **East Asian culture group** with at least **50 cities** |\n| **Universal blocker** | The global flag `empire_of_china_dismantled` must NOT be active (if the EoC title has been permanently abolished in the world, this reform becomes unavailable to everyone) |\n\nAdditionally, for the **Nation Designer**, you need:\n- **Chinese culture group** (`east_asian`) + **Chinese tech group**\n- Capital located in the **North China**, **Xinan**, or **South China** region (costs +1000% in the designer)\n\n---\n\n## What It Does\n\n### Modifiers\n- **+0.5** Monthly Prestige\n- **+500** Governing Capacity (a very large bonus — the legacy no-DLC version only gives +250)\n- **−10%** Clergy Influence\n- **−10%** Nobility Influence\n- **−10%** Burghers Influence\n\n### Special Rules & Mechanics\n- 🔒 **Locked government type** — cannot be converted away through normal means (`allow_normal_conversion = no`)\n- 🔒 **Tier 1 is locked** once selected (`lock_level_when_selected = yes`) — you cannot swap it out\n- 👑 **Fixed rank 3 (Empire)** — your government rank is permanently locked at Empire tier\n- ⚔️ **Unify China CB** — grants a permanent Casus Belli to unify the Chinese states\n- 🚫 **Cannot force tributaries** via the standard mechanic (China's tribute system uses the Mandate of Heaven mechanics instead)\n- 🏛️ **Enables three court factions**: **Temples**, **Eunuchs**, and **Bureaucrats**\n- 📦 **90% of territory** is assigned to estates at start (`start_territory_to_estates = 0.9`)\n- ✅ **With Mandate of Heaven DLC**: also activates the **Meritocracy** mechanic (the faction system is replaced by Meritocracy)\n\n### Notable Restrictions\n- **Autonomy floor of 50%** in owned provinces — you cannot reduce autonomy below 50% (noted in «Art of War» wiki)\n- The **Cossacks estate** is unavailable to nations with this reform\n\n---\n\n## Legacy Version (`celestial_empire_legacy`)\n\nThere is also a pre-DLC **legacy** version of the reform (for saves from before Mandate of Heaven was introduced). It gives:\n- +0.5 Prestige, +250 Governing Capacity (half of the full version)\n- +10% Institution Embracement Cost (a drawback the full version doesn't have)\n- Same three factions; same fixed empire rank\n- Cannot be selected in the nation designer or by new countries\n\n---\n\n## Summary\n\nThe Celestial Empire is effectively **Ming's exclusive government form**, tied to holding the **Emperor of China** title (with MoH DLC). Its headline strength is the massive **+500 Governing Capacity** and **estate influence reductions**, which help manage China's enormous territorial size — but the **locked tier and locked government type** mean you have very little flexibility in how you govern. Losing the Mandate of Heaven means losing this reform entirely.",
+   "tools_used": [
+    "ToolSearch",
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb"
+   ],
+   "t": 52403
+  }
+ ]
+}

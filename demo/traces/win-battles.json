@@ -1,0 +1,165 @@
+{
+ "id": "win-battles",
+ "lang": "en",
+ "question": "How do I win battles against a bigger army early in the game?",
+ "shows": "Combat framing from fundamentals, backed by wiki mechanics",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 50058,
+ "tool_calls": 6,
+ "events": [
+  {
+   "type": "start",
+   "t": 1254
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about winning battles against a bigger army early in the game in EU4. This falls under the \"Combat tactics layer\" in the game map. Let me search the knowledge base for relevant information.",
+   "t": 4176
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search"
+   },
+   "t": 4447
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 4455
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me search the knowledge base for information about winning battles against bigger armies early in the game.",
+   "t": 5699
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "winning battles against bigger army combat tactics early game"
+   },
+   "t": 6162
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Beginner's guide» (kb:eu4 · misc · source=wiki) relevance=0.73\\nSection: Beginner's guide > Common questions > I'm fighting a war. How can I win?\\nSource: wiki/misc/Beginner's guide (doc_id=eu4:w-a5709d57e5 | read full context: get_doc(\\\"eu4:w-a5709d57e5\\\", offset=49207))\\nContent: of vital importance during every conflict, so before getting yourself into a war, make sure to check how advanced your future conquest is. As the game progresses, the importance of proper army composition (Such as having an army comprised of less than 50% cavalry which avoids a significant combat performance penalty) increases. Check out the Land warfare page for more indepth detail. In addition there are other factors that become increasingly vital to military survival: morale, tactics, maneuver, and discipline. Some of these are increased by technology and ideas, so always make sure to caref\\n\\n---\\n\\n[2] «Combat Basics (how a battle actually plays out — tactical layer)» (kb:eu4 · fundamentals · source=fundamentals) relevance=0.68\\nSection: Combat Basics > Combat width and reserves\\nSource: fundamentals/combat/Combat Basics (how a battle actually plays out — tactical layer) (doc_id=eu4:f-b313bb855c | read full context: get_doc(\\\"eu4:f-b313bb855c\\\", offset=981))\\nContent: **Combat width** caps how many regiments can actively fight at once (front row + back row); it starts\\naround 15-20 depending on military technology and rises over the game. Units beyond that cap sit in\\n**reserve",
+   "truncated": true,
+   "t": 6570
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "combat width flanking morale discipline fire shock phase"
+   },
+   "t": 6718
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Military leader» (kb:eu4 · mechanic · source=wiki) relevance=0.67\\nSection: Military leader > Abilities > Fire\\nSource: wiki/mechanic/Military leader (doc_id=eu4:w-5be8e0d78a | read full context: get_doc(\\\"eu4:w-5be8e0d78a\\\", offset=4365))\\nContent: Like leader shock, leader fire is added to the dice roll during the fire phase.\\n\\n---\\n\\n[2] «Combat Basics (how a battle actually plays out — tactical layer)» (kb:eu4 · fundamentals · source=fundamentals) relevance=0.65\\nSection: Combat Basics > Morale, discipline, and leaders\\nSource: fundamentals/combat/Combat Basics (how a battle actually plays out — tactical layer) (doc_id=eu4:f-b313bb855c | read full context: get_doc(\\\"eu4:f-b313bb855c\\\", offset=2370))\\nContent: Morale determines when a regiment breaks and routs — losing morale from casualties and passive damage\\nmatters as much as the casualties themselves. **Discipline** is a national modifier that scales both\\ndamage dealt and damage received in favor of the higher-discipline side, making it one of the highest-\\nvalue military stats to invest in. Generals/admirals grant \\\"pips\\\" (fire/shock/morale/maneuver) that\\ndirectly add to dice rolls and reduce losses — a skilled leader can noticeably swing an otherwise even\\nbattle.\\n\\n---\\n\\n[3] «Naval warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.62\\nSection: Naval warfare > Combat sequence > Phases\\nSource: wiki/mechanic/Naval warfare (doc_id=eu4:w-67ab83586a | read full context: get_doc(\\\"eu4:w-67ab835",
+   "truncated": true,
+   "t": 7078
+  },
+  {
+   "type": "thinking",
+   "text": "Good results. Let me now get the full Combat Basics fundamentals document to get more detailed information, and also search for terrain advantages and general tips for early game battles.",
+   "t": 9208
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:f-b313bb855c"
+   },
+   "t": 11060
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "terrain penalty attacker river crossing defender advantage early game"
+   },
+   "t": 11076
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"f-b313bb855c\\\"\\ntitle: \\\"Combat Basics (how a battle actually plays out — tactical layer)\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"fundamentals\\\"\\nlang: \\\"en\\\"\\nversion: \\\"\\\"\\nsource_hash: \\\"9b517f2ce602\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/f-b313bb855c.md\\\"\\nsource: \\\"fundamentals\\\"\\nwiki_category: \\\"combat\\\"\\nsource_path: \\\"fundamentals/combat/Combat Basics (how a battle actually plays out — tactical layer)\\\"\\n---\\n\\n# Combat Basics\\n\\nThis is the **tactical layer** — what happens once two armies actually collide in a province. It is\\ndistinct from `fundamentals:war_and_expansion`, which covers the strategic layer (whether to declare\\nwar, warscore, peace deals, AE/coalition risk). Use this doc when a question is about how a battle\\nresolves, not whether/when to fight one.\\n\\n## The 3-day Fire/Shock cycle\\n\\nA battle is a sequence of 3-day phases alternating **Fire** then **Shock** (Fire first). Each phase, both\\nsides roll dice determining morale damage and casualties for that phase. **Infantry** is strongest during\\nFire, **cavalry** is strongest during Shock, and **artillery** grows into a powerful Fire-phase unit as\\nmilitary technology advances (up to +8.4 cumulative fire bonus by tech 32). This is why army composition\\nand unit tech matter more than raw headcount — an army badly mismatched to the current tech era can lose\\ndespite equal or greater numbers.\\n\\n## Combat width and reserves\\n\\n**Combat width** caps how many regiments can actively fight",
+   "truncated": true,
+   "t": 11101
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Combat Basics (how a battle actually plays out — tactical layer)» (kb:eu4 · fundamentals · source=fundamentals) relevance=0.71\\nSection: Combat Basics > Terrain and crossing penalties\\nSource: fundamentals/combat/Combat Basics (how a battle actually plays out — tactical layer) (doc_id=eu4:f-b313bb855c | read full context: get_doc(\\\"eu4:f-b313bb855c\\\", offset=1870))\\nContent: Attacking into unfavorable terrain (mountains, forests, marsh, etc.) applies an attacker penalty to dice\\nrolls; defending in it is correspondingly strong — this is the mechanical basis for \\\"defend in mountains\\nwhen outnumbered\\\" advice. Crossing a river costs the attacker -1 to all rolls, crossing a strait or making\\nan amphibious landing costs -2 — unless the attacking leader's maneuver stat exceeds the defender's, which\\ncancels the crossing penalty entirely.\\n\\n---\\n\\n[2] «Patch 1.8» (kb:eu4 · patch_notes · source=wiki) relevance=0.62\\nSection: Patch 1.8 > Game balance > Combat\\nSource: wiki/patch_notes/Patch 1.8 (doc_id=eu4:w-495c7d0deb | read full context: get_doc(\\\"eu4:w-495c7d0deb\\\", offset=8326))\\nContent: * Each province now has only one terrain\\n* You no longer get river-crossing penalties if you have higher maneuver than the defender\\n* Combat damage from dice rolls and modifiers is now a linear curve\\n\\n---\\n\\n[3] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.62\\nSection: Land warfare > Terrain > Crossing penalties\\nSource: wiki/mechanic/Land warfare (doc_id=e",
+   "truncated": true,
+   "t": 11523
+  },
+  {
+   "type": "thinking",
+   "text": "I now have a solid amount of information to answer the question about winning battles against a bigger army early in the game. Let me also check for information about general pips and how they contribute, especially for early game, and also about combat stacking.",
+   "t": 14282
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "general pips fire shock morale maneuver early game military leader advantage"
+   },
+   "t": 15493
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry ratio infantry composition overstacking penalty early game"
+   },
+   "t": 15726
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.76\\nSection: Land warfare > Combat statistics > Pips\\nSource: wiki/mechanic/Land warfare (doc_id=eu4:w-350a689b97 | read full context: get_doc(\\\"eu4:w-350a689b97\\\", offset=24287))\\nContent: Morale defensive pips are of importance, because morale pips affect both fire and shock phases. However, they only affect morale damage while shock and fire pips affect both strength and morale damage in their respective phase. Priority between fire and shock pips is to be given according to military technology (fire gradually becoming more prevalent as military technology advances, as a rule of thumb from tech 16 when artillery receive a full +1 fire bonus and potentially earlier).\\n\\n---\\n\\n[2] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.70\\nSection: Land warfare > Combat statistics > Pips\\nSource: wiki/mechanic/Land warfare (doc_id=eu4:w-350a689b97 | read full context: get_doc(\\\"eu4:w-350a689b97\\\", offset=24777))\\nContent: Pips prioritization for cannons differs in that offensive shock modifiers are marginal at best and defensive pips are only given effect by multiples of two. The latter is caused by the defensive pips of cannons being divided by two, then rounded down and ultimately added to the frontline’s defensive pips (or, stated alternatively, contributing half of their defensive pips to the front line). The actual effect is more complex, however, since defensive fire and shock pips both c",
+   "truncated": true,
+   "t": 15960
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.79\\nSection: Land warfare > Combat statistics > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land warfare (doc_id=eu4:w-350a689b97 | read full context: get_doc(\\\"eu4:w-350a689b97\\\", offset=32279))\\nContent: Cavalry to infantry ratio\\n*\\n\\n---\\n\\n[2] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.72\\nSection: Land units > Cavalry > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=8245))\\nContent: ily even during battles, and is based on the actual headcount of individual soldiers instead of regiments. Since infantry tends to take more casualties than cavalry, it is advisable to take at least a bit more infantry than the ratio would suggest, and (to maximize the number of cavalry used, since deployment prioritises infantry) reinforce the battle with fresh infantry as regiments retreat.\\n\\n---\\n\\n[3] «Army» (kb:eu4 · mechanic · source=wiki) relevance=0.71\\nSection: Army > Recruiting an army > Composition\\nSource: wiki/mechanic/Army (doc_id=eu4:w-8f03a34714 | read full context: get_doc(\\\"eu4:w-8f03a34714\\\", offset=5190))\\nContent: * To avoid the insufficient support penalty, an army must not surpass the maximum ratio of cavalry per infantry regiments.\\n* Artillery can fire from the second line, and therefore can vastly increase the effectiveness of an army.\\n* Artillery defends first line units fr",
+   "truncated": true,
+   "t": 16321
+  },
+  {
+   "type": "thinking",
+   "text": "I now have enough information to give a comprehensive answer on winning battles against a bigger army early in the game. Let me compile the key strategies:\n\n1. **Terrain advantage** - Fight in rough terrain (mountains, forests, marsh) to give the attacker a penalty. Crossing a river costs -1 to all dice rolls, crossing straits or amphibious landings cost -2.\n\n2. **General/leader quality** - A skilled general with high pips (especially shock for early game, fire for later) can significantly swing a battle in your favor. In early game, shock is most important.\n\n3. **Combat width** - Don't overstay the combat width. \n\nIf the enemy has a larger army but you force the fight onto terrain that shrinks combat width, their numbers matter less. I'm also noting that cavalry should stay under 50% of infantry to avoid support penalties, morale needs time to recover between fights, overstacking wastes units while still taking morale damage, and discipline boosts both offense and defense.\n\nIn early game, quality and composition beat raw numbers, so I want to pull all this together into a clear, organized answer.\n\n",
+   "t": 28398
+  },
+  {
+   "type": "text",
+   "text": "Here's a full breakdown of how to punch above your weight in early EU4 battles, organized by what matters most:\n\n---\n\n## ⚔️ Winning Battles Against a Bigger Army — Early Game Guide\n\n### 1. 🏔️ Force Them to Attack You in Bad Terrain\nThis is the single most reliable edge. When you're the **defender** in rough terrain, the attacker takes automatic **dice roll penalties**:\n\n| Situation | Attacker Penalty |\n|---|---|\n| Rough terrain (mountains, forests, marsh) | −1 to −2 to all rolls |\n| River crossing | −1 to all rolls |\n| Strait crossing / amphibious landing | −2 to all rolls |\n\n> Maneuver exception: if **your general's maneuver** exceeds the enemy's, river/strait crossing penalties are **completely cancelled** for you — keep that in mind when attacking.\n\n**Practical tip:** Retreat into a mountainous or forested province and let them walk in. Stack rough terrain + river crossing and you can flip a 2:1 disadvantage into an even fight. — «Combat Basics», «Land warfare» (wiki)\n\n---\n\n### 2. 🎖️ Use a Better General\nIn early game, **general pips directly add to dice rolls**, so a 3-shock general vs. a 0-shock general is worth +3 on every single shock phase die roll — that's enormous.\n\n- **Shock pips** are king early (tech 1–15): cavalry dominates Shock phases\n- **Morale pips** protect against morale collapse across *both* phases\n- A high-pip general can realistically flip a 20% size disadvantage\n\nIf you get a ruler/heir with 5+ MIL, use them as your general — free pips. — «Military leader» (wiki), «Combat Basics» (fundamentals)\n\n---\n\n### 3. 🧠 Understand Combat Width — Don't Let Their Numbers Count\n**Combat width** (roughly 15–20 regiments at early tech) caps how many units can fight at once. Extra units sit in **reserve** — they take passive morale damage but contribute *nothing* to the fight until front-liners die.\n\nThis means a 40k army vs. your 25k army is not 1.6× stronger — it's closer to equal until losses open up front-line space. You don't need to match numbers, you need to win the front-row fight fast. — «Combat Basics» (fundamentals)\n\n---\n\n### 4. ⚖️ Keep Cavalry ≤ 50% of Infantry\nThe base cavalry-to-infantry ratio cap is **50%**. Exceeding it triggers the *\"insufficient support\"* penalty: a military tactics malus on cavalry equal to half the percentage the cap is exceeded by. Early on, a good army is mostly infantry + some cavalry (to fill flanks) — not a cavalry horde. — «Land units» (wiki)\n\n---\n\n### 5. 🔥 Fire vs. Shock Phase Awareness\nBattle alternates **Fire → Shock → Fire → Shock…** in 3-day cycles.\n\n- **Early game (low tech):** Infantry is strongest in Fire, Cavalry in Shock → both matter\n- **Artillery** doesn't become a game-changer until ~mil tech 16+, so don't worry about it yet\n- Winning the **morale war** is often more decisive than casualties — armies rout when morale hits zero, not when all troops die\n\n---\n\n### 6. 🧱 Don't Fight Weakened — Let Morale Recover\nAfter winning a battle, your army gets a **morale recovery boost** scaled to how hard you fought. But if you fight a second battle immediately after a grueling win, you can lose to a smaller fresh army. Always **wait for morale to refill** between engagements. — «Land warfare» (wiki)\n\n---\n\n## Quick Early-Game Checklist Before a Battle\n\n| Check | Goal |\n|---|---|\n| Terrain | Fight in mountains/forest if possible |\n| General | Bring your best shock/morale general |\n| Cavalry ratio | Keep under 50% of infantry count |\n| Army size vs. combat width | Don't bring massive excess (wastes morale) |\n| Morale | Fight only at near-full morale |\n| Enemy position | Force a river or strait crossing if attacking |\n\n---\n\n**Bottom line:** Raw numbers matter far less than **terrain + general quality + morale management**. A 20k well-led army defending a mountain pass from a demoralized 30k force will win comfortably — sources: «Combat Basics (how a battle actually plays out — tactical layer)» (fundamentals), «Land warfare» and «Army» (wiki).",
+   "t": 49668
+  },
+  {
+   "type": "final",
+   "answer": "Here's a full breakdown of how to punch above your weight in early EU4 battles, organized by what matters most:\n\n---\n\n## ⚔️ Winning Battles Against a Bigger Army — Early Game Guide\n\n### 1. 🏔️ Force Them to Attack You in Bad Terrain\nThis is the single most reliable edge. When you're the **defender** in rough terrain, the attacker takes automatic **dice roll penalties**:\n\n| Situation | Attacker Penalty |\n|---|---|\n| Rough terrain (mountains, forests, marsh) | −1 to −2 to all rolls |\n| River crossing | −1 to all rolls |\n| Strait crossing / amphibious landing | −2 to all rolls |\n\n> Maneuver exception: if **your general's maneuver** exceeds the enemy's, river/strait crossing penalties are **completely cancelled** for you — keep that in mind when attacking.\n\n**Practical tip:** Retreat into a mountainous or forested province and let them walk in. Stack rough terrain + river crossing and you can flip a 2:1 disadvantage into an even fight. — «Combat Basics», «Land warfare» (wiki)\n\n---\n\n### 2. 🎖️ Use a Better General\nIn early game, **general pips directly add to dice rolls**, so a 3-shock general vs. a 0-shock general is worth +3 on every single shock phase die roll — that's enormous.\n\n- **Shock pips** are king early (tech 1–15): cavalry dominates Shock phases\n- **Morale pips** protect against morale collapse across *both* phases\n- A high-pip general can realistically flip a 20% size disadvantage\n\nIf you get a ruler/heir with 5+ MIL, use them as your general — free pips. — «Military leader» (wiki), «Combat Basics» (fundamentals)\n\n---\n\n### 3. 🧠 Understand Combat Width — Don't Let Their Numbers Count\n**Combat width** (roughly 15–20 regiments at early tech) caps how many units can fight at once. Extra units sit in **reserve** — they take passive morale damage but contribute *nothing* to the fight until front-liners die.\n\nThis means a 40k army vs. your 25k army is not 1.6× stronger — it's closer to equal until losses open up front-line space. You don't need to match numbers, you need to win the front-row fight fast. — «Combat Basics» (fundamentals)\n\n---\n\n### 4. ⚖️ Keep Cavalry ≤ 50% of Infantry\nThe base cavalry-to-infantry ratio cap is **50%**. Exceeding it triggers the *\"insufficient support\"* penalty: a military tactics malus on cavalry equal to half the percentage the cap is exceeded by. Early on, a good army is mostly infantry + some cavalry (to fill flanks) — not a cavalry horde. — «Land units» (wiki)\n\n---\n\n### 5. 🔥 Fire vs. Shock Phase Awareness\nBattle alternates **Fire → Shock → Fire → Shock…** in 3-day cycles.\n\n- **Early game (low tech):** Infantry is strongest in Fire, Cavalry in Shock → both matter\n- **Artillery** doesn't become a game-changer until ~mil tech 16+, so don't worry about it yet\n- Winning the **morale war** is often more decisive than casualties — armies rout when morale hits zero, not when all troops die\n\n---\n\n### 6. 🧱 Don't Fight Weakened — Let Morale Recover\nAfter winning a battle, your army gets a **morale recovery boost** scaled to how hard you fought. But if you fight a second battle immediately after a grueling win, you can lose to a smaller fresh army. Always **wait for morale to refill** between engagements. — «Land warfare» (wiki)\n\n---\n\n## Quick Early-Game Checklist Before a Battle\n\n| Check | Goal |\n|---|---|\n| Terrain | Fight in mountains/forest if possible |\n| General | Bring your best shock/morale general |\n| Cavalry ratio | Keep under 50% of infantry count |\n| Army size vs. combat width | Don't bring massive excess (wastes morale) |\n| Morale | Fight only at near-full morale |\n| Enemy position | Force a river or strait crossing if attacking |\n\n---\n\n**Bottom line:** Raw numbers matter far less than **terrain + general quality + morale management**. A 20k well-led army defending a mountain pass from a demoralized 30k force will win comfortably — sources: «Combat Basics (how a battle actually plays out — tactical layer)» (fundamentals), «Land warfare» and «Army» (wiki).",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb"
+   ],
+   "t": 50058
+  }
+ ]
+}

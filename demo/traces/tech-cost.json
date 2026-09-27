@@ -1,0 +1,169 @@
+{
+ "id": "tech-cost",
+ "lang": "en",
+ "question": "Why is my technology so expensive? I'm playing a nation in India.",
+ "shows": "The hand-written fundamentals layer: a diagnosis, not a lookup",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 41825,
+ "tool_calls": 6,
+ "events": [
+  {
+   "type": "start",
+   "t": 957
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about why technology is expensive for a nation in India. Based on the game map overview, I already know this is likely related to Institutions and tech groups, but let me search the knowledge base for specific details about tech costs for Indian nations.\n\nLet me search for relevant information about technology costs, institutions, and tech groups for Indian nations.",
+   "t": 5965
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search knowledge"
+   },
+   "t": 6419
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 6473
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me search the knowledge base for information about technology costs for Indian nations, focusing on institutions and tech groups.",
+   "t": 9142
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "technology cost expensive India"
+   },
+   "t": 9387
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.54\\nSection: Technology > Cost > General modifiers > Increase over time\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=8605))\\nContent: Technology cost increases over time. This increase is linear and only depends on the historic discovery date of the current technology of a country. This means if the historic discovery date of the current technology is 1444 the increase to discover the next technology is 0% and if the historic discovery date of the current technology is 1821 the increase is 30%.\\n\\n---\\n\\n[2] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.53\\nSection: Technology > Cost > General modifiers > Ideas and policies\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=9942))\\nContent: technology cost\\n\\n---\\n\\n[3] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.50\\nSection: Technology > Cost\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=7441))\\nContent: The cost for researching a new technology level consists of the base cost, 600 monarch points, multiplied by the current institution penalty and all modifiers, plus 100%.\\n\\n{ \\\\text{technology cost} = \\\\max\\\\left(30;\\\\text{base cost } \\\\cdot \\\\left( 100% + \\\\sum\\\\text{general technology cost modifiers} + \\\\sum\\\\text{institution penalty } \\\\ri",
+   "truncated": true,
+   "t": 9705
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "institutions technology penalty non-Western tech group"
+   },
+   "t": 9954
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.70\\nSection: Technology > Groups\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=2582))\\nContent: Almost all countries in a given tech group begin the game either embracing the institution of feudalism or not (exceptions to this rule are listed below). Those that don't therefore start with a 50% penalty to technology cost due to institutions. Those that do embrace it have no such penalty until reaching techs that require Renaissance. All countries in a given tech group begin the game with their given tech level, regardless of whether or not that country begins with a tech penalty that deviates from the standard institution penalty of their given tech group. For more information, see Instit\\n\\n---\\n\\n[2] «Institutions» (kb:eu4 · misc · source=wiki) relevance=0.68\\nSection: Institutions\\nSource: wiki/misc/Institutions (doc_id=eu4:w-dcd439a732 | read full context: get_doc(\\\"eu4:w-dcd439a732\\\", offset=16))\\nContent: **Institutions** are fundamental advances in civilization and are the primary determinant of technology cost. Technologies require specific institutions to be embraced and will have increased tech cost penalties otherwise (as shown through the icons above the technology, where those shown in red or grayed out are increasing the cost). The first tech of an institution receives an institution penalty of +15% the next one +30% and all fol",
+   "truncated": true,
+   "t": 10259
+  },
+  {
+   "type": "thinking",
+   "text": "Let me get more detailed information about the Technology page, especially the Indian tech group and institution penalties, and also search for tech group costs for India specifically.",
+   "t": 12870
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-d018b082e8",
+    "sections": "2,3,4"
+   },
+   "t": 13893
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-d018b082e8 multiple sections combined, 3 in total)\\n\\n### Section [2] Types\\n## Types\\n\\n\\n\\n---\\n\\n### Section [3] Administrative\\n### Administrative\\n\\nAdministrative technology is the broad group that makes new government types available, increases production efficiency, unlocks national idea slots, and enables the construction of a wide range of different buildings, most of which are related to issues of stability and income. Higher levels also provide more administrative efficiency for your country, which means less coring costs and less aggressive expansion impacts but also higher liberty desire in colonial nation subjects. Most formable nations require administrative technology level 10 to form.\\n\\n\\n\\n---\\n\\n### Section [4] Diplomatic\\n### Diplomatic\\n\\nDiplomatic technology is primarily related to interactions with other nations and far off lands. This research area increases trade efficiency, colonization range, diplomatic influence, and naval power. The buildings that diplomatic technology allows are trade and sea related.\\n\\n\"}",
+   "truncated": false,
+   "t": 13959
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Indian tech group starting penalty cost modifier"
+   },
+   "t": 14343
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.55\\nSection: Technology > Cost\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=7441))\\nContent: The cost for researching a new technology level consists of the base cost, 600 monarch points, multiplied by the current institution penalty and all modifiers, plus 100%.\\n\\n{ \\\\text{technology cost} = \\\\max\\\\left(30;\\\\text{base cost } \\\\cdot \\\\left( 100% + \\\\sum\\\\text{general technology cost modifiers} + \\\\sum\\\\text{institution penalty } \\\\right) \\\\right) }\\n### Institution penalty\\n\\n---\\n\\n[2] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.49\\nSection: Technology > Groups\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=4808))\\nContent: | Group | Starting institution penalty | Countries |\\n| --- | --- | --- |\\n| *Chinese* | +50% | Ainu, Guge, Kham, Nivkh, Solon, Tsang, U, Yarkand, Siberian Clan Councils (Chavchuveny, Chukchi, Kamchadals, Khodynt) |\\n| *Nomadic* | +0% | Manchu Nations: (Jianzhou, Haixi, Xibe) |\\n\\n---\\n\\n[3] «Technology» (kb:eu4 · misc · source=wiki) relevance=0.47\\nSection: Technology > Groups\\nSource: wiki/misc/Technology (doc_id=eu4:w-d018b082e8 | read full context: get_doc(\\\"eu4:w-d018b082e8\\\", offset=2582))\\nContent: Almost all countries in a given tech group begin the game either embracing the institution of feudalism or not (exceptions to this rule are ",
+   "truncated": true,
+   "t": 14737
+  },
+  {
+   "type": "thinking",
+   "text": "I now have enough information to give a comprehensive answer. Let me also get the full Tech Groups section and the Institutions section from the Technology wiki page.",
+   "t": 17144
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-d018b082e8",
+    "offset": 7441,
+    "max_chars": 3000
+   },
+   "t": 18063
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-d018b082e8 body is 45930 chars total, this slice 7441–10441)\\n\\nThe cost for researching a new technology level consists of the base cost, 600 monarch points, multiplied by the current institution penalty and all modifiers, plus 100%.\\n\\n{ \\\\text{technology cost} = \\\\max\\\\left(30;\\\\text{base cost } \\\\cdot \\\\left( 100% + \\\\sum\\\\text{general technology cost modifiers} + \\\\sum\\\\text{institution penalty } \\\\right) \\\\right) }\\n### Institution penalty\\n\\nThere are eight world-changing ideas that spread throughout the world over the course of history. Societies that haven't embraced these ideas will have a harder time keeping up in technology as the rest of the world, especially Europe where these ideas usually originate, outpaces them. Each technology has specific institution requirements, which will increase tech cost by +15%, +30% or +50% when not fulfilled, and give a corresponding bonus to the maximum number of stockpiled monarch points. These penalties accumulate as additional institutions appear; at the extreme, a country that still hasn't embraced any institution in 1821 will have a +400% penalty to technology cost.\\n\\n### General modifiers\\n\\nGeneral modifiers reduce the cost of all technology types. \\n\\n#### Increase over time\\n\\nTechnology cost increases over time. This increase is linear and only depends on the historic discovery date of the current technology of a country. This means if the historic discovery date of the current technology is 14",
+   "truncated": true,
+   "t": 18117
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-dcd439a732",
+    "section": 1
+   },
+   "t": 18777
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-dcd439a732 · section [1] Institutions · 1888 chars total, this slice 0–1888)\\n\\n# Institutions\\n\\n**Institutions** are fundamental advances in civilization and are the primary determinant of technology cost. Technologies require specific institutions to be embraced and will have increased tech cost penalties otherwise (as shown through the icons above the technology, where those shown in red or grayed out are increasing the cost). The first tech of an institution receives an institution penalty of +15% the next one +30% and all following techs +50%. This penalty can stack if multiple institutions are not embraced.\\n\\nEmbracing an institution requires that institution to be fully present in provinces containing at least 10% of a country's development (modified by local autonomy), after which it requires an amount of ducats dependent on the remaining development in provinces where the institution is not fully present.\\n\\nThere are a total of 8 different institutions that appear throughout the game (except for the first which is present at the beginning of the game in 1444), at roughly 50-year intervals starting in 1450 and ending in 1750.\\n\\nEach year all provinces an institution can spawn in are randomly given a chance to spawn the institution. Each eligible province for an institution has a fixed chance (5% to 100% depending on the institution) to get it to spawn in that province. If only 3 provinces can get it to spawn for an institution with a 10% s",
+   "truncated": true,
+   "t": 18827
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have enough information to give a comprehensive answer. Let me also check what the 8 institutions are and their historical spread dates for Indian nations specifically.\n\nLet me also look for the section on tech groups to get the Indian tech group starting penalty specifically.",
+   "t": 21689
+  },
+  {
+   "type": "text",
+   "text": "Great, I have everything I need. Here's a thorough answer:\n\n---\n\n## Why Is Your Tech So Expensive in India?\n\nThere are **two layered causes**, and for an Indian nation both are usually hitting you at once.\n\n---\n\n### 1. 🏛️ Un-embraced Institutions — The #1 Culprit\n\nThis is almost always the real answer. «Institutions» (wiki) explains it clearly:\n\n> *\"The first tech of an institution receives a penalty of +15%, the next +30%, and all following techs +50%. This penalty stacks across multiple un-embraced institutions.\"*\n\nThere are **8 institutions** total (Feudalism, Renaissance, Colonialism, Printing Press, Global Trade, Manufactories, Enlightenment, Industrialization), appearing roughly every 50 years from 1450 onward. **They almost always spawn in Western Europe first** and spread outward slowly. As an Indian nation, you are far from the origin point — institutions reach you late, or you must actively spread them yourself.\n\nThe math gets brutal fast:\n\n| Un-embraced Institutions | Extra Tech Cost |\n|---|---|\n| 1 | up to **+50%** per tech level |\n| 2 | up to **+100%** |\n| 3 | up to **+150%** |\n| All 8 ignored until 1821 | **+400%** (!) |\n\nSo if your tech feels impossibly expensive mid-game, **open the tech screen and look at the institution icons above the tech buttons** — red/greyed icons = you're paying those penalties right now.\n\n---\n\n### 2. 🌏 Indian Tech Group — Starting Penalty\n\nThe «Technology» (wiki) table confirms:\n\n> *Indian tech group: **+50% starting institution penalty***\n\nThis means many Indian nations begin the game **without Feudalism already embraced**, so you start at a 50% penalty even on day 1 (unlike Western nations who start with Feudalism and pay no extra cost until Renaissance appears). The specific nations listed include Bastar, Chanda, Garha, Ladakh, Manipur, Tripura, and others.\n\n---\n\n### 3. ⏳ Time-Based Cost Increase\n\nA smaller additional factor: tech cost rises **linearly over the game**, up to **+30% by 1821**, purely based on how historically late the current tech level was discovered. This applies to everyone, but it compounds your other penalties.\n\n---\n\n### ✅ How to Fix It\n\n| Problem | Solution |\n|---|---|\n| Institutions not spreading to India | **Manually spread them**: send a merchant or diplomat to get them into your provinces, or develop a province where the institution exists |\n| Can't afford to embrace yet | Embrace as soon as the institution is **≥10% present** in your development — the ducats to embrace are far cheaper than the ongoing monarch point drain from the tech penalty |\n| Behind on tech despite embracing | Use the **neighbor bonus**: you get **−5% tech cost per level you're behind** the most advanced nation bordering you (up to −75%). A Western nation bordering your territory actually helps you! |\n| Still struggling | Take ideas that reduce tech cost (e.g. **Innovative** idea group gives −10% tech cost) |\n\n**The bottom line:** Check your institutions screen first. If you're 2–3 institutions behind and haven't embraced them, you could be paying **100–150% extra** on every tech purchase. Embracing institutions is the single highest-impact action you can take.\n\n*Sources: «Technology» (wiki), «Institutions» (wiki), «Growth Engine» (fundamentals)*",
+   "t": 41591
+  },
+  {
+   "type": "final",
+   "answer": "Great, I have everything I need. Here's a thorough answer:\n\n---\n\n## Why Is Your Tech So Expensive in India?\n\nThere are **two layered causes**, and for an Indian nation both are usually hitting you at once.\n\n---\n\n### 1. 🏛️ Un-embraced Institutions — The #1 Culprit\n\nThis is almost always the real answer. «Institutions» (wiki) explains it clearly:\n\n> *\"The first tech of an institution receives a penalty of +15%, the next +30%, and all following techs +50%. This penalty stacks across multiple un-embraced institutions.\"*\n\nThere are **8 institutions** total (Feudalism, Renaissance, Colonialism, Printing Press, Global Trade, Manufactories, Enlightenment, Industrialization), appearing roughly every 50 years from 1450 onward. **They almost always spawn in Western Europe first** and spread outward slowly. As an Indian nation, you are far from the origin point — institutions reach you late, or you must actively spread them yourself.\n\nThe math gets brutal fast:\n\n| Un-embraced Institutions | Extra Tech Cost |\n|---|---|\n| 1 | up to **+50%** per tech level |\n| 2 | up to **+100%** |\n| 3 | up to **+150%** |\n| All 8 ignored until 1821 | **+400%** (!) |\n\nSo if your tech feels impossibly expensive mid-game, **open the tech screen and look at the institution icons above the tech buttons** — red/greyed icons = you're paying those penalties right now.\n\n---\n\n### 2. 🌏 Indian Tech Group — Starting Penalty\n\nThe «Technology» (wiki) table confirms:\n\n> *Indian tech group: **+50% starting institution penalty***\n\nThis means many Indian nations begin the game **without Feudalism already embraced**, so you start at a 50% penalty even on day 1 (unlike Western nations who start with Feudalism and pay no extra cost until Renaissance appears). The specific nations listed include Bastar, Chanda, Garha, Ladakh, Manipur, Tripura, and others.\n\n---\n\n### 3. ⏳ Time-Based Cost Increase\n\nA smaller additional factor: tech cost rises **linearly over the game**, up to **+30% by 1821**, purely based on how historically late the current tech level was discovered. This applies to everyone, but it compounds your other penalties.\n\n---\n\n### ✅ How to Fix It\n\n| Problem | Solution |\n|---|---|\n| Institutions not spreading to India | **Manually spread them**: send a merchant or diplomat to get them into your provinces, or develop a province where the institution exists |\n| Can't afford to embrace yet | Embrace as soon as the institution is **≥10% present** in your development — the ducats to embrace are far cheaper than the ongoing monarch point drain from the tech penalty |\n| Behind on tech despite embracing | Use the **neighbor bonus**: you get **−5% tech cost per level you're behind** the most advanced nation bordering you (up to −75%). A Western nation bordering your territory actually helps you! |\n| Still struggling | Take ideas that reduce tech cost (e.g. **Innovative** idea group gives −10% tech cost) |\n\n**The bottom line:** Check your institutions screen first. If you're 2–3 institutions behind and haven't embraced them, you could be paying **100–150% extra** on every tech purchase. Embracing institutions is the single highest-impact action you can take.\n\n*Sources: «Technology» (wiki), «Institutions» (wiki), «Growth Engine» (fundamentals)*",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__get_doc"
+   ],
+   "t": 41825
+  }
+ ]
+}

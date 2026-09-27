@@ -1,0 +1,187 @@
+{
+ "id": "aristocratic-ideas",
+ "lang": "en",
+ "question": "What does the Aristocratic idea group give, and what kind of nation should take it?",
+ "shows": "Both sources together: exact bonuses from the parsed game files, strategy from the wiki",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 51523,
+ "tool_calls": 6,
+ "events": [
+  {
+   "type": "start",
+   "t": 918
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about the Aristocratic idea group in EU4 - what bonuses it provides and what kind of nation should take it. Let me search the knowledge base for this information.",
+   "t": 7457
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "search_kb",
+    "max_results": 3
+   },
+   "t": 7815
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_tree\"}]",
+   "truncated": false,
+   "t": 7823
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me search for the Aristocratic idea group in the knowledge base.",
+   "t": 9178
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Aristocratic idea group bonuses",
+    "path_prefix": "game_file/idea_group"
+   },
+   "t": 9607
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Aristocratic ideas when to pick strategy",
+    "path_prefix": "wiki"
+   },
+   "t": 10074
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Aristocratic Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.60\\nSection: Aristocratic Ideas > Raw Script (appendix)\\nSource: game_file/idea_group/aristocracy_ideas (doc_id=eu4:g-34e50c1e8e | read full context: get_doc(\\\"eu4:g-34e50c1e8e\\\", offset=1985))\\nContent: ```\\naristocracy_ideas = {\\n    category = MIL\\n    bonus = {\\n        leader_siege = 1\\n        nobles_loyalty_modifier = 0.1\\n        rajput_loyalty_modifier = 0.1\\n        maratha_loyalty_modifier = 0.1\\n    }\\n    trigger = {\\n        has_government_attribute = enables_aristocratic_idea_group\\n    }\\n    noble_knights = {\\n        cavalry_power = 0.15\\n    }\\n    serfdom = {\\n        global_manpower_modifier = 0.15\\n        development_cost = -0.05\\n    }\\n    noble_resilience = {\\n        cav_to_inf_ratio = 0.1\\n        cavalry_cost = -0.20\\n    }\\n    noble_officers = {\\n        army_tradition_decay = -0.01\\n\\n---\\n\\n[2] «Aristocratic Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.60\\nSection: Aristocratic Ideas > Overview\\nSource: game_file/idea_group/aristocracy_ideas (doc_id=eu4:g-34e50c1e8e | read full context: get_doc(\\\"eu4:g-34e50c1e8e\\\", offset=35))\\nContent: Idea group key: `aristocracy_ideas`. Category: Military (MIL).\\n\\n**Available only if:**\\n- Government has attribute: Enables Aristocratic Idea Group\\n\\n---\\n\\n[3] «Aristocratic Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.56\\nSection: Aristocratic Ideas > Raw Script (appendix)\\nSource: game_f",
+   "truncated": true,
+   "t": 10116
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Zaporozhie» (kb:eu4 · country · source=wiki) relevance=0.61\\nSection: Zaporozhie > Strategy > Final Steps to Re-Form Poland\\nSource: wiki/country/Zaporozhie (doc_id=eu4:w-f70491636c | read full context: get_doc(\\\"eu4:w-f70491636c\\\", offset=10870))\\nContent: # take the 'Call of the Steppes' decision to enact the Sich Rada government reform, this will disable Aristocratic ideas (but since it has already been selected in the place of Defensive ideas it will remain unlocked) and allow Horde ideas (one could of course choose to be a Russian principality but this plays sub-par to Zaporozhie's unique mechanics as it does not have the military benefits of the Sich Rada and access to both Aristocratic and Horde ideas at the same time)\\n# one can therefore have both Aristocratic and Horde ideas for super powerful cavalry boosted by the Polish cavalry ideas\\n\\n---\\n\\n[2] «The Idea Variation» (kb:eu4 · misc · source=wiki) relevance=0.61\\nSection: The Idea Variation > Special Administrative Ideas: Government > Monarchy Ideas\\nSource: wiki/misc/The Idea Variation (doc_id=eu4:w-c914c57b1e | read full context: get_doc(\\\"eu4:w-c914c57b1e\\\", offset=4838))\\nContent: Monarchy ideas are pretty much the old aristocratic ideas improved with absolutism bonuses and cavalry to infantry ratio, also giving 20% manpower which is very good for an admin idea group. \\nThis group really does become powerful in the age of absolutism and might be a good choice for a midgame pick.\\n\\n---\\n\\n[3] ",
+   "truncated": true,
+   "t": 10591
+  },
+  {
+   "type": "thinking",
+   "text": "Let me get the full document for Aristocratic Ideas to see all the bonuses, and also get the Idea groups guide for the strategic context.",
+   "t": 13167
+  },
+  {
+   "type": "text",
+   "text": "Good, I have the game_file doc ID. Let me pull the full Aristocratic Ideas document and also the idea groups guide for strategic context.",
+   "t": 13884
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:g-34e50c1e8e"
+   },
+   "t": 14613
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-34e50c1e8e\\\"\\ntitle: \\\"Aristocratic Ideas\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"idea_group\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"b61e895e4d41\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-34e50c1e8e.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"idea_group\\\"\\nentity_id: \\\"aristocracy_ideas\\\"\\nsource_file: \\\"common/ideas/00_basic_ideas.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Aristocratic Ideas\\n\\n## Overview\\n\\nIdea group key: `aristocracy_ideas`. Category: Military (MIL).\\n\\n**Available only if:**\\n- Government has attribute: Enables Aristocratic Idea Group\\n\\n## Conditions and Effects\\n\\n### Group completion bonus\\n\\n- Leader Siege: 1\\n- [Country.GetNobilityName] Loyalty Equilibrium +10%\\n- [Country.GetRajputsName] Loyalty Equilibrium +10%\\n- [Country.GetMarathasName] Loyalty Equilibrium +10%\\n\\n### Ideas\\n\\n#### 1. Noble Knights (`noble_knights`)\\n\\n- Cavalry Combat Ability +15%\\n\\n#### 2. Serfdom (`serfdom`)\\n\\n- Global Manpower Modifier +15%\\n- Development Cost -5%\\n\\n#### 3. Noble Connections (`noble_resilience`)\\n\\n- Your Army, excluding Artillery, cannot be comprised of more than {MAX}% Cavalry or you will suffer the Insufficient Support penalty causing additional losses in combat.: 0.1\\n- Cavalry Cost -20%\\n\\n#### 4. Noble Officers (`noble_officers`)\\n\\n- Army Tradition Decay: -0.01\\n- Navy Tradition Decay: -0.01\\n- Number of Pronoiars: 1\\n\\n#### 5. International Nobility (`international_nobility`)\\n\\n- {DIRECTION} {V",
+   "truncated": true,
+   "t": 14651
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Aristocratic ideas recommended cavalry monarchy when to take",
+    "path_prefix": "wiki/misc"
+   },
+   "t": 15260
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Beginner's guide» (kb:eu4 · misc · source=wiki) relevance=0.63\\nSection: Beginner's guide > Common questions > What do I do with monarch points?\\nSource: wiki/misc/Beginner's guide (doc_id=eu4:w-a5709d57e5 | read full context: get_doc(\\\"eu4:w-a5709d57e5\\\", offset=54075))\\nContent: Military Power is used:\\n* to research military technology and ideas\\n* to recruit land leaders (generals and conquistadors)\\n* to maintain military leaders (including naval) beyond the current cap\\n* to do various military actions:\\n**harsh treatment (reducing the progress of a rebel faction)\\n** attacking natives in a colony or uncolonized province\\n** assaulting forts\\n** with the Mandate of Heaven DLC, artillery barrage (creating a breach in the walls)\\n** strengthen government (increasing legitimacy, republican tradition, horde unity, or devotion depending on government type)\\n\\n---\\n\\n[2] «The Idea Variation» (kb:eu4 · misc · source=wiki) relevance=0.60\\nSection: The Idea Variation > Special Administrative Ideas: Government > Monarchy Ideas\\nSource: wiki/misc/The Idea Variation (doc_id=eu4:w-c914c57b1e | read full context: get_doc(\\\"eu4:w-c914c57b1e\\\", offset=4838))\\nContent: Monarchy ideas are pretty much the old aristocratic ideas improved with absolutism bonuses and cavalry to infantry ratio, also giving 20% manpower which is very good for an admin idea group. \\nThis group really does become powerful in the age of absolutism and might be a good choice for a midgame pick.\\n\\n",
+   "truncated": true,
+   "t": 15831
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have all the information I need to provide a comprehensive answer about the Aristocratic idea group. Let me also check the Idea groups guide for more specific recommendations.",
+   "t": 17217
+  },
+  {
+   "type": "text",
+   "text": "Let me grab the full Aristocratic section from the Idea groups guide.",
+   "t": 17690
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-fe1cf59618",
+    "offset": 34800,
+    "max_chars": 2500
+   },
+   "t": 18320
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-fe1cf59618 body is 39506 chars total, this slice 34800–37300)\\n\\ns. +2 Promoted cultures, +25% religious unity and -1 national unrest helps against rebels. +20% Trade steering improves country's trade income.\\n\\n Indigenous ideas are meant for primitive tribes in the New World. Aside from mediocre military bonuses, they help tribes achieve what they usually need - to develop, reform their government and catch up with the colonisers technologically.\\n\\n**Recommended for/when:**\\n\\n* If you want to improve your military, but also need several other improvements, while having only one idea group slot available.\\n* If you're not sure which military idea group to take, and/or want to try something alternative.\\n* (For Aristocratic and Horde) If you want to focus on cavalry.\\n\\n## Examples\\n\\nHere are some practical examples of decision-making readers may take inspiration from. Remember that it shows only one of the ways these countries can be played, not the only one possible at all.\\n\\n**Castile**: Due to its mission tree and perfect geographical predispositions, the player decides to start with exploration and then expansion ideas to start a colonial empire. As a third group, they'd like a military one, not to fall behind - and they go for quality, as it improves the navy as well, which is essential for Castile's success. After some time colonising and following their mission tree, the player finds themselves with several powerful subjects, so they choos",
+   "truncated": true,
+   "t": 18342
+  },
+  {
+   "type": "thinking",
+   "text": "Let me look for the specific section on Aristocratic ideas in the guide. Let me search a bit earlier for this section.",
+   "t": 20358
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Aristocratic ideas recommended cavalry monarchy absolutism",
+    "doc_id": "eu4:w-fe1cf59618"
+   },
+   "t": 20861
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Idea groups guide» (kb:eu4 · misc · source=wiki) relevance=0.56\\nSection: Idea groups guide > Military idea groups > Government-based idea groups\\nSource: wiki/misc/Idea groups guide (doc_id=eu4:w-fe1cf59618 | read full context: get_doc(\\\"eu4:w-fe1cf59618\\\", offset=33569))\\nContent: groups will be brief and recommendations general, shared by all groups.\\n\\nAristocratic ideas are for monarchies and tribes. They offer, aside from military bonuses, extra diplomat and cheaper claims. +10% Nobility loyalty equilibrium also helps keeping the referred estate in check.\\n\\nPlutocratic ideas improve republic and plutocratic-like monarchies. Aside from military, they offer several bonuses for trade, including one merchant. They also help maintaining country's stability, with -1 national unrest and +10% burghers loyalty equilibrium.\\n\\n---\\n\\n[2] «Idea groups guide» (kb:eu4 · misc · source=wiki) relevance=0.55\\nSection: Idea groups guide > Examples\\nSource: wiki/misc/Idea groups guide (doc_id=eu4:w-fe1cf59618 | read full context: get_doc(\\\"eu4:w-fe1cf59618\\\", offset=38210))\\nContent: **Bohemia**: A few years after the game starts, the player is presented two options - both lead to vastly different playstyles. By choosing to convert to hussite, they get an unique religion, finding themselves in the middle of a heretic continent. In that case, going for quantity or offensive and religious sounds like a great start for massive conquests. Staying catholic offers another oppor",
+   "truncated": true,
+   "t": 21458
+  },
+  {
+   "type": "thinking",
+   "text": "I now have all the information I need to give a comprehensive answer about the Aristocratic idea group. Let me synthesize all the information.\n\nKey points:\n1. It's a **Military (MIL)** idea group\n2. **Access restriction**: Requires a government attribute \"Enables Aristocratic Idea Group\" - mainly available to monarchies (and some tribes)\n3. **The 7 ideas** (from game_file, v1.37.3):\n   - Noble Knights: +15% Cavalry Combat Ability\n   - Serfdom: +15% Global Manpower, -5% Development Cost\n   - Noble Connections improves the cavalry-to-infantry ratio and cuts cavalry cost, while Noble Officers slows tradition decay and adds Pronoia. International Nobility boosts diplomats and cuts general cost, Rightful Conquest reduces claim fabrication and unjustified demand costs, and Local Nobility trades some autonomy reduction for absolutism gain.\n4. The completion bonus grants extra leader siege ability and a nobility boost.\n\nThinking about who benefits most: monarchies and tribal governments (since republics are locked out), cavalry-focused nations like Eastern European or Steppe powers, and those pairing this with Espionage ideas or pursuing the Rightful Conquest claim-fabrication strategy. The absolutism boost from Local Nobility also appeals strongly to late-game absolutism rushers, and there's a nice cross-synergy where cavalry nations stacking Noble Knights with Noble Connections get a solid cavalry combat boost.\n\n",
+   "t": 36922
+  },
+  {
+   "type": "text",
+   "text": "Here is a complete breakdown of the Aristocratic idea group, drawn from the **game_file (v1.37.3)** and the **«Idea groups guide»** (wiki).\n\n---\n\n## Aristocratic Ideas — Full Breakdown\n\n### Access Restriction\nThis is a **Military (MIL)** idea group locked behind the government attribute **\"Enables Aristocratic Idea Group\"**. Per the wiki («Monarchy»), this is available to **monarchies** by default, and also to certain tribal governments. Republics, theocracies, and most other government types **cannot** pick it.\n\n---\n\n### The 7 Ideas\n\n| # | Name | Bonuses |\n|---|------|---------|\n| 1 | **Noble Knights** | +15% Cavalry Combat Ability |\n| 2 | **Serfdom** | +15% Global Manpower, −5% Development Cost |\n| 3 | **Noble Connections** | +10% Cavalry-to-Infantry ratio cap, −20% Cavalry Cost |\n| 4 | **Noble Officers** | −0.01 Army Tradition Decay, −0.01 Navy Tradition Decay, +1 Pronoia |\n| 5 | **International Nobility** | +1 Diplomat, −10% General Cost |\n| 6 | **Rightful Conquest** | −50% Fabricate Claims Cost, −25% Unjustified Demands |\n| 7 | **Local Nobility** | −2.5% Global Autonomy, +0.5 Yearly Absolutism |\n\n### Completion Bonus\n- **+1 Leader Siege**\n- **+10% Nobility Loyalty Equilibrium** (also +10% Rajputs and +10% Marathas loyalty, relevant for Indian/South Asian nations)\n\n---\n\n### Who Should Take It?\n\n**1. Cavalry-focused monarchies** — The clearest use case. Ideas 1, 2, and 3 stack into a powerful cavalry package: +15% combat ability, −20% cost, and a higher cavalry ratio cap, all at once. The wiki («Idea groups guide») explicitly notes: *\"(For Aristocratic and Horde) If you want to focus on cavalry.\"* This makes it especially attractive for Eastern European, Ottoman, Mughal, and steppe-adjacent nations that already have cavalry bonuses in their national ideas — the extra +15% cav combat ability compounds multiplicatively.\n\n**2. Absolutism rushers (mid-to-late game)** — Idea 7 (Local Nobility) gives **+0.5 Yearly Absolutism** and **−2.5% Global Autonomy**, which is strong when pushing toward max absolutism after the Age of Absolutism fires. The completion bonus also keeps your Nobility estate loyal, indirectly protecting your absolutism from faction events.\n\n**3. Expansion-minded monarchies** — **Rightful Conquest** (−50% fabricate claims, −25% unjustified demands) is one of the best expansion support ideas in the game. It dramatically reduces the cost to build a casus belli and softens the AE hit from taking uncontested territory.\n\n**4. Espionage combo nations** — The game's AI weighting reveals a **1.25× preference multiplier** when the nation already has **Espionage ideas**. The Aristocratic + Espionage policy \"Noble Loyalty Act\" gives an additional **+10% cavalry combat ability**, making the pair a premier cavalry stack. This is a well-known combo highlighted in multiple wiki strategy guides (e.g., Transoxiana, Zaporozhie, Poland).\n\n---\n\n### What It's *Not* Good For\n- **Republics, theocracies, and most non-monarchical governments** simply cannot access it.\n- Nations that fight primarily with infantry (e.g., Western European pike-and-shot armies) get relatively little from Ideas 1 and 3.\n- Not a top pick if you need one of the other Military slots for something more focused (Offensive for morale/discipline, Quality for across-the-board unit strength, Quantity for sheer numbers).\n\n---\n\n**Sources:** «Aristocratic Ideas» (game_file, v1.37.3) · «Idea groups guide» (wiki) · «Monarchy» (wiki)",
+   "t": 51195
+  },
+  {
+   "type": "final",
+   "answer": "Here is a complete breakdown of the Aristocratic idea group, drawn from the **game_file (v1.37.3)** and the **«Idea groups guide»** (wiki).\n\n---\n\n## Aristocratic Ideas — Full Breakdown\n\n### Access Restriction\nThis is a **Military (MIL)** idea group locked behind the government attribute **\"Enables Aristocratic Idea Group\"**. Per the wiki («Monarchy»), this is available to **monarchies** by default, and also to certain tribal governments. Republics, theocracies, and most other government types **cannot** pick it.\n\n---\n\n### The 7 Ideas\n\n| # | Name | Bonuses |\n|---|------|---------|\n| 1 | **Noble Knights** | +15% Cavalry Combat Ability |\n| 2 | **Serfdom** | +15% Global Manpower, −5% Development Cost |\n| 3 | **Noble Connections** | +10% Cavalry-to-Infantry ratio cap, −20% Cavalry Cost |\n| 4 | **Noble Officers** | −0.01 Army Tradition Decay, −0.01 Navy Tradition Decay, +1 Pronoia |\n| 5 | **International Nobility** | +1 Diplomat, −10% General Cost |\n| 6 | **Rightful Conquest** | −50% Fabricate Claims Cost, −25% Unjustified Demands |\n| 7 | **Local Nobility** | −2.5% Global Autonomy, +0.5 Yearly Absolutism |\n\n### Completion Bonus\n- **+1 Leader Siege**\n- **+10% Nobility Loyalty Equilibrium** (also +10% Rajputs and +10% Marathas loyalty, relevant for Indian/South Asian nations)\n\n---\n\n### Who Should Take It?\n\n**1. Cavalry-focused monarchies** — The clearest use case. Ideas 1, 2, and 3 stack into a powerful cavalry package: +15% combat ability, −20% cost, and a higher cavalry ratio cap, all at once. The wiki («Idea groups guide») explicitly notes: *\"(For Aristocratic and Horde) If you want to focus on cavalry.\"* This makes it especially attractive for Eastern European, Ottoman, Mughal, and steppe-adjacent nations that already have cavalry bonuses in their national ideas — the extra +15% cav combat ability compounds multiplicatively.\n\n**2. Absolutism rushers (mid-to-late game)** — Idea 7 (Local Nobility) gives **+0.5 Yearly Absolutism** and **−2.5% Global Autonomy**, which is strong when pushing toward max absolutism after the Age of Absolutism fires. The completion bonus also keeps your Nobility estate loyal, indirectly protecting your absolutism from faction events.\n\n**3. Expansion-minded monarchies** — **Rightful Conquest** (−50% fabricate claims, −25% unjustified demands) is one of the best expansion support ideas in the game. It dramatically reduces the cost to build a casus belli and softens the AE hit from taking uncontested territory.\n\n**4. Espionage combo nations** — The game's AI weighting reveals a **1.25× preference multiplier** when the nation already has **Espionage ideas**. The Aristocratic + Espionage policy \"Noble Loyalty Act\" gives an additional **+10% cavalry combat ability**, making the pair a premier cavalry stack. This is a well-known combo highlighted in multiple wiki strategy guides (e.g., Transoxiana, Zaporozhie, Poland).\n\n---\n\n### What It's *Not* Good For\n- **Republics, theocracies, and most non-monarchical governments** simply cannot access it.\n- Nations that fight primarily with infantry (e.g., Western European pike-and-shot armies) get relatively little from Ideas 1 and 3.\n- Not a top pick if you need one of the other Military slots for something more focused (Offensive for morale/discipline, Quality for across-the-board unit strength, Quantity for sheer numbers).\n\n---\n\n**Sources:** «Aristocratic Ideas» (game_file, v1.37.3) · «Idea groups guide» (wiki) · «Monarchy» (wiki)",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb"
+   ],
+   "t": 51523
+  }
+ ]
+}

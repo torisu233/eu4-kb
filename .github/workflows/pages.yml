@@ -1,0 +1,44 @@
+name: Demo (GitHub Pages)
+
+# Publishes the replay demo: the real UI (kb_ui.html) plus the recorded traces in demo/.
+# There is no model behind it, so the page detects the missing backend and runs in replay mode.
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'kb_ui.html'
+      - 'demo/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble static site
+        run: |
+          mkdir -p _site
+          cp kb_ui.html _site/index.html
+          cp -r demo _site/demo
+          rm -f _site/demo/questions.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

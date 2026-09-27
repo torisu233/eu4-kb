@@ -29,6 +29,7 @@ COPY clausewitz/ ./clausewitz/
 COPY renderers/ ./renderers/
 COPY wiki/ ./wiki/
 COPY kb_mcp_server.py kb_answer_backend.py kb_ui.html entrypoint.sh ./
+COPY demo/ ./demo/
 RUN chmod +x entrypoint.sh
 
 # 建執行期用戶，並「在下載大模型檔案之前」就讓它擁有 /app 和快取路徑——踩過兩次坑才定案:

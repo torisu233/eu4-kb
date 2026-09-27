@@ -1,0 +1,213 @@
+{
+ "id": "form-mughals",
+ "lang": "en",
+ "question": "How do I form the Mughals?",
+ "shows": "A formable-nation decision recovered from wiki templates",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 45990,
+ "tool_calls": 7,
+ "events": [
+  {
+   "type": "start",
+   "t": 1175
+  },
+  {
+   "type": "thinking",
+   "text": "The user wants to know how to form the Mughals in EU4. Let me search the knowledge base for this information.",
+   "t": 4091
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "select:search_kb,grep_kb"
+   },
+   "t": 4430
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "No matching deferred tools found",
+   "truncated": false,
+   "t": 4438
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search knowledge base"
+   },
+   "t": 6004
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 6022
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have the tools available. Let me search the knowledge base for information about forming the Mughals.",
+   "t": 7339
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "form Mughal Empire decision requirements"
+   },
+   "t": 7798
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Byzantine decisions» (kb:eu4 · misc · source=wiki) relevance=0.64\\nSection: Byzantine decisions > King of Kings decisions\\nSource: wiki/misc/Byzantine decisions (doc_id=eu4:w-7b6c9123c9 | read full context: get_doc(\\\"eu4:w-7b6c9123c9\\\", offset=2250))\\nContent: The following decisions require the 'King of Kings' DLC.\\n\\nDecision: Justinian's Empire\\nPotential: The country:\\n* Has had the event *\\\"Rome in Roman Hands\\\"*\\nAllow: The country:\\n* Has completed the *\\\"Justinians ambition\\\" and *\\\"Into Aegyptus\\\" Byzantine missions\\n* Owns at least **150** provinces required to form the Roman Empire\\nEffect: The country:\\n* Changes its name to **\\\"Eastern Roman Empire\\\"**\\n\\n---\\n\\n[2] «Pasai» (kb:eu4 · country · source=wiki) relevance=0.62\\nSection: Pasai > Decisions\\nSource: wiki/country/Pasai (doc_id=eu4:w-706b86116c | read full context: get_doc(\\\"eu4:w-706b86116c\\\", offset=505))\\nContent: [See \\\"Formation decisions\\\" article for details]\\n\\n---\\n\\n[3] «Grand Empire» (kb:eu4 · government_reform · source=game_file) relevance=0.62\\nSection: Grand Empire > Conditions and Effects > Modifiers\\nSource: game_file/government_reform/lithuanian_grand_empire (doc_id=eu4:g-00450f60c4 | read full context: get_doc(\\\"eu4:g-00450f60c4\\\", offset=122))\\nContent: - No Religion Penalty: Yes\\n- Monarch Admin Power +200%\\n- Governing Capacity: 300\\n\\n---\\n\\n[4] «Mughals» (kb:eu4 · country · source=wiki) relevance=0.59\\nSection: Mughals > Decisions\\nSource: wiki/country/Mughals (doc_id=",
+   "truncated": true,
+   "t": 8203
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "Mughal",
+    "path_prefix": "game_file/decision"
+   },
+   "t": 8210
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"(no matching literal content)\"}",
+   "truncated": false,
+   "t": 8298
+  },
+  {
+   "type": "thinking",
+   "text": "Let me search specifically for the \"Form Mughal Empire\" decision in the game files, and also look at the wiki page for the Mughals formation.",
+   "t": 10320
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "form Mughal Empire decision potential allow effects",
+    "path_prefix": "game_file"
+   },
+   "t": 10910
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Form Mughal Empire decision requirements culture religion India",
+    "path_prefix": "wiki"
+   },
+   "t": 11466
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Elective Monarchy» (kb:eu4 · government_reform · source=game_file) relevance=0.64\\nSection: Elective Monarchy > Conditions and Effects > Other\\nSource: game_file/government_reform/elective_monarchy_reform (doc_id=eu4:g-5300177e12 | read full context: get_doc(\\\"eu4:g-5300177e12\\\", offset=330))\\nContent: - Potential (key: potential):\\n  Requires DLC: Domination\\n- Allow Normal Conversion: Yes\\n- Valid For Nation Designer: Yes\\n- Nation Designer Cost +1000%\\n\\n---\\n\\n[2] «Nobility of the Emperor» (kb:eu4 · government_reform · source=game_file) relevance=0.61\\nSection: Nobility of the Emperor > Conditions and Effects > Other\\nSource: game_file/government_reform/imperial_nobility_reform (doc_id=eu4:g-0338177242 | read full context: get_doc(\\\"eu4:g-0338177242\\\", offset=397))\\nContent: - Allow Normal Conversion: Yes\\n- Potential (key: potential):\\n  Is revolutionary: Yes\\n\\n---\\n\\n[3] «Equal Electorate» (kb:eu4 · government_reform · source=game_file) relevance=0.61\\nSection: Equal Electorate > Conditions and Effects > Other\\nSource: game_file/government_reform/equal_electorate_reform (doc_id=eu4:g-0d70c46d87 | read full context: get_doc(\\\"eu4:g-0d70c46d87\\\", offset=322))\\nContent: - Allow Normal Conversion: Yes\\n- Potential (key: potential):\\n  Is revolutionary: Yes\\n  Requires DLC: Emperor\\n\\n---\\n\\n[4] «Royal Favoritism» (kb:eu4 · government_reform · source=game_file) relevance=0.60\\nSection: Royal Favoritism > Conditions and Effects > Other\\nSource: game_file/gove",
+   "truncated": true,
+   "t": 12319
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Mughals» (kb:eu4 · country · source=wiki) relevance=0.69\\nSection: Mughals\\nSource: wiki/country/Mughals (doc_id=eu4:w-96fda1c804 | read full context: get_doc(\\\"eu4:w-96fda1c804\\\", offset=11))\\nContent: Government: Indian Sultanate\\nCulture: Hindavi (Hindustani)\\nReligion: Sunni\\nCapital: Central Doab (524)\\nTech: Indian\\nRank: Empire\\n\\n---\\n\\n[2] «Rajputana» (kb:eu4 · country · source=wiki) relevance=0.67\\nSection: Rajputana\\nSource: wiki/country/Rajputana (doc_id=eu4:w-9e0ba2e9a1 | read full context: get_doc(\\\"eu4:w-9e0ba2e9a1\\\", offset=13))\\nContent: Government: Rajput Kingdom\\nCulture: Rajasthani (Western Aryan)\\nReligion: Hindu\\nCapital: Kannauj (4497)\\nTech: Indian\\nRank: Empire\\n**Rajputana** is a formable country in India by any nation with Rajasthani as its primary culture.\\n\\nRajasthani nations in 1444 are Dhundhar, Jaisalmer, Jangladesh, Mewar, Mewat, and Nagaur. Forming Rajputana does not prerequisite any religion. Consequently it can either form Bharat, or Hindustan.\\n\\n---\\n\\n[3] «Sindh» (kb:eu4 · country · source=wiki) relevance=0.66\\nSection: Sindh\\nSource: wiki/country/Sindh (doc_id=eu4:w-7759735e12 | read full context: get_doc(\\\"eu4:w-7759735e12\\\", offset=9))\\nContent: Government: Indian Sultanate\\nCulture: Sindhi (Western Aryan)\\nReligion: Sunni\\nCapital: Thatta (504)\\nTech: Indian\\nRank: Kingdom\\n**Sindh** is a country in India.\\n\\n---\\n\\n[4] «Bharat» (kb:eu4 · country · source=wiki) relevance=0.65\\nSection: Bharat\\nSource: wiki/country/Bh",
+   "truncated": true,
+   "t": 13383
+  },
+  {
+   "type": "thinking",
+   "text": "I found the Mughals wiki page. Let me get the full Formation decisions page and the Mughals wiki page to get the exact requirements.",
+   "t": 15242
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-96fda1c804"
+   },
+   "t": 15487
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"w-96fda1c804\\\"\\ntitle: \\\"Mughals\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"country\\\"\\nlang: \\\"en\\\"\\nversion: \\\"\\\"\\nsource_hash: \\\"f462e3b352b2\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/w-96fda1c804.md\\\"\\nsource: \\\"wiki\\\"\\nwiki_category: \\\"country\\\"\\npageid: 245\\nlast_revision_id: 166786\\nsource_url: \\\"https://eu4.paradoxwikis.com/Mughals\\\"\\nresidual_template_count: 0\\nsource_path: \\\"wiki/country/Mughals\\\"\\n---\\n\\n# Mughals\\n\\nGovernment: Indian Sultanate\\nCulture: Hindavi (Hindustani)\\nReligion: Sunni\\nCapital: Central Doab (524)\\nTech: Indian\\nRank: Empire\\nThe **Mughal Empire** was a powerful Indianised Turco-Mongol Muslim state, founded in the early 16th century by Babur, a Timurid prince and descendant of Tamerlane. At its height in the early 18th century, the empire controlled almost all of the Indian subcontinent and quarter of the world's economy before internal struggles allowed regional powers to take hold (such as the Maratha and Sikh Empires) and the Empire fractured. Its final stronghold, Delhi, was annexed by the British in 1858 after the Indian Rebellion. In-game, the Mughals may be selected in a later historical start or formed by any Iranian or Central Asian state which controls certain provinces in India.\\n\\n## Diwan\\n\\ndh\\nThe Mughals have access to the **Diwan** mechanic, which replaces the regular culture promotion mechanics. Instead of spending diplomatic monarch power to promote cultures into accepted status, the Mughals can 'assimilate' cul",
+   "truncated": true,
+   "t": 15590
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Form Mughal Empire decision allow potential",
+    "path_prefix": "wiki/misc"
+   },
+   "t": 16188
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Byzantine decisions» (kb:eu4 · misc · source=wiki) relevance=0.62\\nSection: Byzantine decisions > King of Kings decisions\\nSource: wiki/misc/Byzantine decisions (doc_id=eu4:w-7b6c9123c9 | read full context: get_doc(\\\"eu4:w-7b6c9123c9\\\", offset=2250))\\nContent: The following decisions require the 'King of Kings' DLC.\\n\\nDecision: Justinian's Empire\\nPotential: The country:\\n* Has had the event *\\\"Rome in Roman Hands\\\"*\\nAllow: The country:\\n* Has completed the *\\\"Justinians ambition\\\" and *\\\"Into Aegyptus\\\" Byzantine missions\\n* Owns at least **150** provinces required to form the Roman Empire\\nEffect: The country:\\n* Changes its name to **\\\"Eastern Roman Empire\\\"**\\n\\n---\\n\\n[2] «Formation decisions» (kb:eu4 · misc · source=wiki) relevance=0.62\\nSection: Formation decisions > Greater Asia\\nSource: wiki/misc/Formation decisions (doc_id=eu4:w-f55a2acbbe | read full context: get_doc(\\\"eu4:w-f55a2acbbe\\\", offset=85160))\\nContent: Decision: Form Bukhara\\nPotential: Bukhara does *not* exist.\\n\\n---\\n\\n[3] «Formation decisions» (kb:eu4 · misc · source=wiki) relevance=0.61\\nSection: Formation decisions > Middle East\\nSource: wiki/misc/Formation decisions (doc_id=eu4:w-f55a2acbbe | read full context: get_doc(\\\"eu4:w-f55a2acbbe\\\", offset=124424))\\nContent: Decision: Form Egypt\\nPotential: Egypt does *not* exist.\\n\\n---\\n\\n[4] «Formation decisions» (kb:eu4 · misc · source=wiki) relevance=0.59\\nSection: Formation decisions > Greater Asia\\nSource: wiki/misc/Formation decis",
+   "truncated": true,
+   "t": 17301
+  },
+  {
+   "type": "thinking",
+   "text": "I found the Formation decisions page has the \"Form Mughal Empire\" decision. Let me get the full details of this decision from the Formation decisions article.",
+   "t": 19171
+  },
+  {
+   "type": "text",
+   "text": "Found it! Let me get the full decision text:",
+   "t": 19293
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-f55a2acbbe",
+    "offset": 115801,
+    "max_chars": 4000
+   },
+   "t": 19862
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-f55a2acbbe body is 174721 chars total, this slice 115801–119801)\\n\\nDecision: Form Mughal Empire\\nPotential: The country:\\n* was never an end-game nation.\\n* is *not* Persia, Mughals, Ottomans, or Holy Roman Empire.\\n* has *not* yet enacted this decision.\\n* is *not* a colonial nation.\\n* does *not* have 'Celestial Empire' Government reform.\\n* is in the Iranian culture group *or* has Turkmeni, Uzbek *or* Kyrgyz as primary culture.\\nIf the country is AI-controlled then it:\\n* \\n* is *not* a custom nation\\n* is *not* a former colonial nation.\\n* has at least **5** cities\\n* Mughals does *not* exist\\nPlaying with normal or historical nations.\\nAllow: Mughals does *not* exist\\n\\nThe country:\\n* \\n* is *not* at war\\n* is Muslim\\n* owns its core provinces:\\n** Delhi (522)\\n** either Doaba (2075), Lahore (507) *or* Central Doab (524)\\nDelhi (522) is part of a state.\\nEffect: The country:\\n* becomes Mughals.\\n* restore its name\\n* gains 25 prestige.\\n* gets new missions.\\n* gets the event ‘New Traditions & Ambitions’, unless it is a custom nation.\\n* changes primary culture to Hindavi.\\n* changes technology group *and* unit type to Indian.\\n* becomes an empire\\n* removes all provinces from the Holy Roman Empire, if it is a member and *not* an elector or the emperor.\\n* gets a permanent claim on Hindustan region\\n* removes all unowned cores and permanent claims in the following regions:\\n** Persia\\n** Khorasan\\n** Central Asia\\n** Caucasus.\\n* becomes a Monar",
+   "truncated": true,
+   "t": 19903
+  },
+  {
+   "type": "thinking",
+   "text": "I now have all the information I need to answer the question about how to form the Mughals. Let me compile a clear, well-organized answer.\n\nKey facts from the Formation decisions wiki:\n\n**POTENTIAL (who can see the decision):**\n- Was never an end-game nation\n- Is NOT Persia, Mughals, Ottomans, or Holy Roman Empire\n- Has NOT enacted this decision yet\n- Is NOT a colonial nation\n- Does NOT have 'Celestial Empire' government reform\n- Is in the **Iranian culture group** OR has **Turkmeni, Uzbek, or Kyrgyz** as primary culture\n- Also requires not being at war, being Muslim, and owning core provinces including Delhi plus one of Doaba, Lahore, or Central Doab, with Delhi part of a state.\n- Enacting it turns the country into the Mughals, granting 25 prestige, new missions, a national ideas event, a shift to Hindavi culture and Indian tech group/unit type, and Empire rank.\n\nI'm noting it also grants a permanent claim on Hindustan, strips Persian/Central Asian claims, sets up a monarchy with an Indian Sultanate reform (plus Dharma-specific reforms if owned), and boosts Delhi's development. Timurids and other Iranian or Central Asian culture group nations are the typical starting picks, with the wiki calling Timurids the easiest path.\n\n",
+   "t": 29352
+  },
+  {
+   "type": "text",
+   "text": "Here is a complete breakdown of how to form the **Mughal Empire**, sourced from «Formation decisions» and «Mughals» (wiki).\n\n---\n\n## ✅ Who Can Form the Mughals?\n\nThe decision appears in your decisions tab only if **all** of these are true:\n\n| Condition | Details |\n|---|---|\n| **Culture / origin** | Your primary culture is in the **Iranian culture group** (e.g. Timurid, Khorasan, Afghan, etc.) **OR** your primary culture is **Turkmeni, Uzbek, or Kyrgyz** |\n| **Not already formed** | You are not already the Mughals, Persia, Ottomans, or Holy Roman Empire |\n| **Not a colonial/end-game nation** | No colonial nations; no Celestial Empire government reform |\n\n**Common starters:** The **Timurids** are the classic pick — they are large, Iranian-cultured, and already neighbor northern India. Other viable nations include Khorasan, Transoxiana, the Uzbek hordes (Uzbek culture), and smaller Iranian-culture minors.\n\n---\n\n## 🔓 Requirements to Click the Decision\n\n| Requirement | Details |\n|---|---|\n| **Religion** | Must be **Muslim** (any Muslim faith) |\n| **Not at war** | You must be at peace |\n| **Own + core Delhi** (province 522) | Must own and have a core on Delhi; Delhi must also be **part of a state** |\n| **Own + core one of:** | Doaba (2075) **or** Lahore (507) **or** Central Doab (524) |\n| **Mughals don't exist** | The Mughals tag must not already be in the game |\n\n> **In practice:** You need to conquer northern India — grab **Delhi** and at least one of the Lahore/Doab provinces, make sure you have cores on them (wait out the coring time or use admin power), and put Delhi in a stated territory.\n\n---\n\n## 🎁 What You Get Upon Forming\n\n- **+25 Prestige**\n- **New national ideas** (via the \"New Traditions & Ambitions\" event — Mughal ideas are excellent, including −25% core-creation cost)\n- **Primary culture → Hindavi** (Hindustani group)\n- **Tech group + unit type → Indian**\n- **Rank upgraded to Empire**\n- **Permanent claims** on the entire Hindustan region\n- **Cores/claims removed** from Persia, Khorasan, Central Asia, and the Caucasus\n- Government set to **Indian Sultanate** reform (Monarchy base)\n- **With Dharma DLC:** Also gets the powerful **Mughal Diwan** government reform (culture assimilation mechanic) + **Mansabdari System** (tier 5) + **Zabt System** (tier 7) reforms\n\n---\n\n## 💡 Practical Tips\n\n1. **Timurids are the easiest path.** They start in 1444 as a large Iranian-culture realm that already borders the required provinces. Manage your vassals and march into northern India early.\n2. **Watch for the Delhi state requirement.** Delhi must be in a *stated* territory (not a territory), so make sure you have the governing capacity to state it before clicking.\n3. **Secure alliances or break them first.** Delhi Sultanate and its neighbors often have a web of alliances — picking them apart one by one is key.\n4. **After forming:** Lean into the Diwan mechanic (Dharma DLC) — assimilating whole culture groups gives stacking permanent bonuses (e.g. Iranian = −10% advisor costs, Hindustani = −10% core-creation cost). Prioritize conquering Hindustan for your mission tree rewards.\n\n*Sources: «Formation decisions» (wiki), «Mughals» (wiki)*",
+   "t": 45775
+  },
+  {
+   "type": "final",
+   "answer": "Here is a complete breakdown of how to form the **Mughal Empire**, sourced from «Formation decisions» and «Mughals» (wiki).\n\n---\n\n## ✅ Who Can Form the Mughals?\n\nThe decision appears in your decisions tab only if **all** of these are true:\n\n| Condition | Details |\n|---|---|\n| **Culture / origin** | Your primary culture is in the **Iranian culture group** (e.g. Timurid, Khorasan, Afghan, etc.) **OR** your primary culture is **Turkmeni, Uzbek, or Kyrgyz** |\n| **Not already formed** | You are not already the Mughals, Persia, Ottomans, or Holy Roman Empire |\n| **Not a colonial/end-game nation** | No colonial nations; no Celestial Empire government reform |\n\n**Common starters:** The **Timurids** are the classic pick — they are large, Iranian-cultured, and already neighbor northern India. Other viable nations include Khorasan, Transoxiana, the Uzbek hordes (Uzbek culture), and smaller Iranian-culture minors.\n\n---\n\n## 🔓 Requirements to Click the Decision\n\n| Requirement | Details |\n|---|---|\n| **Religion** | Must be **Muslim** (any Muslim faith) |\n| **Not at war** | You must be at peace |\n| **Own + core Delhi** (province 522) | Must own and have a core on Delhi; Delhi must also be **part of a state** |\n| **Own + core one of:** | Doaba (2075) **or** Lahore (507) **or** Central Doab (524) |\n| **Mughals don't exist** | The Mughals tag must not already be in the game |\n\n> **In practice:** You need to conquer northern India — grab **Delhi** and at least one of the Lahore/Doab provinces, make sure you have cores on them (wait out the coring time or use admin power), and put Delhi in a stated territory.\n\n---\n\n## 🎁 What You Get Upon Forming\n\n- **+25 Prestige**\n- **New national ideas** (via the \"New Traditions & Ambitions\" event — Mughal ideas are excellent, including −25% core-creation cost)\n- **Primary culture → Hindavi** (Hindustani group)\n- **Tech group + unit type → Indian**\n- **Rank upgraded to Empire**\n- **Permanent claims** on the entire Hindustan region\n- **Cores/claims removed** from Persia, Khorasan, Central Asia, and the Caucasus\n- Government set to **Indian Sultanate** reform (Monarchy base)\n- **With Dharma DLC:** Also gets the powerful **Mughal Diwan** government reform (culture assimilation mechanic) + **Mansabdari System** (tier 5) + **Zabt System** (tier 7) reforms\n\n---\n\n## 💡 Practical Tips\n\n1. **Timurids are the easiest path.** They start in 1444 as a large Iranian-culture realm that already borders the required provinces. Manage your vassals and march into northern India early.\n2. **Watch for the Delhi state requirement.** Delhi must be in a *stated* territory (not a territory), so make sure you have the governing capacity to state it before clicking.\n3. **Secure alliances or break them first.** Delhi Sultanate and its neighbors often have a web of alliances — picking them apart one by one is key.\n4. **After forming:** Lean into the Diwan mechanic (Dharma DLC) — assimilating whole culture groups gives stacking permanent bonuses (e.g. Iranian = −10% advisor costs, Hindustani = −10% core-creation cost). Prioritize conquering Hindustan for your mission tree rewards.\n\n*Sources: «Formation decisions» (wiki), «Mughals» (wiki)*",
+   "tools_used": [
+    "ToolSearch",
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc"
+   ],
+   "t": 45990
+  }
+ ]
+}

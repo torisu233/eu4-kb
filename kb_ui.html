@@ -24,8 +24,10 @@
   #status{margin:12px 2px 8px;color:var(--mut);font-size:13px;min-height:18px}
   .cols{display:grid;grid-template-columns:380px 1fr;gap:16px;margin-top:6px}
   @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .cols>*{min-width:0}
   .panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px}
   .panel h3{margin:0 0 10px;font-size:13px;color:var(--mut);font-weight:600;letter-spacing:.3px}
+  #process{max-height:72vh;overflow:auto}
   /* process steps */
   .step{border-left:3px solid var(--bd);padding:6px 0 6px 10px;margin:8px 0;font-size:13px}
   .step .lbl{font-weight:600}
@@ -55,6 +57,17 @@
   .fbbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   #fbc{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--bd);border-radius:8px;font:inherit;font-size:13px}
   #fbmsg{font-size:13px;color:#16a34a}
+  /* recorded demo runs (replay) */
+  #demos{display:none;margin:14px 0 4px} #demos.show{display:block}
+  #demos h3{margin:0 0 4px;font-size:13px;color:var(--mut);font-weight:600;letter-spacing:.3px}
+  #demos .note{font-size:12px;color:var(--mut);margin:0 0 8px}
+  .demolist{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity}
+  .demo{flex:0 0 250px;scroll-snap-align:start;text-align:left;padding:9px 11px;background:var(--card);color:var(--fg);border:1px solid var(--bd);
+        border-radius:10px;font-weight:500;font-size:13px;line-height:1.4;white-space:normal}
+  .demo:hover:not(:disabled),.demo.on{border-color:var(--accent)} .demo.on{box-shadow:0 0 0 1px var(--accent) inset}
+  .demo .shows{display:block;margin-top:4px;font-size:11.5px;color:var(--mut);font-weight:400}
+  #replayq{display:none;margin:12px 2px 0;font-weight:600} #replayq.show{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  #skip{padding:4px 10px;font-size:12px;background:#fff;color:var(--accent);border:1px solid var(--accent);border-radius:8px}
   .spin{display:inline-block;width:13px;height:13px;border:2px solid #cbd5e1;border-top-color:var(--accent);
         border-radius:50%;animation:r .8s linear infinite;vertical-align:-2px;margin-right:6px}
   @keyframes r{to{transform:rotate(360deg)}}
@@ -74,6 +87,8 @@
     <button id="go">Send</button>
   </div>
   <div class="hint" id="t-hint"></div>
+  <div id="demos"><h3 id="t-demos"></h3><p class="note" id="t-demonote"></p><div class="demolist" id="demolist"></div></div>
+  <div id="replayq"><span id="rq"></span><button id="skip"></button></div>
   <div id="status"></div>
   <div class="cols">
     <div class="panel"><h3 id="t-proc"></h3><div id="process"></div></div>
@@ -110,6 +125,12 @@
       expand:"expand content", truncated:" (truncated)", noText:"(no text content for this step)",
       toolWord:"tool", returned:" returned",
       fbSaved:"✓ Recorded, thanks", fbFail:"⚠ Failed to record", fbFailE:(e)=>`⚠ Failed to record: ${e}`,
+      demos:"▶ Recorded runs — click one to replay it", subReplay:"Replay of recorded runs · hybrid RAG + MCP agent",
+      demoNoteLive:"Real runs of this system, recorded with every step. Replayed at higher speed.",
+      demoNoteStatic:"This page has no live model behind it. Each run below was recorded end to end against the real system (reasoning, tool calls, raw tool results, final answer) and is replayed here at higher speed.",
+      demoMeta:(n,s)=>`${n} tool calls · ${s}s live`,
+      skip:"Skip to end ⏭", replaying:"Replaying recorded run…",
+      replayDone:(n,s,m,d)=>`✓ Replay of a recorded run: ${n} tool calls, ${s}s live (${m}, recorded ${d})`,
     },
     zh: {
       title:"EU4 知识库问答", sub:"本地 RAG · 即时过程",
@@ -129,6 +150,12 @@
       expand:"展开内容", truncated:"（已截断）", noText:"（此步无文字内容）",
       toolWord:"工具", returned:" 返回",
       fbSaved:"✓ 已记录，谢谢", fbFail:"⚠ 记录失败", fbFailE:(e)=>`⚠ 记录失败：${e}`,
+      demos:"▶ 录制的真实运行——点击回放", subReplay:"录制运行的回放 · 混合检索 RAG + MCP agent",
+      demoNoteLive:"本系统的真实运行记录（含每一步），加速回放。",
+      demoNoteStatic:"此页面后面没有在线模型。下面每一题都是对真实系统完整录制的运行（思考、工具调用、工具原始返回、最终答案），在此加速回放。",
+      demoMeta:(n,s)=>`${n} 次工具调用 · 实际 ${s} 秒`,
+      skip:"跳到结尾 ⏭", replaying:"回放录制的运行…",
+      replayDone:(n,s,m,d)=>`✓ 录制运行的回放：${n} 次工具调用，实际耗时 ${s} 秒（${m}，录制于 ${d}）`,
     },
   };
   let LANG = (localStorage.getItem("eu4kb_lang") || "en");
@@ -153,11 +180,19 @@
     document.querySelector('.fbbtn[data-r="down"]').textContent = d.fbDown;
     $('#fbc').placeholder = d.fbcPh;
     $('#lang').value = LANG;
+    $('#t-demos').textContent = d.demos;
+    $('#t-demonote').textContent = LIVE ? d.demoNoteLive : d.demoNoteStatic;
+    $('#skip').textContent = d.skip;
+    if (!LIVE && DEMOS.length) $('#t-sub').textContent = d.subReplay;
+    renderDemos();
   }
 
   const el = (h)=>{ const div=document.createElement('div'); div.innerHTML=h; return div.firstElementChild; };
   function render(md){
-    if (window.marked){ try{ return marked.parse(md); }catch(e){} }
+    // CommonMark won't close **bold** after full-width punctuation when a CJK character follows
+    // (e.g. **莫卧儿（Mughals）**流程), so convert bold up front
+    const pre = md.replace(/\*\*(?=\S)([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+    if (window.marked){ try{ return marked.parse(pre); }catch(e){} }
     return '<pre style="white-space:pre-wrap;background:none;color:inherit;padding:0">'+md.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre>';
   }
   function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
@@ -223,11 +258,57 @@
     }catch(e){ $('#fbmsg').textContent=d.fbFailE(e);
       document.querySelectorAll('.fbbtn').forEach(b=>b.disabled=false); $('#fbc').disabled=false; btn.classList.remove('on'); }
   }
+  // ---- Replay of recorded runs (demo/index.json + demo/traces/<id>.json, written by record_demo.py).
+  // With no backend behind the page (static hosting), replay is the only mode and the ask box is hidden.
+  let LIVE = false, DEMOS = [], replayGen = 0, skipNow = false;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  function renderDemos(){
+    const list = $('#demolist'); list.innerHTML = '';
+    DEMOS.forEach(x=>{
+      const b = el('<button class="demo" data-id="'+esc(x.id)+'">'+esc(x.question)+
+                   '<span class="shows">'+esc(x.shows)+' · '+esc(T().demoMeta(x.tool_calls, Math.round(x.duration_ms/1000)))+'</span></button>');
+      b.onclick = ()=>replay(x.id);
+      list.appendChild(b);
+    });
+    $('#demos').classList.toggle('show', DEMOS.length>0);
+  }
+  async function replay(id){
+    const gen = ++replayGen; skipNow = false;
+    document.querySelectorAll('.demo').forEach(b=>{ b.classList.toggle('on', b.dataset.id===id);
+      if (b.dataset.id===id) b.scrollIntoView({block:'nearest', inline:'nearest'}); });
+    const tr = await (await fetch('demo/traces/'+encodeURIComponent(id)+'.json')).json();
+    if (gen !== replayGen) return;
+    const d = T();
+    $('#process').innerHTML=''; $('#answer').innerHTML=''; answerBuf=''; turnId=null; resetFeedback();
+    $('#rq').textContent = 'Q: ' + tr.question; $('#replayq').classList.add('show'); $('#skip').style.display='';
+    $('#status').innerHTML = '<span class="spin"></span>' + esc(d.replaying);
+    let prev = 0;
+    for (const ev of tr.events){
+      // compress real time: long gaps (model thinking, slow tools) shrink, but order and rhythm stay visible
+      if (!skipNow) await sleep(Math.min(Math.max((ev.t - prev) / 2.5, 250), 2500));
+      if (gen !== replayGen) return;
+      prev = ev.t; handle(ev);
+    }
+    $('#skip').style.display='none';
+    $('#status').textContent = d.replayDone(tr.tool_calls, Math.round(tr.duration_ms/1000), tr.model, tr.recorded_at);
+    $('#fb').classList.remove('show');
+  }
+  async function init(){
+    try{ const r = await fetch('health'); LIVE = r.ok && (await r.json()).status === 'ok'; }catch(e){ LIVE = false; }
+    try{ const r = await fetch('demo/index.json'); if (r.ok) DEMOS = await r.json(); }catch(e){ DEMOS = []; }
+    if (!LIVE){ $('.ask').style.display='none'; $('#t-hint').style.display='none'; }
+    applyLang();
+    const want = new URLSearchParams(location.search).get('demo');
+    if (!LIVE && DEMOS.length) replay(want && DEMOS.some(x=>x.id===want) ? want : DEMOS[0].id);
+  }
+
   document.querySelectorAll('.fbbtn').forEach(b=> b.onclick=()=>sendFeedback(b.dataset.r, b));
-  $('#go').onclick=ask;
-  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) ask(); });
+  $('#go').onclick=()=>{ replayGen++; $('#replayq').classList.remove('show'); document.querySelectorAll('.demo').forEach(b=>b.classList.remove('on')); ask(); };
+  $('#skip').onclick=()=>{ skipNow = true; };
+  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) $('#go').onclick(); });
   $('#lang').addEventListener('change', e=>{ LANG = e.target.value; localStorage.setItem("eu4kb_lang", LANG); applyLang(); });
   applyLang();
+  init();
 </script>
 </body>
 </html>

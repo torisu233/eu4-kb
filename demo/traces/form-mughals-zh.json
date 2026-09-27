@@ -1,0 +1,238 @@
+{
+ "id": "form-mughals-zh",
+ "lang": "zh",
+ "question": "怎么成立莫卧儿？",
+ "shows": "Chinese answer mode: official Chinese game terms injected by the retrieval layer",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 111427,
+ "tool_calls": 9,
+ "events": [
+  {
+   "type": "start",
+   "t": 1587
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking how to form the Mughal Empire (莫卧儿) in EU4. Let me search the knowledge base for this information.",
+   "t": 8169
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search"
+   },
+   "t": 8386
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 8392
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me search for information about forming the Mughal Empire in EU4.",
+   "t": 12750
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "form Mughal Empire decision",
+    "lang": "zh",
+    "top_k": 8
+   },
+   "t": 13350
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Butua（布图阿）» (kb:eu4 · country · source=wiki) relevance=0.73\\nSection: Butua > Decisions\\nSource: wiki/country/Butua (doc_id=eu4:w-51f2df41b4 | read full context: get_doc(\\\"eu4:w-51f2df41b4\\\", offset=296))\\nContent: Butua can form the Rozwi Empire.\\n[See \\\"Formation decisions\\\" article for details]\\n\\n---\\n\\n[2] «Rozwi Empire（罗兹维帝国）» (kb:eu4 · country · source=wiki) relevance=0.70\\nSection: Rozwi Empire > Formation\\nSource: wiki/country/Rozwi Empire (doc_id=eu4:w-4b95c1883d | read full context: get_doc(\\\"eu4:w-4b95c1883d\\\", offset=286))\\nContent: [See \\\"Formation decisions\\\" article for details]\\n\\n---\\n\\n[3] «Formation decisions» (kb:eu4 · misc · source=wiki) relevance=0.70\\nSection: Formation decisions > India\\nSource: wiki/misc/Formation decisions (doc_id=eu4:w-f55a2acbbe | read full context: get_doc(\\\"eu4:w-f55a2acbbe\\\", offset=107999))\\n(same content also stored in 1 other place(s), e.g. wiki/misc/Formation decisions)\\nContent: * gets the event ‘New Traditions & Ambitions’, unless it is a custom nation.\\n* becomes an empire.\\n* removes all provinces from the Holy Roman Empire, if it is a member and *not* an elector or the emperor.\\n* gains permanent claims on the Indian subcontinent.\\n\\n---\\n\\n[4] «Byzantine decisions» (kb:eu4 · misc · source=wiki) relevance=0.69\\nSection: Byzantine decisions > King of Kings decisions\\nSource: wiki/misc/Byzantine decisions (doc_id=eu4:w-7b6c9123c9 | read full context: get_doc(\\\"eu4:w-7b6c9123c9\\\", offset=2250))\\nContent: T",
+   "truncated": true,
+   "t": 13531
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "Mughal",
+    "lang": "zh",
+    "limit": 15
+   },
+   "t": 13758
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"«Absolutism（专制主义）» (kb:eu4) | Absolutism > Maximum effect of absolutism\\nSource:wiki/mechanic/Absolutism\\n…*+10% as a possible reward from the Chinese mission Path of Expansion\\n*+15% from the Great Moravia final idea ambition\\n*+10% as a possible reward from the Netherlands mission Fate of the Confederation…\\n\\n«Advisor（顾问）» (kb:eu4) | Advisor > Types > Administrative\\nSource:wiki/misc/Advisor\\n…| Advisor | Effects | Decisions | Requirements | Conditional Modifiers |\\n| --- | --- | --- | --- | --- |\\n| **Treasurer** | National tax modifier: +10% | | | If the Mughals \\\"Dahsala System\\\" Mission was…\\n\\n«Afghanistan（阿富汗）» (kb:eu4) | Afghanistan > Decisions\\nSource:wiki/country/Afghanistan\\n…Because Afghanistan's primary culture is in the Iranian culture group, it can form Persia, which is actually recommended, as it can serve as a good stepping stone to further expansion and conquest.\\nju…\\n\\n«Afghanistan（阿富汗）» (kb:eu4) | Afghanistan > Missions\\nSource:wiki/country/Afghanistan\\n…Afghanistan shares the same missions as the Timurids. Timurid missions are mainly focused on conquering and vassalising its neighbours, Persia in particular should it appear, as well as invading India…\\n\\n«Afghanistan（阿富汗）» (kb:eu4) | Afghanistan > Strategy > Mid-game\\nSource:wiki/country/Afghanistan\\n…Once the player has secured independence, there are several options one can pursue. For example, one can pursue the conquest of India and form the Mughals, unlocking their powerful ideas as wel",
+   "truncated": true,
+   "t": 13793
+  },
+  {
+   "type": "thinking",
+   "text": "I found some relevant results. Let me get more details from the Formation decisions article about the Mughal Empire, and also the Mughals country page.",
+   "t": 16212
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-f55a2acbbe",
+    "offset": 115801,
+    "max_chars": 4000
+   },
+   "t": 16987
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-f55a2acbbe body is 174721 chars total, this slice 115801–119801)\\n\\nDecision: Form Mughal Empire\\nPotential: The country:\\n* was never an end-game nation.\\n* is *not* Persia, Mughals, Ottomans, or Holy Roman Empire.\\n* has *not* yet enacted this decision.\\n* is *not* a colonial nation.\\n* does *not* have 'Celestial Empire' Government reform.\\n* is in the Iranian culture group *or* has Turkmeni, Uzbek *or* Kyrgyz as primary culture.\\nIf the country is AI-controlled then it:\\n* \\n* is *not* a custom nation\\n* is *not* a former colonial nation.\\n* has at least **5** cities\\n* Mughals does *not* exist\\nPlaying with normal or historical nations.\\nAllow: Mughals does *not* exist\\n\\nThe country:\\n* \\n* is *not* at war\\n* is Muslim\\n* owns its core provinces:\\n** Delhi (522)\\n** either Doaba (2075), Lahore (507) *or* Central Doab (524)\\nDelhi (522) is part of a state.\\nEffect: The country:\\n* becomes Mughals.\\n* restore its name\\n* gains 25 prestige.\\n* gets new missions.\\n* gets the event ‘New Traditions & Ambitions’, unless it is a custom nation.\\n* changes primary culture to Hindavi.\\n* changes technology group *and* unit type to Indian.\\n* becomes an empire\\n* removes all provinces from the Holy Roman Empire, if it is a member and *not* an elector or the emperor.\\n* gets a permanent claim on Hindustan region\\n* removes all unowned cores and permanent claims in the following regions:\\n** Persia\\n** Khorasan\\n** Central Asia\\n** Caucasus.\\n* becomes a Monar",
+   "truncated": true,
+   "t": 17004
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-96fda1c804",
+    "max_chars": 8000
+   },
+   "t": 17568
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"w-96fda1c804\\\"\\ntitle: \\\"Mughals\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"country\\\"\\nlang: \\\"en\\\"\\nversion: \\\"\\\"\\nsource_hash: \\\"f462e3b352b2\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/w-96fda1c804.md\\\"\\nsource: \\\"wiki\\\"\\nwiki_category: \\\"country\\\"\\npageid: 245\\nlast_revision_id: 166786\\nsource_url: \\\"https://eu4.paradoxwikis.com/Mughals\\\"\\nresidual_template_count: 0\\nsource_path: \\\"wiki/country/Mughals\\\"\\n---\\n\\n# Mughals\\n\\nGovernment: Indian Sultanate\\nCulture: Hindavi (Hindustani)\\nReligion: Sunni\\nCapital: Central Doab (524)\\nTech: Indian\\nRank: Empire\\nThe **Mughal Empire** was a powerful Indianised Turco-Mongol Muslim state, founded in the early 16th century by Babur, a Timurid prince and descendant of Tamerlane. At its height in the early 18th century, the empire controlled almost all of the Indian subcontinent and quarter of the world's economy before internal struggles allowed regional powers to take hold (such as the Maratha and Sikh Empires) and the Empire fractured. Its final stronghold, Delhi, was annexed by the British in 1858 after the Indian Rebellion. In-game, the Mughals may be selected in a later historical start or formed by any Iranian or Central Asian state which controls certain provinces in India.\\n\\n## Diwan\\n\\ndh\\nThe Mughals have access to the **Diwan** mechanic, which replaces the regular culture promotion mechanics. Instead of spending diplomatic monarch power to promote cultures into accepted status, the Mughals can 'assimilate' cul",
+   "truncated": true,
+   "t": 17600
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have comprehensive information about forming the Mughal Empire. Let me also search for which countries can form the Mughals - specifically about the Timurids and other Iranian/Central Asian nations.",
+   "t": 20545
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Mughals national ideas traditions bonuses",
+    "lang": "zh",
+    "top_k": 5
+   },
+   "t": 21212
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Post Finem/National ideas» (kb:eu4 · misc · source=wiki) relevance=0.65\\nSection: Post Finem/National ideas > National ideas within Post Finem\\nSource: wiki/misc/Post Finem/National ideas (doc_id=eu4:w-2a49ff90a7 | read full context: get_doc(\\\"eu4:w-2a49ff90a7\\\", offset=631))\\nContent: traditions*, two bonuses that define the history and heritage of the country.\\n\\nAs players purchase ideas, they will unlock *national ideas* as well, one for every three ideas purchased, until all seven national ideas have been unlocked. National ideas do not cost monarch points of their own but are unlocked free of charge in a pre-set order.\\n\\nWhen the final national idea is unlocked, the national ambition is also unlocked.\\n\\nMost countries have unique national ideas, but some have a generic set based on their region or culture.\\n\\n---\\n\\n[2] «National ideas（国家理念）» (kb:eu4 · misc · source=wiki) relevance=0.64\\nSection: National ideas\\nSource: wiki/misc/National ideas (doc_id=eu4:w-49088b9867 | read full context: get_doc(\\\"eu4:w-49088b9867\\\", offset=545))\\nContent: called *national traditions*, **national ideas**, and a *national ambition*.\\n\\nEach country starts with *national traditions*, two bonuses that define the history and heritage of the country.\\n\\nAs players purchase ideas, they will unlock *national ideas* as well, one for every three ideas purchased, until all seven national ideas have been unlocked. National ideas do not cost monarch points of their own but are u",
+   "truncated": true,
+   "t": 21361
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have enough information to provide a comprehensive answer. Let me also check if there's a game_file entry for the Mughals national ideas.",
+   "t": 27444
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "MUG",
+    "path_prefix": "game_file",
+    "lang": "zh",
+    "limit": 5
+   },
+   "t": 28129
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"«Pirate Republic（海盗共和国）» (kb:eu4) | Pirate Republic > Conditions and Effects > Other\\nSource:game_file/government_reform/pirate_republic\\n…Technology Group is North American\\n  None of:\\n    Technology Group is South American\\n  None of:\\n    Technology Group is Aboriginal\\n  None of:\\n    Technology Group is Mesoamerican\\n- Potential (key: pot…\\n\\n«Pirate Republic（海盗共和国）» (kb:eu4) | Pirate Republic > Raw Script (appendix)\\nSource:game_file/government_reform/pirate_republic\\n…pr_buccaneers\\n        pr_smugglers\\n        pr_captains\\n    }\\n    modifiers = {\\n        republican_tradition = -1\\n        max_absolutism = -50\\n        naval_forcelimit_modifier = 0.5\\n        capture_sh…\\n\\n«Pirate Kingdom（海盗王国）» (kb:eu4) | Pirate Kingdom > Conditions and Effects > Other\\nSource:game_file/government_reform/pirate_kingdom\\n…- Allow Normal Conversion: No\\n- Legacy Government: Yes\\n- Valid For New Country: No\\n- Valid For Nation Designer: No\\n- Has Term Election: No\\n- Republican Name: Yes\\n- Royal Marriage: No\\n- Republic: Yes\\n-…\\n\\n«Pirate Kingdom（海盗王国）» (kb:eu4) | Pirate Kingdom > Raw Script (appendix)\\nSource:game_file/government_reform/pirate_kingdom\\n…pr_buccaneers\\n        pr_smugglers\\n        pr_captains\\n    }\\n    modifiers = {\\n        republican_tradition = -1\\n        max_absolutism = -50\\n        naval_forcelimit_modifier = 0.5\\n        capture_sh…\\n\\n«Liberi Government（自由民政府）» (kb:eu4) | Liberi Government > Conditions and Effects > Other\\nSource:game_file/g",
+   "truncated": true,
+   "t": 28168
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Mughals national ideas core creation cost cavalry",
+    "lang": "zh",
+    "path_prefix": "game_file",
+    "top_k": 5
+   },
+   "t": 31130
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Horde Ideas（游牧理念）» (kb:eu4 · idea_group · source=game_file) relevance=0.66\\nSection: Horde Ideas > Conditions and Effects > Ideas > 1. Horse-lords of the Steppes (`horse_lords`)\\nSource: game_file/idea_group/horde_gov_ideas (doc_id=eu4:g-427386580b | read full context: get_doc(\\\"eu4:g-427386580b\\\", offset=367))\\nContent: - Cavalry Cost -33%\\n- Your Army, excluding Artillery, cannot be comprised of more than {MAX}% Cavalry or you will suffer the Insufficient Support penalty causing additional losses in combat.: 0.1\\n\\n---\\n\\n[2] «Sich Rada（锡奇拉达）» (kb:eu4 · government_reform · source=game_file) relevance=0.54\\nSection: Sich Rada > Conditions and Effects > Modifiers\\nSource: game_file/government_reform/cossacks_reform (doc_id=eu4:g-8003405d6b | read full context: get_doc(\\\"eu4:g-8003405d6b\\\", offset=487))\\nContent: - Cavalry Combat Ability +20%\\n- Cavalry Cost -20%\\n- Your Army, excluding Artillery, cannot be comprised of more than {MAX}% Cavalry or you will suffer the Insufficient Support penalty causing additional losses in combat.: 0.25\\n- Governing Capacity: 50\\n- Allowed Cossack Fraction: 0.25\\n- Move Capital Cost Modifier -75%\\n\\n---\\n\\n[3] «Cavalry Warfare» (kb:eu4 · government_reform · source=game_file) relevance=0.54\\nSection: Cavalry Warfare > Conditions and Effects > Modifiers\\nSource: game_file/government_reform/cavalry_warfare_reform (doc_id=eu4:g-3d5f0dd0c3 | read full context: get_doc(\\\"eu4:g-3d5f0dd0c3\\\", offset=630))\\nContent: - Your Army, exclud",
+   "truncated": true,
+   "t": 31618
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "mughal_ideas",
+    "lang": "zh",
+    "limit": 5
+   },
+   "t": 36391
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"(no matching literal content)\"}",
+   "truncated": false,
+   "t": 36810
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Mughals ideas traditions ambition",
+    "lang": "zh",
+    "path_prefix": "game_file/idea_group",
+    "top_k": 5
+   },
+   "t": 39710
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Innovative Ideas（革新理念）» (kb:eu4 · idea_group · source=game_file) relevance=0.53\\nSection: Innovative Ideas > Conditions and Effects > Ideas > 2. Empiricism (`empiricism`)\\nSource: game_file/idea_group/innovativeness_ideas (doc_id=eu4:g-9e2a3e06d3 | read full context: get_doc(\\\"eu4:g-9e2a3e06d3\\\", offset=299))\\nContent: - Innovativeness Gain: 0.5\\n\\n---\\n\\n[2] «Innovative Ideas（革新理念）» (kb:eu4 · idea_group · source=game_file) relevance=0.46\\nSection: Innovative Ideas > Raw Script (appendix)\\nSource: game_file/idea_group/innovativeness_ideas (doc_id=eu4:g-9e2a3e06d3 | read full context: get_doc(\\\"eu4:g-9e2a3e06d3\\\", offset=1734))\\nContent: ```\\ninnovativeness_ideas = {\\n    category = ADM\\n    bonus = {\\n        advisor_cost = -0.2\\n    }\\n    patron_of_art = {\\n        prestige_decay = -0.01\\n    }\\n    empiricism = {\\n        innovativeness_gain = 0.5\\n    }\\n    scientific_revolution = {\\n        technology_cost = -0.1\\n        embracement_cost = -0.1\\n    }\\n    dynamic_court = {\\n        advisor_pool = 1\\n    }\\n    print_culture = {\\n        global_institution_spread = 0.25\\n    }\\n    optimism = {\\n        war_exhaustion = -0.05\\n        monthly_splendor = 1\\n    }\\n    expanded_policies = {\\n        free_policy = 1\\n    }\\n    ai_will_do = {\\n\\n---\\n\\n[3] «Indigenous Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.46\\nSection: Indigenous Ideas > Raw Script (appendix)\\nSource: game_file/idea_group/indigenous_ideas (doc_id=eu4:g-e896052e09 | rea",
+   "truncated": true,
+   "t": 40297
+  },
+  {
+   "type": "thinking",
+   "text": "I have all the information I need to answer the question about how to form the Mughal Empire. Let me synthesize the answer in Chinese.\n\nKey points:\n1. **Who can form it**: Countries in the Iranian culture group OR with Turkmeni, Uzbek, or Kyrgyz as primary culture. Examples: Timurids, Delhi's neighbors (Afghanistan, Ajam, Baluchistan, etc.)\n2. **Prerequisites**:\n   - Not at war\n   - Muslim religion\n   - Own core provinces: Delhi (522) AND either Doaba (2075), Lahore (507), or Central Doab (524)\n   - Delhi must be part of a state, Mughals must not already exist, and other exclusions apply (not end-game/Persia/Ottomans/HRE/colonial nation, no Celestial Empire reform)\n3. **Effects**: becomes Mughals empire, shifts primary culture to Hindavi and tech group to Indian, promotes to Empire rank, grants permanent claims on Hindustan, gives 25 prestige, unlocks new missions, and adds the Mughal Diwan mechanic if Dharma DLC is active\n\nAdds Indian Sultanate government reform, plus Mughal Diwan, Mansabdari System, and Zabt System reforms with Dharma, and gives Delhi province buffs. The best strategy is playing as Timurids and conquering/coring Delhi plus the Lahore/Doab area — now I want to organize all this clearly.\n\n",
+   "t": 69465
+  },
+  {
+   "type": "text",
+   "text": "好的，以下是完整的成立**莫卧儿（Mughals）**流程，综合了 wiki 策略说明与游戏文件的精确条件。\n\n---\n\n## 🕌 成立莫卧儿帝国\n\n来源：«Formation decisions（建国决策）» (wiki) + «Mughals（莫卧儿）» (wiki)\n\n---\n\n### 一、哪些国家可以触发？\n\n**主要文化**必须满足以下之一：\n- 属于**伊朗（Iranian）文化组**（如帖木儿、阿富汗、阿贾姆、俾路支等）\n- 主要文化为**土库曼（Turkmeni）、乌兹别克（Uzbek）或吉尔吉斯（Kyrgyz）**\n\n> ⚠️ 已经是波斯、莫卧儿、奥斯曼或神罗，或拥有\"天朝帝国\"政府改革的国家**不能**触发。殖民国家、终局国家同样不可用。\n\n---\n\n### 二、允许条件（Allow，必须全部满足）\n\n| 条件 | 说明 |\n|------|------|\n| 莫卧儿尚未存在 | Mughals does not exist |\n| **不在战争中** | Is not at war |\n| **信仰伊斯兰教（Muslim）** | 任何穆斯林教派均可 |\n| **拥有核心省份：德里（522）** | 必须是你的核心 |\n| **拥有以下之一的核心：** | Doaba (2075) **或** Lahore (507) **或** Central Doab (524) |\n| **德里省份已划入一个州（State）** | 需要提前将德里设为已划州的省份 |\n\n---\n\n### 三、成立效果\n\n- 🏴 国家变为**莫卧儿（Mughals）**，升格为**帝国（Empire）**等级\n- 🗺️ 主要文化变为**印地语（Hindavi）**\n- ⚙️ 科技组与兵种组均变为**印度（Indian）**\n- 🗺️ 获得**印度斯坦地区**的永久宣称\n- ✨ 获得25声望、新任务树\n- 🏛️ 触发\"新传统与雄心\"事件（重置国家理念）\n- 🏛️ 政府改革自动添加：**印度苏丹制（Indian Sultanate）**\n- 若开启 **Dharma DLC**，还会额外解锁：\n  - 莫卧儿内阁（Mughal Diwan）——独特文化同化机制（见下）\n  - 曼萨布达里制度（Mansabdari System，第5级）\n  - 扎布特制度（Zabt System，第7级）\n- 德里省份获得 +1基础税收、+1基础生产力\n\n---\n\n### 四、推荐路线\n\n**最佳起点：帖木儿（Timurids）**\n\n> 《莫卧儿》wiki 策略章节指出：帖木儿是成立莫卧儿最容易的出发点。通过合理管理封臣，可以从克什米尔方向打入德里地区，拿到所需省份后即可宣布决策。\n\n其他可行国家：\n- **阿富汗（Afghanistan）**：伊朗文化组，可先成立波斯再转向印度\n- **阿贾姆（Ajam）**：同为伊朗文化，可形成帖木儿后再图莫卧儿\n- **俾路支（Baluchistan）**：也在选项范围内\n\n---\n\n### 五、莫卧儿的核心特色（成立后值得期待的内容）\n\n#### 🎨 莫卧儿内阁（Diwan）——文化同化系统（需 Dharma）\n你**直接拥有**某个文化的**所有省份**时，该文化自动被永久同化（无需花费外交点），并在拥有整个文化组后获得独特奖励，例如：\n- 印度斯坦文化组全拥有 → **建造核心费用 -10%**\n- 伊朗文化组全拥有 → **顾问费用 -10%**\n- 鞑靼文化组全拥有 → **骑兵费用 -15%**\n（完整表格多达40余个文化组奖励）\n\n#### 🐎 曼萨布达里制度（Mansabdari System）\n贵族阶层特权\"曼萨布骑兵\"可提供**骑兵费用 -50%**（随贵族忠诚度缩放），配合战时经济改革效果极强。\n\n#### 📜 国家理念亮点\n- **建造核心费用 -25%**（全游戏最强之一）\n- 结合行政理念可进一步叠加，快速消化征服领土\n\n---\n\n总结一句话：**帖木儿（或伊朗/中亚文化组国家）+ 穆斯林信仰 + 拿下德里和拉合尔/多阿巴地区核心 + 将德里划州 = 可以成立莫卧儿。** 成立后解锁的文化同化机制（Diwan）是全游戏最独特的机制之一，越打越强。",
+   "t": 111197
+  },
+  {
+   "type": "final",
+   "answer": "好的，以下是完整的成立**莫卧儿（Mughals）**流程，综合了 wiki 策略说明与游戏文件的精确条件。\n\n---\n\n## 🕌 成立莫卧儿帝国\n\n来源：«Formation decisions（建国决策）» (wiki) + «Mughals（莫卧儿）» (wiki)\n\n---\n\n### 一、哪些国家可以触发？\n\n**主要文化**必须满足以下之一：\n- 属于**伊朗（Iranian）文化组**（如帖木儿、阿富汗、阿贾姆、俾路支等）\n- 主要文化为**土库曼（Turkmeni）、乌兹别克（Uzbek）或吉尔吉斯（Kyrgyz）**\n\n> ⚠️ 已经是波斯、莫卧儿、奥斯曼或神罗，或拥有\"天朝帝国\"政府改革的国家**不能**触发。殖民国家、终局国家同样不可用。\n\n---\n\n### 二、允许条件（Allow，必须全部满足）\n\n| 条件 | 说明 |\n|------|------|\n| 莫卧儿尚未存在 | Mughals does not exist |\n| **不在战争中** | Is not at war |\n| **信仰伊斯兰教（Muslim）** | 任何穆斯林教派均可 |\n| **拥有核心省份：德里（522）** | 必须是你的核心 |\n| **拥有以下之一的核心：** | Doaba (2075) **或** Lahore (507) **或** Central Doab (524) |\n| **德里省份已划入一个州（State）** | 需要提前将德里设为已划州的省份 |\n\n---\n\n### 三、成立效果\n\n- 🏴 国家变为**莫卧儿（Mughals）**，升格为**帝国（Empire）**等级\n- 🗺️ 主要文化变为**印地语（Hindavi）**\n- ⚙️ 科技组与兵种组均变为**印度（Indian）**\n- 🗺️ 获得**印度斯坦地区**的永久宣称\n- ✨ 获得25声望、新任务树\n- 🏛️ 触发\"新传统与雄心\"事件（重置国家理念）\n- 🏛️ 政府改革自动添加：**印度苏丹制（Indian Sultanate）**\n- 若开启 **Dharma DLC**，还会额外解锁：\n  - 莫卧儿内阁（Mughal Diwan）——独特文化同化机制（见下）\n  - 曼萨布达里制度（Mansabdari System，第5级）\n  - 扎布特制度（Zabt System，第7级）\n- 德里省份获得 +1基础税收、+1基础生产力\n\n---\n\n### 四、推荐路线\n\n**最佳起点：帖木儿（Timurids）**\n\n> 《莫卧儿》wiki 策略章节指出：帖木儿是成立莫卧儿最容易的出发点。通过合理管理封臣，可以从克什米尔方向打入德里地区，拿到所需省份后即可宣布决策。\n\n其他可行国家：\n- **阿富汗（Afghanistan）**：伊朗文化组，可先成立波斯再转向印度\n- **阿贾姆（Ajam）**：同为伊朗文化，可形成帖木儿后再图莫卧儿\n- **俾路支（Baluchistan）**：也在选项范围内\n\n---\n\n### 五、莫卧儿的核心特色（成立后值得期待的内容）\n\n#### 🎨 莫卧儿内阁（Diwan）——文化同化系统（需 Dharma）\n你**直接拥有**某个文化的**所有省份**时，该文化自动被永久同化（无需花费外交点），并在拥有整个文化组后获得独特奖励，例如：\n- 印度斯坦文化组全拥有 → **建造核心费用 -10%**\n- 伊朗文化组全拥有 → **顾问费用 -10%**\n- 鞑靼文化组全拥有 → **骑兵费用 -15%**\n（完整表格多达40余个文化组奖励）\n\n#### 🐎 曼萨布达里制度（Mansabdari System）\n贵族阶层特权\"曼萨布骑兵\"可提供**骑兵费用 -50%**（随贵族忠诚度缩放），配合战时经济改革效果极强。\n\n#### 📜 国家理念亮点\n- **建造核心费用 -25%**（全游戏最强之一）\n- 结合行政理念可进一步叠加，快速消化征服领土\n\n---\n\n总结一句话：**帖木儿（或伊朗/中亚文化组国家）+ 穆斯林信仰 + 拿下德里和拉合尔/多阿巴地区核心 + 将德里划州 = 可以成立莫卧儿。** 成立后解锁的文化同化机制（Diwan）是全游戏最独特的机制之一，越打越强。",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__search_kb"
+   ],
+   "t": 111427
+  }
+ ]
+}

@@ -1,0 +1,369 @@
+{
+ "id": "sunni-cavalry",
+ "lang": "en",
+ "question": "How can an ordinary Sunni monarchy build an army that is mostly cavalry?",
+ "shows": "The content-layering rule: generic vs. shared vs. country-exclusive content",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 150250,
+ "tool_calls": 16,
+ "events": [
+  {
+   "type": "start",
+   "t": 331
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about how an ordinary Sunni monarchy can build an army that is mostly cavalry in EU4. This is a \"generalized/hypothetical nation\" question. Let me search the knowledge base for relevant information about cavalry composition, cavalry bonuses, idea groups, and relevant mechanics.\n\nLet me search for cavalry-related content in the KB.",
+   "t": 4412
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb search"
+   },
+   "t": 4689
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__search_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}]",
+   "truncated": false,
+   "t": 4695
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have the EU4 KB tools available. Let me search for cavalry-related content - specifically about cavalry composition, cavalry ratio, cavalry bonuses, idea groups that help cavalry, and any mechanics related to building a cavalry-heavy army.",
+   "t": 11580
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry ratio limit composition army",
+    "top_k": 8
+   },
+   "t": 12302
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry bonus idea group Sunni Islam",
+    "top_k": 8
+   },
+   "t": 12551
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.78\\nSection: Land warfare > Combat statistics > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land warfare (doc_id=eu4:w-350a689b97 | read full context: get_doc(\\\"eu4:w-350a689b97\\\", offset=32279))\\nContent: Cavalry to infantry ratio\\n*\\n\\n---\\n\\n[2] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.78\\nSection: Land units > Cavalry > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=8642))\\nContent: The base cavalry to infantry ratio is 50%. This is further modified by the following:\\ncavalry to infantry ratio\\n\\n---\\n\\n[3] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.74\\nSection: Land units > Cavalry > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=7645))\\nContent: The country's cavalry to infantry ratio shows what percentage of the front line can be made up of cavalry. Having the front line be made up of more cavalry than the country's ratio allows applies the *\\\"insufficient support\\\"* penalty, which is a military tactics malus to cavalry regiments equal to the percentage by which the ratio is exceeded, divided by 2. In steppes this malus is doubled. For example, if the ratio is 50%, but the front line is made up of 100% cavalry, these units will receive a −25% military tactics malus, w",
+   "truncated": true,
+   "t": 12680
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Golden Horde» (kb:eu4 · country · source=wiki) relevance=0.65\\nSection: Golden Horde > Strategy > For the Faith! (Southward bound)\\nSource: wiki/country/Golden Horde (doc_id=eu4:w-5019edc703 | read full context: get_doc(\\\"eu4:w-5019edc703\\\", offset=7739))\\nContent: ional missionaries and +10%Missionary strength, in addition to a permanent CB and -20%Lower war score costs against other religions. The Caliphal Horde will be able to launch Jihads to conquer vast swathes of territory and then convert them at what could be described as an \\\"industrial efficiency\\\". This will award the **Dar al-Islam** achievement and also create a good starting position for achieving the **One Faith** achievement as well.\\n\\n---\\n\\n[2] «Ottomans» (kb:eu4 · country · source=wiki) relevance=0.62\\nSection: Ottomans > Strategy > Ideas (outdated)\\nSource: wiki/country/Ottomans (doc_id=eu4:w-ca0e964513 | read full context: get_doc(\\\"eu4:w-ca0e964513\\\", offset=41033))\\nContent: If Ottomans stay Sunni, \\n Humanist idea group is usually the best option for handling rebels and fits well with an aggressive conquest style where Ottoman don't have time to convert all heathen provinces. The Ottoman traditions gives a +3 tolerance of heathens you can stack this with the +2 tolerance of heathens in this idea group. With that, you don't have any penalty to religious unity in heathen provinces. It also gives provinces for the Dhimmi estate, which can be quite lucrative.\\n\\n---\\n\\n[3] «Ottomans» (kb:",
+   "truncated": true,
+   "t": 12992
+  },
+  {
+   "type": "thinking",
+   "text": "Good, I have some useful initial results. Let me now dig deeper into:\n1. The Land units doc to get the full cavalry to infantry ratio mechanics (what modifiers exist)\n2. The idea groups that specifically boost cavalry ratio or cavalry combat ability\n3. Any government reforms or decisions relevant to Sunni nations for cavalry\n\nLet me fetch the relevant sections from the Land units doc and also search for cavalry-specific idea groups.",
+   "t": 20012
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-257f8d675a",
+    "offset": 7645,
+    "max_chars": 4000
+   },
+   "t": 20586
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-257f8d675a body is 31705 chars total, this slice 7645–11645)\\n\\nThe country's cavalry to infantry ratio shows what percentage of the front line can be made up of cavalry. Having the front line be made up of more cavalry than the country's ratio allows applies the *\\\"insufficient support\\\"* penalty, which is a military tactics malus to cavalry regiments equal to the percentage by which the ratio is exceeded, divided by 2. In steppes this malus is doubled. For example, if the ratio is 50%, but the front line is made up of 100% cavalry, these units will receive a −25% military tactics malus, which is raised to −50% in steppes. This ratio threshold is checked daily even during battles, and is based on the actual headcount of individual soldiers instead of regiments. Since infantry tends to take more casualties than cavalry, it is advisable to take at least a bit more infantry than the ratio would suggest, and (to maximize the number of cavalry used, since deployment prioritises infantry) reinforce the battle with fresh infantry as regiments retreat.\\n\\nThe base cavalry to infantry ratio is 50%. This is further modified by the following:\\ncavalry to infantry ratio\\n\\n* +50% Great Mongol State government\\n* +50% Reward from Teutonic Order Crusader path mission Establish a Great Cavalry, upgraded from +25% or +10% from previous mission rewards on the Crusader path.\\n* +50% Possible reward from Commonwealth event Expanding the Quarter Army provided specified ",
+   "truncated": true,
+   "t": 20635
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry to infantry ratio modifier idea group government reform",
+    "top_k": 8
+   },
+   "t": 21066
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Land warfare» (kb:eu4 · mechanic · source=wiki) relevance=0.71\\nSection: Land warfare > Combat statistics > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land warfare (doc_id=eu4:w-350a689b97 | read full context: get_doc(\\\"eu4:w-350a689b97\\\", offset=32279))\\nContent: Cavalry to infantry ratio\\n*\\n\\n---\\n\\n[2] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.70\\nSection: Land units > Cavalry > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=8642))\\nContent: The base cavalry to infantry ratio is 50%. This is further modified by the following:\\ncavalry to infantry ratio\\n\\n---\\n\\n[3] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.69\\nSection: Land units > Cavalry > Cavalry to infantry ratio\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=8245))\\nContent: ily even during battles, and is based on the actual headcount of individual soldiers instead of regiments. Since infantry tends to take more casualties than cavalry, it is advisable to take at least a bit more infantry than the ratio would suggest, and (to maximize the number of cavalry used, since deployment prioritises infantry) reinforce the battle with fresh infantry as regiments retreat.\\n\\n---\\n\\n[4] «Army» (kb:eu4 · mechanic · source=wiki) relevance=0.65\\nSection: Army > Recruiting an army > Composition\\nSource: wiki/mec",
+   "truncated": true,
+   "t": 21452
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have a good picture of the cavalry ratio mechanics. Let me now search for:\n1. Idea groups that give cavalry combat bonuses (cavalry combat ability, cavalry flanking, etc.)\n2. Government reforms that provide cavalry bonuses\n3. Specifically what's available to a \"generic Sunni monarchy\"\n\nLet me also search for cavalry combat ability ideas and horde ideas specifically.",
+   "t": 25650
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry combat ability idea group modifier",
+    "top_k": 8
+   },
+   "t": 26153
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Horde Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.73\\nSection: Horde Ideas > Conditions and Effects > Group completion bonus\\nSource: game_file/idea_group/horde_gov_ideas (doc_id=eu4:g-427386580b | read full context: get_doc(\\\"eu4:g-427386580b\\\", offset=222))\\nContent: - Cavalry Combat Ability +25%\\n- [Country.GetTribesName] Loyalty Equilibrium +10%\\n\\n---\\n\\n[2] «Transoxiana» (kb:eu4 · country · source=wiki) relevance=0.71\\nSection: Transoxiana > Strategy > Idea groups\\nSource: wiki/country/Transoxiana (doc_id=eu4:w-fcea23abbc | read full context: get_doc(\\\"eu4:w-fcea23abbc\\\", offset=6131))\\nContent: Administrative ideas are highly recommended, as the player should be doing a lot of conquering throughout the game. Espionage and Aristocratic ideas have some useful bonuses, but combined with the ideas of all nations mentioned in this guide (Transoxiana, Mughals, Timurids, or Yuan) give a policy that boosts cavalry combat ability by 20%. Combined with the national ideas of these nations which each give +20% cavalry combat ability, along with Aristocratic ideas that give another +10% cavalry combat ability, this leads to an impressive +50% cavalry combat ability or +60% with Quality ideas. Oth\\n\\n---\\n\\n[3] «Idea groups guide» (kb:eu4 · misc · source=wiki) relevance=0.68\\nSection: Idea groups guide > Military idea groups > Quality\\nSource: wiki/misc/Idea groups guide (doc_id=eu4:w-fe1cf59618 | read full context: get_doc(\\\"eu4:w-fe1cf59618\\\", offse",
+   "truncated": true,
+   "t": 26467
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:g-3d5f0dd0c3",
+    "max_chars": 3000
+   },
+   "t": 26665
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-3d5f0dd0c3\\\"\\ntitle: \\\"Cavalry Warfare\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"government_reform\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"d6a016866850\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-3d5f0dd0c3.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"government_reform\\\"\\nentity_id: \\\"cavalry_warfare_reform\\\"\\nsource_file: \\\"common/government_reforms/06_government_reforms_common.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Cavalry Warfare\\n\\n## Overview\\n\\nGovernment reform key: `cavalry_warfare_reform`.\\n\\n## Conditions and Effects\\n\\n### Trigger (unlock condition)\\n\\n- If (key: if):\\n  Limited to:\\n    Has Modifier Locking Military Tier (key: has_modifier_locking_military_tier):\\n      Has country modifier: Foreign Military Manuals\\n  Any of:\\n    Has enacted Government Reform Cavalry Warfare\\n    Has Not Modifier Locking Military Tier (key: has_not_modifier_locking_military_tier):\\n      None of:\\n        Has Modifier Locking Military Tier (key: has_modifier_locking_military_tier):\\n          Has country modifier: Foreign Military Manuals\\n\\n### Modifiers\\n\\n- Your Army, excluding Artillery, cannot be comprised of more than {MAX}% Cavalry or you will suffer the Insufficient Support penalty causing additional losses in combat.: 0.1\\n- Cavalry Cost -10%\\n\\n### AI Weighting (how the game AI evaluates picking this reform)\\n\\n- Factor: 1\\n\\n### Other\\n\\n- Allow Normal Conversion: Yes\\n- Potential (key: potential):\\n  None of:\\n    Has",
+   "truncated": true,
+   "t": 26781
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me get more details about idea groups that provide cavalry bonuses - specifically:\n1. Aristocratic ideas (mentioned for +10% cavalry combat ability)\n2. Horde ideas (but those require Horde government, which a Sunni monarchy wouldn't have by default)\n3. Quality ideas (general +10% cavalry combat ability)\n4. The full list of cavalry ratio modifiers\n\nI also need to check what tier the \"Cavalry Warfare\" government reform is at - it's a tier 5 reform from the search result. Let me search for Aristocratic ideas and check what other reforms are available to a generic monarchy.\nI'll confirm which government reforms a generic monarchy can access at that tier, and look more closely at Aristocratic ideas.\n\n",
+   "t": 34191
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Aristocratic ideas cavalry noble knights",
+    "top_k": 5
+   },
+   "t": 34194
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry flanking range idea morale shock fire",
+    "top_k": 5
+   },
+   "t": 34202
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Aristocratic Ideas» (kb:eu4 · idea_group · source=game_file) relevance=0.78\\nSection: Aristocratic Ideas > Conditions and Effects > Ideas > 1. Noble Knights (`noble_knights`)\\nSource: game_file/idea_group/aristocracy_ideas (doc_id=eu4:g-34e50c1e8e | read full context: get_doc(\\\"eu4:g-34e50c1e8e\\\", offset=467))\\nContent: - Cavalry Combat Ability +15%\\n\\n---\\n\\n[2] «The Knights» (kb:eu4 · country · source=wiki) relevance=0.64\\nSection: The Knights\\nSource: wiki/country/The Knights (doc_id=eu4:w-7752c4a886 | read full context: get_doc(\\\"eu4:w-7752c4a886\\\", offset=136))\\nContent: **The Knights** Hospitaller are an ancient Catholic military order. Arising from a group of nurses and doctors, to care for the sick, around the turn of the millennium this holy order turned to its Knights to throw back the Turkish and Muslim threat. Controlling only the island city of Rhodes the Knights must contend with both the Heathens and the aloof Venetians, as well as heretics in Rhodes itself. Things are not going to be easy for The Knights. Starting with one province The Knights must deftly rebuild a power base throughout the Mediterranean and convert the heretical Christians back to\\n\\n---\\n\\n[3] «The Knights» (kb:eu4 · country · source=wiki) relevance=0.61\\nSection: The Knights > Achievements\\nSource: wiki/country/The Knights (doc_id=eu4:w-7752c4a886 | read full context: get_doc(\\\"eu4:w-7752c4a886\\\", offset=8780))\\nContent: Form the Kingdom of Jerusalem as Cyprus or The Knights",
+   "truncated": true,
+   "t": 34503
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Patch 1.33» (kb:eu4 · patch_notes · source=wiki) relevance=0.63\\nSection: Patch 1.33 > Gamebalance > Units\\nSource: wiki/patch_notes/Patch 1.33 (doc_id=eu4:w-6b4d7ce716 | read full context: get_doc(\\\"eu4:w-6b4d7ce716\\\", offset=2263))\\nContent: * Fire and Shock pips now affect morale damage as well.\\n* Overlord naval force limit numbers changed from flat to percentage.\\n* Smolensk Units now prefer to display artillery in their stack (similar how Poland shows cavalry if their stacks have cavalry).\\n* The Revolutionary Guard now has -50% Regiment Drill Loss.\\n* Backrow troops now take 40% of the regular morale damage.\\n\\n---\\n\\n[2] «Land units» (kb:eu4 · mechanic · source=wiki) relevance=0.61\\nSection: Land units > Cavalry\\nSource: wiki/mechanic/Land units (doc_id=eu4:w-257f8d675a | read full context: get_doc(\\\"eu4:w-257f8d675a\\\", offset=1507))\\nContent: With the owning and maintaining of a horse being an expensive undertaking, the mounted warrior is the elite of any army. The speed of the horse gives this soldier greater mobility on the battlefield, while only the most disciplined soldiers can stand in the face of the cavalry charge.\\n\\nCavalry is good for flanking once the main line has been filled, but are much more expensive than infantry. Cavalry has a base flanking range of 2 and costs 2.5 times as much as infantry. They are more powerful than infantry, especially during the shock phase of combat.\\n\\n---\\n\\n[3] «Land warfare» (kb:eu4 · mechanic · source=wik",
+   "truncated": true,
+   "t": 34836
+  },
+  {
+   "type": "thinking",
+   "text": "I found that Aristocratic Ideas has both:\n1. \"Noble Knights\" (1st idea) - +15% cavalry combat ability\n2. \"Noble Resilience\" (3rd idea) - +10% cavalry to infantry ratio and -20% cavalry cost\n\nBut I also need to check whether Aristocratic Ideas requires any special government attribute. Looking at the raw script, it has:\n```\ntrigger = {\n    has_government_attribute = enables_aristocratic_idea_group\n}\n```\n\nSo it requires the government attribute `enables_aristocratic_idea_group`. Let me check what government types/reforms enable this. A generic Sunni monarchy might or might not have this.\nI should check the full ideas file plus search for which government types actually enable this attribute.\n\n",
+   "t": 42106
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:g-34e50c1e8e",
+    "max_chars": 3000
+   },
+   "t": 42109
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "enables_aristocratic_idea_group government attribute monarchy",
+    "top_k": 5
+   },
+   "t": 42113
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-34e50c1e8e\\\"\\ntitle: \\\"Aristocratic Ideas\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"idea_group\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"b61e895e4d41\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-34e50c1e8e.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"idea_group\\\"\\nentity_id: \\\"aristocracy_ideas\\\"\\nsource_file: \\\"common/ideas/00_basic_ideas.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Aristocratic Ideas\\n\\n## Overview\\n\\nIdea group key: `aristocracy_ideas`. Category: Military (MIL).\\n\\n**Available only if:**\\n- Government has attribute: Enables Aristocratic Idea Group\\n\\n## Conditions and Effects\\n\\n### Group completion bonus\\n\\n- Leader Siege: 1\\n- [Country.GetNobilityName] Loyalty Equilibrium +10%\\n- [Country.GetRajputsName] Loyalty Equilibrium +10%\\n- [Country.GetMarathasName] Loyalty Equilibrium +10%\\n\\n### Ideas\\n\\n#### 1. Noble Knights (`noble_knights`)\\n\\n- Cavalry Combat Ability +15%\\n\\n#### 2. Serfdom (`serfdom`)\\n\\n- Global Manpower Modifier +15%\\n- Development Cost -5%\\n\\n#### 3. Noble Connections (`noble_resilience`)\\n\\n- Your Army, excluding Artillery, cannot be comprised of more than {MAX}% Cavalry or you will suffer the Insufficient Support penalty causing additional losses in combat.: 0.1\\n- Cavalry Cost -20%\\n\\n#### 4. Noble Officers (`noble_officers`)\\n\\n- Army Tradition Decay: -0.01\\n- Navy Tradition Decay: -0.01\\n- Number of Pronoiars: 1\\n\\n#### 5. International Nobility (`international_nobility`)\\n\\n- {DIRECTION} {V",
+   "truncated": true,
+   "t": 42310
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Crown Colony» (kb:eu4 · government_reform · source=game_file) relevance=0.76\\nSection: Crown Colony > Conditions and Effects > Custom Attributes\\nSource: game_file/government_reform/crown_colony_government (doc_id=eu4:g-751b59a3a7 | read full context: get_doc(\\\"eu4:g-751b59a3a7\\\", offset=657))\\nContent: - Locked Government Type: Yes\\n- Enables Plutocratic Idea Group is YES\\n- Enables Aristocratic Idea Group is NO\\n\\n---\\n\\n[2] «Military Dictatorship» (kb:eu4 · government_reform · source=game_file) relevance=0.74\\nSection: Military Dictatorship > Conditions and Effects > Custom Attributes\\nSource: game_file/government_reform/military_dictatorship_reform (doc_id=eu4:g-9c8122a083 | read full context: get_doc(\\\"eu4:g-9c8122a083\\\", offset=231))\\nContent: - Generals Become Rulers: Yes\\n- Locked Government Type: Yes\\n- Enables Plutocratic Idea Group is YES\\n- Enables Aristocratic Idea Group is NO\\n\\n---\\n\\n[3] «Colonial Government» (kb:eu4 · government_reform · source=game_file) relevance=0.74\\nSection: Colonial Government > Conditions and Effects > Custom Attributes\\nSource: game_file/government_reform/colonial_government (doc_id=eu4:g-0208b4d656 | read full context: get_doc(\\\"eu4:g-0208b4d656\\\", offset=730))\\nContent: - Locked Government Type: Yes\\n- Enables Plutocratic Idea Group is YES\\n- Enables Aristocratic Idea Group is NO\\n\\n---\\n\\n[4] «Protectorate Parliament» (kb:eu4 · government_reform · source=game_file) relevance=0.72\\nSection: Protectorate Parliament > ",
+   "truncated": true,
+   "t": 42668
+  },
+  {
+   "type": "thinking",
+   "text": "I can see that Aristocratic Ideas requires the government attribute `enables_aristocratic_idea_group`. I need to check if a standard monarchy gets this. The search results show that Crown Colony, Military Dictatorship, Colonial Government, and Protectorate Parliament explicitly set \"Enables Aristocratic Idea Group is NO\", which implies most standard monarchy government types DO enable it.\n\nLet me check what the standard monarchy government reform (tier 1) gives.",
+   "t": 57323
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "monarchy government reform tier 1 enables aristocratic",
+    "top_k": 5
+   },
+   "t": 58084
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Feudal Nobility» (kb:eu4 · government_reform · source=game_file) relevance=0.82\\nSection: Feudal Nobility > Overview\\nSource: game_file/government_reform/feudalism_reform (doc_id=eu4:g-2a0f4fc785 | read full context: get_doc(\\\"eu4:g-2a0f4fc785\\\", offset=32))\\nContent: Government reform key: `feudalism_reform`.\\n\\n---\\n\\n[2] «Monarchy» (kb:eu4 · government_reform · source=game_file) relevance=0.70\\nSection: Monarchy > Raw Script (appendix)\\nSource: game_file/government_reform/monarchy_mechanic (doc_id=eu4:g-4085783767 | read full context: get_doc(\\\"eu4:g-4085783767\\\", offset=386))\\nContent: ```\\nmonarchy_mechanic = {\\n    monarchy = yes\\n    heir = yes\\n    queen = yes\\n    basic_reform = yes\\n    is_eligible_for_hre_emperor = yes\\n    valid_for_nation_designer = no\\n    custom_attributes = {\\n        enables_aristocratic_idea_group = yes\\n    }\\n    modifiers = {\\n        nobles_influence_modifier = 0.05\\n    }\\n}\\n```\\n\\n---\\n\\n[3] «Nobility estate» (kb:eu4 · mechanic · source=wiki) relevance=0.67\\nSection: Nobility estate > Influence\\nSource: wiki/mechanic/Nobility estate (doc_id=eu4:w-c1fc322660 | read full context: get_doc(\\\"eu4:w-c1fc322660\\\", offset=2902))\\nContent: **Influence** – The estate has a base influence of **10%,** modified by:\\nnobility influence\\n*+5% Has enacted the Feudal Nobility tier 1 government reform\\n*+5% Has enacted the Noble Elite tier 1 government reform\\n*+10% Has the Mamluk Government tier 1 government reform\\n*+5% Has enacted th",
+   "truncated": true,
+   "t": 58428
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry cost maintenance upkeep reduce",
+    "top_k": 5
+   },
+   "t": 58747
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Army» (kb:eu4 · mechanic · source=wiki) relevance=0.69\\nSection: Army > Maintenance\\nSource: wiki/mechanic/Army (doc_id=eu4:w-8f03a34714 | read full context: get_doc(\\\"eu4:w-8f03a34714\\\", offset=8860))\\nContent: An army needs a certain amount of money every month as maintenance. This cost can be influenced by the army maintenance slider of the economy interface. Reducing the maintenance slider can (multiplicatively) reduce maintenance cost by up to half, but also reduces reinforcement rates and morale. At 0% funding, regiments will not reinforce, and maximum morale will be reduced by 100% (additive with other percentage modifiers) to a minimum of 0.51 (the minimum required for an army to move).\\n\\n---\\n\\n[2] «Special land units» (kb:eu4 · mechanic · source=wiki) relevance=0.65\\nSection: Special land units > Mercenaries > Mercenary maintenance cost\\nSource: wiki/mechanic/Special land units (doc_id=eu4:w-8f6d0c8d8a | read full context: get_doc(\\\"eu4:w-8f6d0c8d8a\\\", offset=40346))\\nContent: Base cost |\\n| --- | --- |\\n| Infantry | 10 |\\n| Cavalry | 25 |\\n| Artillery | 30 |\\n\\nNote that for monthly maintenance cost of mercenary regiments:\\n*There is a +10% base modifier.\\n*This is increased by +8% per military technology (compared to other regiments +2% maintenance per military technology).\\n*The end result is only affected by mercenary maintenance modifiers and regiment cost modifiers.\\n*It is not affected by normal land maintenance or mercenary recruitment cost.",
+   "truncated": true,
+   "t": 59077
+  },
+  {
+   "type": "thinking",
+   "text": "Good. Now I have confirmed that:\n1. The standard **Monarchy** government type (mechanic) has `enables_aristocratic_idea_group = yes`, so a Sunni monarchy CAN take Aristocratic Ideas.\n2. Aristocratic Ideas (a MIL idea group) provides:\n   - Idea 1 \"Noble Knights\": +15% Cavalry Combat Ability\n   - Idea 3 \"Noble Connections\": +10% Cavalry to Infantry Ratio, -20% Cavalry Cost\n\nNow let me also check the cavalry cost reduction options more carefully and the Dragoon advisor, and also if there are any policies related to cavalry for Sunni.\nI'm also checking the \"Cavalry Warfare\" government reform, which appears to be a tier 5 military reform gated only by not having unlocked \"Legacy of the Seljuk\" — so it should be accessible to a generic Sunni monarchy.\n\nPutting the full picture together for cavalry ratio: Sunni gives +10%, Aristocratic idea 3 gives +10%, and Cavalry Warfare gives +10%, stacking to an 80% cavalry-to-infantry ratio. For combat ability, Aristocratic idea 1 gives +15%, Quality idea 3 gives +10%, and the Dragoon advisor gives +10%. I'm now looking into cavalry cost reduction sources as well.\n\nSince cavalry costs 2.5x infantry and takes fewer casualties, I'm working out practical army compositions — at 60% ratio, a 20-regiment front line could run 12 cavalry to 8 infantry, though I want to check if there are additional idea groups or policies that further boost cavalry before settling on final numbers.\n\nSo 60% isn't really majority cavalry yet, just barely above baseline; stacking Sunni with Aristocratic ideas gets to 70% and adding Cavalry Warfare reform pushes to 80%, which is genuinely cavalry-heavy. I should also check whether any generic policies boost cavalry ratio further.\n\nPractically though, cavalry costs 2.5x infantry, and since the ratio checks actual headcount rather than regiment count, infantry losses in battle mean you constantly need to reinforce infantry to keep the ratio compliant - this makes maintaining a mostly-cavalry army quite costly, especially for Sunni monarchies lacking steppe horde discounts. I'll check on cavalry flanking modifiers and the Dragoon advisor, then see if there are any policies a Sunni monarchy specifically could use to push the cavalry ratio further before finalizing my answer.\n\n",
+   "t": 89401
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "cavalry policy Aristocratic espionage quality",
+    "top_k": 5
+   },
+   "t": 89411
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "eu4:w-8f03a34714",
+    "offset": 5190,
+    "max_chars": 2500
+   },
+   "t": 89454
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Zaporozhie» (kb:eu4 · country · source=wiki) relevance=0.65\\nSection: Zaporozhie > Strategy\\nSource: wiki/country/Zaporozhie (doc_id=eu4:w-f70491636c | read full context: get_doc(\\\"eu4:w-f70491636c\\\", offset=2686))\\nContent: # **unmatched cavalry combat ability** of over +110% cavalry combat ability (a total achieved as +20% from Sich Rada, +30% from Polish 4th idea - Winged Hussars, +25% full Horde ideas, +15% Aristocratic 1st idea - Noble knights, up to +20% from a loyal 60%+ influence Cossack estate. This 110% can further be increased to 140% from +10% Quality 3rd idea - Finest Horses, and two policies namely +10% Aristocratic-Espionage Noble Loyalty Act and +10% Horde-Espionage Psychological Warfare Act, refer Land units#Combat ability 2)\\n\\n---\\n\\n[2] «Zaporozhie» (kb:eu4 · country · source=wiki) relevance=0.64\\nSection: Zaporozhie > Strategy > Smackus Maximus as Zaporozhien Poland\\nSource: wiki/country/Zaporozhie (doc_id=eu4:w-f70491636c | read full context: get_doc(\\\"eu4:w-f70491636c\\\", offset=13656))\\nContent: * Others ideas and policies to for example give **unmatched cavalry combat ability** of over +110% cavalry combat ability (a total achieved as +20% from Sich Rada, +30% from Polish 4th idea - Winged Hussars, +25% full Horde ideas, +15% Aristocratic 1st idea - Noble knights, up to +20% from a loyal 60%+ influence Cossack estate. This can further be increased to 140% by +10% Quality 3rd idea - Finest Horses, and two policies namely +10% Aristocrati",
+   "truncated": true,
+   "t": 89798
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"(doc_id=eu4:w-8f03a34714 body is 32918 chars total, this slice 5190–7690)\\n\\n* To avoid the insufficient support penalty, an army must not surpass the maximum ratio of cavalry per infantry regiments.\\n* Artillery can fire from the second line, and therefore can vastly increase the effectiveness of an army.\\n* Artillery defends first line units from attacks with half of its defense points in the corresponding battle phase.\\n* Since artillery takes twice the normal damage when in the front line, it should be deployed in the second line. To achieve this, the number of artillery should not exceed the number of cavalry and infantry combined. Also reserves should be calculated to replace lost regiments in first line. \\n* With artillery being three times and cavalry two-and-a-half times more expensive than infantry, a more infantry heavy but cheaper army could be more cost-efficient, especially if a nation suffers from cavalry or artillery penalties. Eight infantry regiments can easily beat three infantry + two cavalry due to flanking effects.\\n* Having a 40 regiment army in a province with only 30 supply limit will cause attrition. It is wise to split an army in half when crossing territory with low supply limits in order to keep attrition at a minimum.\\n\\n**Example army relying on above information:** (On plain terrain, with 11 combat width from technology and 15 base, 50% insufficient support limit)\\ngreengreengreengreengreenINFINFINFINFINFINFINFINFINFINFINFINFINFINFIN",
+   "truncated": true,
+   "t": 89819
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have a really good understanding of this. Let me also search for the Aristocratic-Espionage policy that gives cavalry combat ability, and the Noble Loyalty Act mentioned.",
+   "t": 95437
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "Noble Loyalty Act|cavalry_power.*policy|policy.*cavalry",
+    "path_prefix": "game_file",
+    "limit": 10
+   },
+   "t": 96411
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"(no matching literal content)\"}",
+   "truncated": false,
+   "t": 96896
+  },
+  {
+   "type": "tool_use",
+   "name": "search_kb",
+   "input": {
+    "query": "Noble Loyalty Act policy cavalry power aristocratic espionage",
+    "top_k": 5
+   },
+   "t": 101200
+  },
+  {
+   "type": "tool_result",
+   "name": "search_kb",
+   "content": "{\"result\":\"[1] «Zaporozhie» (kb:eu4 · country · source=wiki) relevance=0.61\\nSection: Zaporozhie > Strategy\\nSource: wiki/country/Zaporozhie (doc_id=eu4:w-f70491636c | read full context: get_doc(\\\"eu4:w-f70491636c\\\", offset=2686))\\nContent: # **unmatched cavalry combat ability** of over +110% cavalry combat ability (a total achieved as +20% from Sich Rada, +30% from Polish 4th idea - Winged Hussars, +25% full Horde ideas, +15% Aristocratic 1st idea - Noble knights, up to +20% from a loyal 60%+ influence Cossack estate. This 110% can further be increased to 140% from +10% Quality 3rd idea - Finest Horses, and two policies namely +10% Aristocratic-Espionage Noble Loyalty Act and +10% Horde-Espionage Psychological Warfare Act, refer Land units#Combat ability 2)\\n\\n---\\n\\n[2] «Puppet the Nobility» (kb:eu4 · government_reform · source=game_file) relevance=0.61\\nSection: Puppet the Nobility > Conditions and Effects > Trigger (unlock condition)\\nSource: game_file/government_reform/blackmail_nobility_reform (doc_id=eu4:g-f22a3ebcc6 | read full context: get_doc(\\\"eu4:g-f22a3ebcc6\\\", offset=148))\\nContent: - Full Idea Group is Espionage Ideas\\n\\n---\\n\\n[3] «Nobility events» (kb:eu4 · event · source=wiki) relevance=0.58\\nSection: Nobility events > Nobility events\\nSource: wiki/event/Nobility events (doc_id=eu4:w-a3b6ceade1 | read full context: get_doc(\\\"eu4:w-a3b6ceade1\\\", offset=804))\\nContent: Trigger: The Nobility estate exists and:\\n* has at least **70** influence\\n* does *not* have",
+   "truncated": true,
+   "t": 101652
+  },
+  {
+   "type": "thinking",
+   "text": "Now I have enough information to give a comprehensive answer. Let me compile what I know:\n\n## Summary for a generic Sunni Monarchy\n\n### Understanding the Cavalry to Infantry Ratio (the core mechanic):\n- The **base ratio is 50%** — meaning by default, at most half of your front-line can be cavalry before incurring the \"Insufficient Support\" penalty\n- **Sunni gives +10%** → 60% ratio by default\n- But 60% means 3 cavalry for every 2 infantry in the front line — technically majority, but barely\n\n### What a standard Sunni Monarchy can do:\n\n**Layer 1 — Just being Sunni (no extra setup needed):**\nSunni's inherent bonus already pushes the ratio to 60% before any idea groups are considered, giving these nations a natural edge in cavalry-heavy compositions.\n\nBeyond that baseline, I'm looking at what idea groups can stack on top: Quality's \"Finest of Horses\" boosts cavalry combat ability by 10%, while Aristocratic's \"Noble Knights\" adds another 15%, both being commonly accessible paths for standard monarchies to further specialize in cavalry warfare.\n\nIdea 3 in Aristocratic, \"Noble Connections,\" pushes the ratio itself up by another 10% while cutting cavalry costs by 20%, making this idea group arguably the single most valuable pick for a cavalry-focused strategy. Stacking Sunni plus both Aristocratic ideas gets the ratio to 70% (seven cavalry per three infantry) with a stronger 15% combat bonus, and layering in the tier-5 \"Cavalry Warfare\" government reform pushes it further to 80%, though that reform can't be combined with \"Legacy of the Seljuk\" since they're mutually exclusive. Now I want to translate these ratio tiers into actual army compositions to see what they look like in practice.\n\nThe ratio check actually uses headcount, not regiment count, and since infantry takes more casualties than cavalry, long battles can skew the ratio unless spare infantry is kept ready to reinforce. Artillery doesn't count toward the ratio at all, and a Sunni monarchy doesn't get horde-specific cavalry bonuses like Great Mongol State, Steppe Horde, or the Legacy of the Seljuk reform, since those all require a horde government.\n\nFor a generic Sunni monarchy, the available bonuses are the +10% Sunni bonus, Cavalry Warfare tier 5, Quality ideas, and the Dragoon advisor, plus Aristocratic ideas (Noble Knights and Noble Connections) since any standard monarchy can pick those. Horde-exclusive bonuses like Tengri, Great Mongol State, Steppe Horde, and Legacy of the Seljuk remain out of reach. I think this covers the answer well enough to write it up now.\n\n",
+   "t": 127971
+  },
+  {
+   "type": "text",
+   "text": "Here is a full breakdown, drawing on «Land units», «Muslim denominations», «Aristocratic Ideas», «Cavalry Warfare» (game_file), and «Army» (wiki):\n\n---\n\n## The Core Mechanic: Cavalry to Infantry Ratio\n\nThe **Cavalry to Infantry Ratio** controls what percentage of your **front line** can be cavalry before you incur the *\"Insufficient Support\"* penalty — a military tactics malus applied to cavalry equal to half the amount by which the limit is exceeded (doubled in steppe terrain). The penalty is checked **daily, based on actual headcount** — not regiment count. Because infantry dies faster than cavalry, your ratio will creep up during a battle unless you reinforce with fresh infantry.\n\n**Base ratio: 50%.** Without any modifiers, half your front line is the ceiling.\n\n---\n\n## What a Sunni Monarchy Gets by Default\n\nBeing **Sunni** grants every nation:\n> **+10% Cavalry to Infantry Ratio** («Muslim denominations», wiki)\n\nThis raises the effective ceiling to **60%** — 3 cavalry for every 2 infantry in the front line. It's the single biggest automatic advantage for a Sunni monarchy over comparable non-Muslim nations.\n\n---\n\n## Building a Mostly-Cavalry Army: Three Layers\n\n### Layer 1 — Idea Groups (available to all standard monarchies)\n\nThe standard **Monarchy** government type has the attribute `enables_aristocratic_idea_group = yes` («Monarchy», game_file), which unlocks the most important idea group for cavalry:\n\n**Aristocratic Ideas** (MIL category) — «Aristocratic Ideas», game_file:\n| Idea | Effect |\n|---|---|\n| 1. Noble Knights | **+15% Cavalry Combat Ability** |\n| 3. Noble Connections | **+10% Cavalry to Infantry Ratio** + **−20% Cavalry Cost** |\n\nThis is the single best idea group investment for a cavalry-focused Sunni monarch. Ideas 1 and 3 together make cavalry both cheaper and far more lethal.\n\n**Quality Ideas** (MIL category) — available to all:\n| Idea | Effect |\n|---|---|\n| 3. Finest of Horses | **+10% Cavalry Combat Ability** |\n\n**Policy bonus** — if you also take **Espionage** ideas alongside Aristocratic, the *Noble Loyalty Act* policy gives a further **+10% Cavalry Combat Ability** («Zaporozhie» strategy, wiki).\n\n### Layer 2 — Government Reform (Tier 5)\n\nThe **Cavalry Warfare** reform («Cavalry Warfare», game_file) is open to any monarchy that hasn't taken the *Legacy of the Seljuk* path:\n- **+10% Cavalry to Infantry Ratio**\n- **−10% Cavalry Cost**\n\n### Layer 3 — Advisor\n\nThe **Dragoon** advisor adds **+10% Cavalry Combat Ability** with no prerequisites («Post Finem/Advisors», wiki).\n\n---\n\n## Stacking the Ratio: How Far Can You Go?\n\n| Source | Ratio Bonus | Running Total |\n|---|---|---|\n| Base | — | 50% |\n| Sunni religion | +10% | **60%** |\n| Aristocratic Idea 3 (Noble Connections) | +10% | **70%** |\n| Cavalry Warfare reform (tier 5) | +10% | **80%** |\n\nAt **80%**, a 20-regiment front line can field **16 cavalry and just 4 infantry** — a truly cavalry-dominated formation.\n\n*Illustrative front lines (excluding artillery backline):*\n- **60%** (Sunni only): 12 cav / 8 inf\n- **70%** (+ Aristocratic idea 3): 14 cav / 6 inf\n- **80%** (+ Cavalry Warfare reform): 16 cav / 4 inf\n\n---\n\n## Important Practical Warnings\n\n1. **Cost is punishing.** Cavalry costs 2.5× as much as infantry to recruit and maintain. A mostly-cavalry army without horde-specific income bonuses will strain your treasury significantly. The −20% cavalry cost from Aristocratic ideas and −10% from Cavalry Warfare reform help, but won't fully close the gap.\n\n2. **Watch the headcount, not the regiment count.** The ratio check uses the actual number of individual soldiers, not whole regiments. As infantry regiments bleed down faster in battle, your cavalry ratio climbs and you can accidentally trigger the penalty mid-fight. Keep spare infantry regiments as reserves to reinforce into the front.\n\n3. **Artillery is excluded from the ratio.** You can freely stack a full second line of artillery without it affecting your cavalry ratio — this is a good way to maximise damage output while keeping the frontline ratio valid.\n\n4. **You are NOT a horde.** The +25% ratio from the *Steppe Horde* government, the +50% from *Great Mongol State* or *Legacy of the Seljuk* tier 5 reform, and the entire *Horde Ideas* group (which gives +25% cavalry combat ability at completion) are **all locked behind Horde government** — not accessible to a regular Sunni monarchy. The ceiling for a standard Sunni monarchy is around **80%** without any exotic nation-specific tricks, compared to 100%+ for actual hordes.\n\n---\n\n## Summary Checklist\n\n| Priority | Action | Benefit |\n|---|---|---|\n| ✅ Automatic | Stay Sunni | +10% cavalry ratio (60% total) |\n| ✅ High priority | Take **Aristocratic Ideas** | +15% cav combat, +10% ratio, −20% cav cost |\n| ✅ Mid-game | Take **Cavalry Warfare** reform (tier 5) | +10% ratio, −10% cav cost |\n| ✅ Optional | Take **Quality Ideas** idea 3 | +10% cav combat |\n| ✅ Optional | Hire a **Dragoon** advisor | +10% cav combat |\n| ✅ Optional | Take **Espionage** ideas for the Aristocratic-Espionage policy | +10% cav combat |",
+   "t": 149908
+  },
+  {
+   "type": "final",
+   "answer": "Here is a full breakdown, drawing on «Land units», «Muslim denominations», «Aristocratic Ideas», «Cavalry Warfare» (game_file), and «Army» (wiki):\n\n---\n\n## The Core Mechanic: Cavalry to Infantry Ratio\n\nThe **Cavalry to Infantry Ratio** controls what percentage of your **front line** can be cavalry before you incur the *\"Insufficient Support\"* penalty — a military tactics malus applied to cavalry equal to half the amount by which the limit is exceeded (doubled in steppe terrain). The penalty is checked **daily, based on actual headcount** — not regiment count. Because infantry dies faster than cavalry, your ratio will creep up during a battle unless you reinforce with fresh infantry.\n\n**Base ratio: 50%.** Without any modifiers, half your front line is the ceiling.\n\n---\n\n## What a Sunni Monarchy Gets by Default\n\nBeing **Sunni** grants every nation:\n> **+10% Cavalry to Infantry Ratio** («Muslim denominations», wiki)\n\nThis raises the effective ceiling to **60%** — 3 cavalry for every 2 infantry in the front line. It's the single biggest automatic advantage for a Sunni monarchy over comparable non-Muslim nations.\n\n---\n\n## Building a Mostly-Cavalry Army: Three Layers\n\n### Layer 1 — Idea Groups (available to all standard monarchies)\n\nThe standard **Monarchy** government type has the attribute `enables_aristocratic_idea_group = yes` («Monarchy», game_file), which unlocks the most important idea group for cavalry:\n\n**Aristocratic Ideas** (MIL category) — «Aristocratic Ideas», game_file:\n| Idea | Effect |\n|---|---|\n| 1. Noble Knights | **+15% Cavalry Combat Ability** |\n| 3. Noble Connections | **+10% Cavalry to Infantry Ratio** + **−20% Cavalry Cost** |\n\nThis is the single best idea group investment for a cavalry-focused Sunni monarch. Ideas 1 and 3 together make cavalry both cheaper and far more lethal.\n\n**Quality Ideas** (MIL category) — available to all:\n| Idea | Effect |\n|---|---|\n| 3. Finest of Horses | **+10% Cavalry Combat Ability** |\n\n**Policy bonus** — if you also take **Espionage** ideas alongside Aristocratic, the *Noble Loyalty Act* policy gives a further **+10% Cavalry Combat Ability** («Zaporozhie» strategy, wiki).\n\n### Layer 2 — Government Reform (Tier 5)\n\nThe **Cavalry Warfare** reform («Cavalry Warfare», game_file) is open to any monarchy that hasn't taken the *Legacy of the Seljuk* path:\n- **+10% Cavalry to Infantry Ratio**\n- **−10% Cavalry Cost**\n\n### Layer 3 — Advisor\n\nThe **Dragoon** advisor adds **+10% Cavalry Combat Ability** with no prerequisites («Post Finem/Advisors», wiki).\n\n---\n\n## Stacking the Ratio: How Far Can You Go?\n\n| Source | Ratio Bonus | Running Total |\n|---|---|---|\n| Base | — | 50% |\n| Sunni religion | +10% | **60%** |\n| Aristocratic Idea 3 (Noble Connections) | +10% | **70%** |\n| Cavalry Warfare reform (tier 5) | +10% | **80%** |\n\nAt **80%**, a 20-regiment front line can field **16 cavalry and just 4 infantry** — a truly cavalry-dominated formation.\n\n*Illustrative front lines (excluding artillery backline):*\n- **60%** (Sunni only): 12 cav / 8 inf\n- **70%** (+ Aristocratic idea 3): 14 cav / 6 inf\n- **80%** (+ Cavalry Warfare reform): 16 cav / 4 inf\n\n---\n\n## Important Practical Warnings\n\n1. **Cost is punishing.** Cavalry costs 2.5× as much as infantry to recruit and maintain. A mostly-cavalry army without horde-specific income bonuses will strain your treasury significantly. The −20% cavalry cost from Aristocratic ideas and −10% from Cavalry Warfare reform help, but won't fully close the gap.\n\n2. **Watch the headcount, not the regiment count.** The ratio check uses the actual number of individual soldiers, not whole regiments. As infantry regiments bleed down faster in battle, your cavalry ratio climbs and you can accidentally trigger the penalty mid-fight. Keep spare infantry regiments as reserves to reinforce into the front.\n\n3. **Artillery is excluded from the ratio.** You can freely stack a full second line of artillery without it affecting your cavalry ratio — this is a good way to maximise damage output while keeping the frontline ratio valid.\n\n4. **You are NOT a horde.** The +25% ratio from the *Steppe Horde* government, the +50% from *Great Mongol State* or *Legacy of the Seljuk* tier 5 reform, and the entire *Horde Ideas* group (which gives +25% cavalry combat ability at completion) are **all locked behind Horde government** — not accessible to a regular Sunni monarchy. The ceiling for a standard Sunni monarchy is around **80%** without any exotic nation-specific tricks, compared to 100%+ for actual hordes.\n\n---\n\n## Summary Checklist\n\n| Priority | Action | Benefit |\n|---|---|---|\n| ✅ Automatic | Stay Sunni | +10% cavalry ratio (60% total) |\n| ✅ High priority | Take **Aristocratic Ideas** | +15% cav combat, +10% ratio, −20% cav cost |\n| ✅ Mid-game | Take **Cavalry Warfare** reform (tier 5) | +10% ratio, −10% cav cost |\n| ✅ Optional | Take **Quality Ideas** idea 3 | +10% cav combat |\n| ✅ Optional | Hire a **Dragoon** advisor | +10% cav combat |\n| ✅ Optional | Take **Espionage** ideas for the Aristocratic-Espionage policy | +10% cav combat |",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__search_kb",
+    "mcp__eu4-kb__get_doc",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__search_kb"
+   ],
+   "t": 150250
+  }
+ ]
+}

@@ -1,0 +1,102 @@
+[
+ {
+  "id": "aristocratic-ideas",
+  "lang": "en",
+  "question": "What does the Aristocratic idea group give, and what kind of nation should take it?",
+  "shows": "Both sources together: exact bonuses from the parsed game files, strategy from the wiki",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 51523,
+  "tool_calls": 6
+ },
+ {
+  "id": "celestial-empire-reform",
+  "lang": "en",
+  "question": "What are the requirements for the Celestial Empire government reform, and what does it do?",
+  "shows": "Clausewitz parsing: trigger conditions rendered from the game's own script",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 52403,
+  "tool_calls": 5
+ },
+ {
+  "id": "ming-1444",
+  "lang": "en",
+  "question": "Who rules Ming at the 1444 start, and what government does it start with?",
+  "shows": "Country history parsed from the game files",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 30701,
+  "tool_calls": 2
+ },
+ {
+  "id": "form-mughals",
+  "lang": "en",
+  "question": "How do I form the Mughals?",
+  "shows": "A formable-nation decision recovered from wiki templates",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 45990,
+  "tool_calls": 7
+ },
+ {
+  "id": "form-mughals-zh",
+  "lang": "zh",
+  "question": "怎么成立莫卧儿？",
+  "shows": "Chinese answer mode: official Chinese game terms injected by the retrieval layer",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 111427,
+  "tool_calls": 9
+ },
+ {
+  "id": "tech-cost",
+  "lang": "en",
+  "question": "Why is my technology so expensive? I'm playing a nation in India.",
+  "shows": "The hand-written fundamentals layer: a diagnosis, not a lookup",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 41825,
+  "tool_calls": 6
+ },
+ {
+  "id": "sunni-cavalry",
+  "lang": "en",
+  "question": "How can an ordinary Sunni monarchy build an army that is mostly cavalry?",
+  "shows": "The content-layering rule: generic vs. shared vs. country-exclusive content",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 150250,
+  "tool_calls": 16
+ },
+ {
+  "id": "win-battles",
+  "lang": "en",
+  "question": "How do I win battles against a bigger army early in the game?",
+  "shows": "Combat framing from fundamentals, backed by wiki mechanics",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 50058,
+  "tool_calls": 6
+ },
+ {
+  "id": "wiki-vs-files",
+  "lang": "en",
+  "question": "Do the wiki and the game files agree on what the Innovative idea group gives? Point out any differences.",
+  "shows": "Cross-checking the two sources value by value; the game files are the authority",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 76786,
+  "tool_calls": 12
+ },
+ {
+  "id": "not-in-kb",
+  "lang": "en",
+  "question": "What are the national ideas of the Kingdom of Atlantis?",
+  "shows": "Not inventing: it searches, finds nothing, and says so",
+  "model": "claude-sonnet-4-6",
+  "recorded_at": "2026-09-27",
+  "duration_ms": 18652,
+  "tool_calls": 1
+ }
+]

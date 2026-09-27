@@ -197,6 +197,7 @@ async def answer(question, lang=None):
     return final
 
 UI_HTML = os.path.join(KB_DIR, "kb_ui.html")
+DEMO_DIR = os.path.realpath(os.path.join(KB_DIR, "demo"))
 
 class Handler(BaseHTTPRequestHandler):
     def _cors(self):
@@ -222,6 +223,16 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path=="/health":
             self._send(200, {"status":"ok","kb_mcp":KB_MCP_URL,"model":MODEL,
                              "auth": "CLAUDE_CODE_OAUTH_TOKEN" if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") else None})
+        elif self.path.startswith("/demo/"):
+            # 錄製的回放軌跡(record_demo.py 產生)；只允許 demo/ 內的 .json，防路徑穿越
+            rel=self.path.split("?",1)[0][len("/demo/"):]
+            full=os.path.realpath(os.path.join(DEMO_DIR, rel))
+            if not (full.startswith(DEMO_DIR+os.sep) and full.endswith(".json") and os.path.isfile(full)):
+                self._send(404, {"error":"not found"}); return
+            body=open(full,"rb").read()
+            self.send_response(200); self._cors()
+            self.send_header("Content-Type","application/json; charset=utf-8")
+            self.send_header("Content-Length",str(len(body))); self.end_headers(); self.wfile.write(body)
         else: self._send(404, {"error":"not found"})
     def _read_q(self):
         """回傳 (question, lang)。lang 由前端語言下拉傳入(預設走後端 DEFAULT_LANG)。"""

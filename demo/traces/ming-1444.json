@@ -1,0 +1,98 @@
+{
+ "id": "ming-1444",
+ "lang": "en",
+ "question": "Who rules Ming at the 1444 start, and what government does it start with?",
+ "shows": "Country history parsed from the game files",
+ "model": "claude-sonnet-4-6",
+ "recorded_at": "2026-09-27",
+ "duration_ms": 30701,
+ "tool_calls": 2,
+ "events": [
+  {
+   "type": "start",
+   "t": 1050
+  },
+  {
+   "type": "thinking",
+   "text": "The user is asking about Ming China's ruler and government at the 1444 start date in EU4. Let me search the knowledge base for this information.",
+   "t": 3817
+  },
+  {
+   "type": "tool_use",
+   "name": "ToolSearch",
+   "input": {
+    "query": "eu4-kb"
+   },
+   "t": 4075
+  },
+  {
+   "type": "tool_result",
+   "name": "ToolSearch",
+   "content": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__get_doc\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__grep_kb\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__knowledge_map\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_index\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__eu4-kb__list_tree\"}]",
+   "truncated": false,
+   "t": 4081
+  },
+  {
+   "type": "thinking",
+   "text": "Now let me search the knowledge base for Ming's starting ruler and government at the 1444 start date.",
+   "t": 5391
+  },
+  {
+   "type": "tool_use",
+   "name": "grep_kb",
+   "input": {
+    "pattern": "Ming",
+    "path_prefix": "game_file",
+    "limit": 10
+   },
+   "t": 5950
+  },
+  {
+   "type": "tool_result",
+   "name": "grep_kb",
+   "content": "{\"result\":\"«Court Ideas» (kb:eu4) | Court Ideas > Raw Script (appendix)\\nSource:game_file/idea_group/court_ideas\\n…```\\ncourt_ideas = {\\n    category = DIP\\n    bonus = {\\n        legitimacy = 0.5\\n        republican_tradition = 0.2\\n        devotion = 0.5\\n        horde_unity = 0.5\\n        meritocracy = 0.25\\n        imp…\\n\\n«Seal of the Great Ming» (kb:eu4) | Seal of the Great Ming > Conditions and Effects > Trigger (unlock condition)\\nSource:game_file/government_reform/mng_seal_of_the_emperor_reform\\n…- Any of:\\n  Has enacted Government Reform Seal of the Great Ming\\n  Completed Mission Mng Crisis Ming Dynasty…\\n\\n«Seal of the Great Ming» (kb:eu4) | Seal of the Great Ming > Conditions and Effects > Other\\nSource:game_file/government_reform/mng_seal_of_the_emperor_reform\\n…- Allow Normal Conversion: Yes\\n- Potential (key: potential):\\n  Any of:\\n    Has enacted Government Reform Seal of the Great Ming\\n    Completed Mission Mng Crisis Ming Dynasty…\\n\\n«Seal of the Great Ming» (kb:eu4) | Seal of the Great Ming > Raw Script (appendix)\\nSource:game_file/government_reform/mng_seal_of_the_emperor_reform\\n…```\\nmng_seal_of_the_emperor_reform = {\\n    icon = mng_seal_of_the_emperor_reform\\n    allow_normal_conversion = yes\\n    potential = {\\n        OR = {\\n            has_reform = mng_seal_of_the_emperor_ref…\\n\\n«Ming» (kb:eu4) | Ming > Overview\\nSource:game_file/country_history/MNG\\n…Country: Ming (`MNG`).\\n- Government type is Monarchy\\n- Gains government reform: Celestial Em",
+   "truncated": true,
+   "t": 6102
+  },
+  {
+   "type": "thinking",
+   "text": "I found a \"Ming\" game_file document (kb:eu4 with source game_file/country_history/MNG). Let me get the full document to find more details about the starting ruler and government.",
+   "t": 9488
+  },
+  {
+   "type": "tool_use",
+   "name": "get_doc",
+   "input": {
+    "doc_id": "game_file/country_history/MNG"
+   },
+   "t": 9873
+  },
+  {
+   "type": "tool_result",
+   "name": "get_doc",
+   "content": "{\"result\":\"---\\ndoc_id: \\\"g-b8332b40d9\\\"\\ntitle: \\\"Ming\\\"\\nsystem: \\\"eu4\\\"\\ndoc_type: \\\"country_history\\\"\\nlang: \\\"en\\\"\\nversion: \\\"release_1.37.3\\\"\\nsource_hash: \\\"b57924686ba8\\\"\\nstatus: \\\"active\\\"\\nmd_path: \\\"docs/g-b8332b40d9.md\\\"\\nsource: \\\"game_file\\\"\\nentity_category: \\\"country_history\\\"\\nentity_id: \\\"MNG\\\"\\nsource_file: \\\"history/countries/MNG - Ming.txt\\\"\\ngame_version: \\\"release_1.37.3\\\"\\n---\\n\\n# Ming\\n\\n## Overview\\n\\nCountry: Ming (`MNG`).\\n- Government type is Monarchy\\n- Gains government reform: Celestial Empire\\n- Government Form and Rank: 3\\n- Technology Group is Chinese\\n- Religion is Confucian\\n- Religion is Mahayana\\n- Jianghuai is the primary culture in our country.\\n- Capital: 1821\\n- If (key: if):\\n  Limited to:\\n    Any of:\\n      Requires DLC: Dharma\\n      Requires DLC: Emperor\\n  Change Estate Land Share (key: change_estate_land_share):\\n    For estate: Burghers\\n    Share change: 10\\n  Change Estate Land Share (key: change_estate_land_share):\\n    For estate: Clergy\\n    Share change: 10\\n  Change Estate Land Share (key: change_estate_land_share):\\n    For estate: Nobility\\n    Share change: -20\\n- Gains 45 prestige\\n- If (key: if):\\n  Limited to:\\n    Requires DLC: Domination\\n  Every Owned Province (key: every_owned_province):\\n    Limited to:\\n      Region is South China\\n    Add Local Autonomy: 25\\n  Every Owned Province (key: every_owned_province):\\n    Limited to:\\n      Region is North China\\n    Add Local Autonomy: 10\\n  Every Owned Provinc",
+   "truncated": true,
+   "t": 10075
+  },
+  {
+   "type": "thinking",
+   "text": "I have all the information I need. At the 1444 start date, the ruler would be the last monarch listed before 1444 - Qizhen (who acceded on 1435-01-31). The heir would be Qiyu (born 1428-09-21). The government is a Monarchy with the Celestial Empire reform.\n\nLet me compile this:\n\n**Ruler at 1444:**\n- Qizhen (House of Zhu), ADM 1 / DIP 1 / MIL 1\n- Acceded: 1435-01-31\n- Personalities: Craven and Naive\n- Heir Qiyu (House of Zhu), ADM 3 / DIP 3 / MIL 4\n- Government is a Monarchy with Celestial Empire reform, rank 3 (Empire), Chinese tech group, Confucian religion harmonized with Mahayana, and Jianghuai primary culture — all pulled directly from the game file.\n\n",
+   "t": 21675
+  },
+  {
+   "type": "text",
+   "text": "Here's what the game file (version 1.37.3) says for Ming at the 1444 start:\n\n---\n\n## 👑 Ruler: Qizhen (House of Zhu)\n- **Stats:** ADM **1** / DIP **1** / MIL **1** — one of the worst rulers in the game\n- **Acceded:** 1435-01-31\n- **Personalities:** *Craven* and *Naive* (both scripted in directly by the game files)\n- **Heir:** Qiyu (House of Zhu) — ADM 3 / DIP 3 / MIL 4, who takes over in 1449 after the historical Tumu Crisis\n\nQizhen is the Zhengtong Emperor, notorious historically for his disastrous campaign against the Oirats that ended with him being captured at the Battle of Tumu Fortress — which is why the game gives him such poor stats and craven/naive personalities.\n\n---\n\n## 🏛️ Government\n| Property | Value |\n|---|---|\n| **Government Type** | Monarchy |\n| **Government Reform** | **Celestial Empire** (Tier 1) |\n| **Government Rank** | 3 (Empire) |\n| **Technology Group** | Chinese |\n| **Religion** | Confucian (Mahayana harmonized) |\n| **Primary Culture** | Jianghuai |\n\nThe **Celestial Empire** reform is Ming's unique starting reform — it provides significant bonuses tailored to managing a large empire (it interacts with Ming's Mandate of Heaven mechanic if you have the *Mandate of Heaven* DLC).\n\n---\n\n**Source:** «Ming» — `game_file/country_history/MNG`",
+   "t": 30388
+  },
+  {
+   "type": "final",
+   "answer": "Here's what the game file (version 1.37.3) says for Ming at the 1444 start:\n\n---\n\n## 👑 Ruler: Qizhen (House of Zhu)\n- **Stats:** ADM **1** / DIP **1** / MIL **1** — one of the worst rulers in the game\n- **Acceded:** 1435-01-31\n- **Personalities:** *Craven* and *Naive* (both scripted in directly by the game files)\n- **Heir:** Qiyu (House of Zhu) — ADM 3 / DIP 3 / MIL 4, who takes over in 1449 after the historical Tumu Crisis\n\nQizhen is the Zhengtong Emperor, notorious historically for his disastrous campaign against the Oirats that ended with him being captured at the Battle of Tumu Fortress — which is why the game gives him such poor stats and craven/naive personalities.\n\n---\n\n## 🏛️ Government\n| Property | Value |\n|---|---|\n| **Government Type** | Monarchy |\n| **Government Reform** | **Celestial Empire** (Tier 1) |\n| **Government Rank** | 3 (Empire) |\n| **Technology Group** | Chinese |\n| **Religion** | Confucian (Mahayana harmonized) |\n| **Primary Culture** | Jianghuai |\n\nThe **Celestial Empire** reform is Ming's unique starting reform — it provides significant bonuses tailored to managing a large empire (it interacts with Ming's Mandate of Heaven mechanic if you have the *Mandate of Heaven* DLC).\n\n---\n\n**Source:** «Ming» — `game_file/country_history/MNG`",
+   "tools_used": [
+    "ToolSearch",
+    "mcp__eu4-kb__grep_kb",
+    "mcp__eu4-kb__get_doc"
+   ],
+   "t": 30701
+  }
+ ]
+}
