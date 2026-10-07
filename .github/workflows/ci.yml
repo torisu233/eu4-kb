@@ -3,7 +3,9 @@ name: CI
 # 觸發：推送到任何分支、或開 Pull Request 時都跑——壞了馬上知道。
 # 純文檔改動(*.md)不觸發：實測發現只改CLAUDE.md這種commit也會觸發整套build+deploy，
 # 把好端端一個warm的Cloud Run實例重新冷啟動一次，沒有必要。
+# workflow_dispatch：手動重跑(如同步完 GCS 上的 kb 資料後重新部署，或新 repo 首次推送未觸發時)。
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
       - '**.md'
