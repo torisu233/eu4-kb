@@ -15,7 +15,7 @@ account (step 6).
 ```bash
 export PROJECT_ID="your-gcp-project-id"
 export REGION="asia-northeast1"                     # change as needed
-export REPO="torisuorg/eu4-kb"                      # GitHub repo, owner/name
+export REPO="torisu233/eu4-kb"                      # GitHub repo, owner/name
 export AR_REPO="eu4-kb"                             # Artifact Registry repository name
 export IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/eu4-kb"
 export KB_BUCKET="eu4-kb-data-$PROJECT_ID"          # bucket names are globally unique
