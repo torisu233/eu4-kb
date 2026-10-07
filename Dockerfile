@@ -46,8 +46,10 @@ RUN useradd -m app \
     && chown -R app /app "$HF_HOME"
 USER app
 
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
-    && python -c "from sentence_transformers import CrossEncoder; CrossEncoder('BAAI/bge-reranker-v2-m3')"
+# 只預熱 embedding 模型。reranker(BAAI/bge-reranker-v2-m3，2.27GB)線上預設關閉(KB_USE_RERANK=0，
+# 理由見 README Production notes)，不再打包：2026-10 CI runner 剩餘磁碟已不夠下載它(build 失敗)，
+# 且它讓鏡像、推送和冷啟動都白白變重。若設 KB_USE_RERANK=1，searcher 會在執行期下載；失敗則退回向量+BM25。
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')"
 
 # Cloud Run 預設從 8080 注入 PORT；問答後端監聽 0.0.0.0 才能從容器外訪問(kb_answer_backend.py
 # 的 HOST 讀 KB_ANSWER_HOST，entrypoint.sh 會設成 0.0.0.0)。
