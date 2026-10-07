@@ -3,7 +3,7 @@
 [![CI](https://github.com/torisuorg/eu4-kb/actions/workflows/ci.yml/badge.svg)](https://github.com/torisuorg/eu4-kb/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<!-- DEMO_GIF -->
+<p align="center"><img src="docs/demo.gif" width="720" alt="A live run: the agent searches the knowledge base, reads tool results, and writes a cited answer"><br><sub>A live run, real speed: the left panel streams the agent's reasoning, tool calls and raw tool results; the right panel is the cited answer. <a href="https://torisuorg.github.io/eu4-kb/">More recorded runs ▶</a></sub></p>
 
 **[▶ Replay demo](https://torisuorg.github.io/eu4-kb/)** · **[Architecture](#architecture)** · **[Governance](#governance-and-blast-radius)** · **[Production notes](#production-notes)** · **[Data & licensing](#data-sources-and-licensing)**
 
