@@ -84,19 +84,18 @@ jobs:
       # --add-volume/--add-volume-mount：把持久化的 GCS bucket(kb 資料)掛進容器，
       #   容器內 entrypoint.sh 讀 EU4_KBS_DIR 指向掛載路徑，資料更新不需要重新部署。
       # --set-secrets：CLAUDE_CODE_OAUTH_TOKEN 走 Secret Manager(非明文 --set-env-vars)。
-      # --allow-unauthenticated：2026-07按用戶要求改為公開(不需要Google身份就能訪問)，
-      #   因為原本"要求Google IAM授權"對一般用戶不友善；真正的用量/成本控管以後另外做
-      #   (如登入機制/rate limit)，目前只靠 --max-instances 1 這個保底(見下)。
+      # --no-allow-unauthenticated：2026-10 改回私有(需 Google IAM 身份)。公開、無鑑權的 LLM 端點
+      #   等於把個人訂閱額度開放給任何人；公開 demo 改由 GitHub Pages 上的回放(demo/)承擔。
+      #   (2026-07 曾按用戶要求公開過，期間無任何用量控管。)
       # --max-instances 1：這是個人訂閱token驅動的服務，公開後更需要這個保底來限制併發，
       #   避免同一個 Claude 訂閱 OAuth token 被多請求同時搶用(注意：這不是速率限制，只是
       #   限制"最多同時起1個實例"，仍需要後續加真正的用量控管)。
       # --cpu 2：原本預設只有1 vCPU，經CI/CD debug過程中的實測日誌證實——單次模型推理
       #   (embedding編碼/reranker重排序)在1 vCPU下要花25~30秒，長到讓MCP Client端等不及
       #   逾時斷線(ClientDisconnect)，這是"MCP經常沒有服務/很慢"的確認根因，加到2 vCPU緩解。
-      # --min-instances 1：實測發現沒設這個時，實例會在很短時間內(觀察到~90秒)就被回收，
-      #   下次請求要整個重新走entrypoint.sh冷啟動(起kb_mcp_server→等就緒→模型載入進記憶體，
-      #   耗時~100秒)，比推理本身慢多了。Cloud Run沒有"閒置多久才縮容"這種可調參數，唯一
-      #   乾淨可靠的解法就是min-instances保底常駐。代價：持續計費，不再有"沒人用就不花錢"。
+      # --min-instances 0：2026-10 從 1 改回 0。min=1 能避免實例被提前回收(觀察到~90秒就被
+      #   回收、冷啟動~100秒)，但代價是 2vCPU 全天候計費。服務已不對外，按需使用時接受冷啟動；
+      #   需要給人現場演示時，可臨時 `gcloud run services update eu4-kb --min-instances 1` 預熱。
       - name: 部署 Cloud Run（創建或更新）
         run: |
           gcloud run deploy eu4-kb \
@@ -106,9 +105,9 @@ jobs:
             --add-volume name=kbdata,type=cloud-storage,bucket="${{ vars.GCP_KB_BUCKET }}" \
             --add-volume-mount volume=kbdata,mount-path=/mnt/kb-data \
             --set-secrets "CLAUDE_CODE_OAUTH_TOKEN=${{ vars.GCP_OAUTH_SECRET_NAME }}:latest" \
-            --allow-unauthenticated \
+            --no-allow-unauthenticated \
             --cpu 2 \
-            --min-instances 1 \
+            --min-instances 0 \
             --max-instances 1 \
             --timeout 600 \
             --memory 4Gi

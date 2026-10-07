@@ -43,7 +43,6 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     os.makedirs(TRACES, exist_ok=True)
     questions = json.load(open(os.path.join(DEMO, "questions.json"), encoding="utf-8"))
-    health = __import__("httpx").get(URL + "/health", timeout=10).json()
 
     for q in questions:
         path = os.path.join(TRACES, q["id"] + ".json")
@@ -58,7 +57,7 @@ def main():
             print(f"[fail] {q['id']}: no final answer; not saved", flush=True)
             continue
         tools = [e["name"] for e in events if e["type"] == "tool_use" and e["name"] != "ToolSearch"]
-        trace = {**q, "model": health.get("model"),
+        trace = {**q, "model": final.get("model"),
                  "recorded_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
                  "duration_ms": events[-1]["t"], "tool_calls": len(tools), "events": events}
         with open(path, "w", encoding="utf-8") as f:

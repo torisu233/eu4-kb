@@ -185,7 +185,7 @@ async def answer_stream(question, lang=None):
         elif isinstance(msg, ResultMessage):
             result_text=getattr(msg,"result",None)
     final_answer=(result_text or "\n".join(last_texts)).strip()
-    yield {"type":"final","answer":final_answer,"tools_used":tools_used,"turn_id":turn_id}
+    yield {"type":"final","answer":final_answer,"tools_used":tools_used,"turn_id":turn_id,"model":MODEL}
     # 落檔(只記正常答完的 turn；emit 斷線被吞、迴圈仍跑到這)。失敗/早退不會到此。
     _log_turn(turn_id, question, final_answer, tool_calls, doc_ids)
 
@@ -221,8 +221,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path=="/" or self.path.startswith("/?"): self._html(UI_HTML)
         elif self.path=="/health":
-            self._send(200, {"status":"ok","kb_mcp":KB_MCP_URL,"model":MODEL,
-                             "auth": "CLAUDE_CODE_OAUTH_TOKEN" if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") else None})
+            # 無鑑權端點：只回存活狀態，不暴露認證方式/內部 MCP 位址/模型
+            self._send(200, {"status":"ok"})
         elif self.path.startswith("/demo/"):
             # 錄製的回放軌跡(record_demo.py 產生)；只允許 demo/ 內的 .json，防路徑穿越
             rel=self.path.split("?",1)[0][len("/demo/"):]

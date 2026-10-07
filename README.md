@@ -171,7 +171,7 @@ tiers:
 | Tier | What it is | Cost / risk |
 |---|---|---|
 | **[Replay](https://torisuorg.github.io/eu4-kb/)** (default) | Real runs recorded with every step (reasoning, tool calls, raw tool results, final answer) and replayed in the real UI. `record_demo.py` records them; the page switches to replay mode when no backend is behind it | Static hosting on GitHub Pages. No model calls |
-| **Live** (on request) | The deployed service | Access and spend are bounded |
+| **Live** (on request) | The deployed Cloud Run service. It is private, behind Google IAM, and scales to zero when idle; it is warmed up only for a scheduled walkthrough | No public endpoint, and no cost while idle |
 | **Local** | Run it yourself (see below) | Yours, not mine |
 
 Replay is the default because it shows everything a live run shows, since the agent's tool use
@@ -213,7 +213,7 @@ Problems that only showed up once the service was actually running somewhere.
 | The deployed agent answered without its tools | Models were pre-downloaded as root into `/root/.cache`, but the container runs as `app`. At startup it re-downloaded a 2.2 GB reranker, and on Cloud Run the writable filesystem counts against memory, so the container ran out of memory and the MCP server never came up | Create the runtime user first, then download the models **as that user** |
 | …and the first fix for that filled the disk again | `chown -R` on multi-GB model files that already exist in a lower image layer copies the whole file into a new layer (overlay copy-up), just to change metadata | Never change ownership of the large files after the fact: create the user and give it the still-empty cache directory before downloading |
 | "The MCP server is often unavailable" | Logs showed a single inference batch took **25–30 s on 1 vCPU**, long enough that the agent's MCP client gave up and disconnected | `--cpu 2` (batches dropped to 14–18 s) |
-| First request after a short idle took about 100 s | Cloud Run replaced the instance after about 90 s, and every cold start reloads the models. Cloud Run has no setting for how long an idle instance is kept | `--min-instances 1`, which trades scale-to-zero for an always-warm instance |
+| First request after a short idle took about 100 s | Cloud Run replaced the instance after about 90 s, and every cold start reloads the models. Cloud Run has no setting for how long an idle instance is kept `--min-instances 1` while the service was public and in active use. Once the replay demo took over, it went back to `0`: always-on 2 vCPU costs money every hour, and a private service can afford a cold start |
 | Every answer was still slow | The cross-encoder reranker cost **7–9 s per `search_kb` call** locally, and a single question makes **7–13 tool calls** | Reranker **off by default**: vector + BM25 alone return in **0.1–0.2 s**. |
 | `--set-secrets` rejected the secret | It wants the bare secret ID, not the full `projects/<id>/secrets/...` path | Use the bare ID, and write it down |
 | Editing documentation redeployed the service | No path filtering in the workflow | `paths-ignore` for Markdown and `docs/` |

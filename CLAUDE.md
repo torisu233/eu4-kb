@@ -98,12 +98,11 @@ python -m kb.build_all --kb eu4 --stages chunk,embed,lance,organize,index,tree  
 （見下方"與典型單服務部署的關鍵差異"）沒有直接照抄。**服務已實際部署
 並用真實問題驗證通過**（`gcloud run services describe eu4-kb --region asia-northeast1`查URL）。
 
-**訪問控制**：2026-07按用戶要求從"預設私有(需Google IAM身份)"改成**完全公開**
-(`--allow-unauthenticated`，`ci.yml`已固化這個設定，之後每次自動部署都會保持公開)——原本要求
-每個訪客都要有Google帳號+`gcloud`才能用，對一般用戶不友善。**用量/成本控管目前完全沒做**
-(`--max-instances 1`只是限制"最多同時1個實例"這個保底，不是真正的用量限制)，登入機制/rate limit
-之類的控管留到之後另外做，目前是有意識地先接受"任何人都能直接用、可能消耗個人Claude訂閱額度"這個
-風險換取可用性。
+**訪問控制**：2026-07 曾按用戶要求改成完全公開(`--allow-unauthenticated`)，期間無任何用量控管
+(個人訂閱額度對任何人開放)。**2026-10 改回私有**(`--no-allow-unauthenticated` + `--min-instances 0`，
+`ci.yml`已固化)：公開 demo 改由 GitHub Pages 上的**回放**承擔(`demo/` 錄製軌跡 + `kb_ui.html` 回放模式，
+`record_demo.py` 錄製)，見 README "The demo is deliberately tiered"。需要現場演示時臨時
+`gcloud run services update eu4-kb --min-instances 1` 預熱，用完改回 0。
 
 ### 部署過程踩的3個真實坑（都在CI/CD實測中發現，不是憑空預想的）
 
