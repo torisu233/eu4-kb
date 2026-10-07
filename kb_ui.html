@@ -12,6 +12,10 @@
   .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px}
   .topbar{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   h1{font-size:20px;margin:6px 0 14px} h1 .sub{font-size:13px;color:var(--mut);font-weight:normal;margin-left:6px}
+  #src{display:none;margin-left:auto;font-size:13px;color:var(--accent);text-decoration:none;white-space:nowrap}
+  #src:hover{text-decoration:underline}
+  #src.show{display:inline}
+  #src.show + #lang{margin-left:10px}
   #lang{margin-left:auto;padding:5px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);
         font:inherit;font-size:13px;color:var(--fg);cursor:pointer}
   .ask{display:flex;gap:8px;align-items:flex-end}
@@ -77,6 +81,7 @@
 <div class="wrap">
   <div class="topbar">
     <h1><span id="t-title">EU4 Knowledge Base Q&A</span> <span class="sub" id="t-sub">Local RAG · live process</span></h1>
+    <a id="src" href="https://github.com/torisu233/eu4-kb" target="_blank" rel="noopener"></a>
     <select id="lang" title="Language">
       <option value="en">English</option>
       <option value="zh">中文</option>
@@ -125,7 +130,7 @@
       expand:"expand content", truncated:" (truncated)", noText:"(no text content for this step)",
       toolWord:"tool", returned:" returned",
       fbSaved:"✓ Recorded, thanks", fbFail:"⚠ Failed to record", fbFailE:(e)=>`⚠ Failed to record: ${e}`,
-      demos:"▶ Recorded runs — click one to replay it", subReplay:"Replay of recorded runs · hybrid RAG + MCP agent",
+      demos:"▶ Recorded runs — click one to replay it", subReplay:"Replay of recorded runs · hybrid RAG + MCP agent", src:"Source & write-up on GitHub ↗",
       demoNoteLive:"Real runs of this system, recorded with every step. Replayed at higher speed.",
       demoNoteStatic:"This page has no live model behind it. Each run below was recorded end to end against the real system (reasoning, tool calls, raw tool results, final answer) and is replayed here at higher speed.",
       demoMeta:(n,s)=>`${n} tool calls · ${s}s live`,
@@ -150,7 +155,7 @@
       expand:"展开内容", truncated:"（已截断）", noText:"（此步无文字内容）",
       toolWord:"工具", returned:" 返回",
       fbSaved:"✓ 已记录，谢谢", fbFail:"⚠ 记录失败", fbFailE:(e)=>`⚠ 记录失败：${e}`,
-      demos:"▶ 录制的真实运行——点击回放", subReplay:"录制运行的回放 · 混合检索 RAG + MCP agent",
+      demos:"▶ 录制的真实运行——点击回放", subReplay:"录制运行的回放 · 混合检索 RAG + MCP agent", src:"GitHub 源码与说明 ↗",
       demoNoteLive:"本系统的真实运行记录（含每一步），加速回放。",
       demoNoteStatic:"此页面后面没有在线模型。下面每一题都是对真实系统完整录制的运行（思考、工具调用、工具原始返回、最终答案），在此加速回放。",
       demoMeta:(n,s)=>`${n} 次工具调用 · 实际 ${s} 秒`,
@@ -184,6 +189,7 @@
     $('#t-demonote').textContent = LIVE ? d.demoNoteLive : d.demoNoteStatic;
     $('#skip').textContent = d.skip;
     if (!LIVE && DEMOS.length) $('#t-sub').textContent = d.subReplay;
+    $('#src').textContent = d.src; $('#src').classList.toggle('show', !LIVE);
     renderDemos();
   }
 
